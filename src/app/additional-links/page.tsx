@@ -19,6 +19,16 @@ const links = [
         desc: "Search local healthcare professionals, filter by location and specialty.",
         url: "https://hez.connect.payercompass.com/",
       },
+      {
+        title: "First Health Provider Locator",
+        desc: "Find in-network providers through the First Health network.",
+        url: "https://providerlocator.firsthealth.com/LocateProvider/SelectNetworkType",
+      },
+      {
+        title: "HealthEZ Provider Portal",
+        desc: "Portal for healthcare providers to submit claims and access resources.",
+        url: "https://provider.myhealthez.com/",
+      },
     ],
   },
   {
@@ -38,6 +48,11 @@ const links = [
         title: "Paytient App — iOS",
         desc: "Download the Paytient app for iPhone.",
         url: "https://apps.apple.com/us/app/paytient/id1418399898",
+      },
+      {
+        title: "Paytient App — Android",
+        desc: "Download the Paytient app for Android.",
+        url: "https://play.google.com/store/apps/details?id=com.paytient",
       },
     ],
   },
@@ -73,6 +88,11 @@ const links = [
         title: "Kennion Program Overview",
         desc: "Download the employee benefits program overview.",
         url: "https://www.kennion.com/content/files/2025/07/Kennion-Program-Overview.pdf",
+      },
+      {
+        title: "2025 Master Medical Plan & SPD",
+        desc: "Download the Summary Plan Description document.",
+        url: "https://kennionplans.com/wp-content/uploads/sites/319/2025/03/Kennion-Plans-Master-Medical-Plan-Document-and-SPD_2025.pdf",
       },
       {
         title: "Kennion Benefit Advisors — Main Site",

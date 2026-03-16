@@ -143,6 +143,26 @@ export default function VisaPage() {
         </ol>
       </div>
 
+      {/* Activation tip */}
+      <div className="mb-10 rounded-xl bg-[var(--kennion-light)] p-6">
+        <h3 className="mb-2 font-semibold text-[var(--kennion-navy)]">
+          Activate Your Physical Card
+        </h3>
+        <p className="text-sm text-gray-600">
+          When your physical card arrives, text the last 4 digits from your
+          phone to{" "}
+          <a
+            href="sms:5732693836"
+            className="font-medium text-[var(--kennion-blue)]"
+          >
+            573-269-3836
+          </a>{" "}
+          to activate. You can also activate in the Paytient app by swiping to
+          the white card on the home screen and pressing and holding to enter
+          your last 4 digits.
+        </p>
+      </div>
+
       <div className="flex flex-col gap-4 sm:flex-row">
         <a
           href="https://www.paytient.com/kennion"

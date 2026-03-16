@@ -79,7 +79,29 @@ export default function PlansPage() {
         })}
       </div>
 
-      <div className="mt-10 rounded-xl bg-[var(--kennion-light)] p-6 text-center">
+      {/* Patient Advocacy */}
+      <div className="mt-10 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold text-[var(--kennion-navy)]">
+          Patient Advocacy &amp; Balance Billing Protection
+        </h2>
+        <p className="mb-3 text-sm text-gray-600">
+          Payer Compass (Zelis) provides URAC-accredited Care Management and
+          balance billing protection. If you receive a balance bill, do not pay
+          it — contact Patient Advocacy.
+        </p>
+        <div className="flex flex-wrap gap-4 text-sm">
+          <a
+            href="tel:8557193763"
+            className="font-medium text-[var(--kennion-blue)]"
+          >
+            855-719-3763
+          </a>
+          <span className="text-gray-400">|</span>
+          <span className="text-gray-600">7am–5pm CST, Mon–Fri</span>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-xl bg-[var(--kennion-light)] p-6 text-center">
         <p className="text-sm text-gray-600">
           For detailed plan documents and benefit summaries, visit{" "}
           <a
