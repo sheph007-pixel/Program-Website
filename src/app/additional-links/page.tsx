@@ -1,0 +1,153 @@
+import { ExternalLink } from "lucide-react";
+
+const links = [
+  {
+    category: "Member Portals",
+    items: [
+      {
+        title: "KennionPlans.com — Member Portal",
+        desc: "Access your plan details, find providers, and manage your health benefits.",
+        url: "https://kennionplans.com",
+      },
+      {
+        title: "myHealthEZ Member Portal",
+        desc: "Log in to see up-to-date plan information, real-time claims, and helpful resources.",
+        url: "https://healthez.com/who-we-help/members/",
+      },
+      {
+        title: "Find a Doctor / Provider Search",
+        desc: "Search local healthcare professionals, filter by location and specialty.",
+        url: "https://hez.connect.payercompass.com/",
+      },
+    ],
+  },
+  {
+    category: "Apps",
+    items: [
+      {
+        title: "myHealthEZ App — iOS",
+        desc: "Download the myHealthEZ app for iPhone.",
+        url: "https://apps.apple.com/us/app/myhealthez/id1571532368",
+      },
+      {
+        title: "myHealthEZ App — Android",
+        desc: "Download the myHealthEZ app for Android.",
+        url: "https://play.google.com/store/apps/details?id=healthez.mobile",
+      },
+      {
+        title: "Paytient App — iOS",
+        desc: "Download the Paytient app for iPhone.",
+        url: "https://apps.apple.com/us/app/paytient/id1418399898",
+      },
+    ],
+  },
+  {
+    category: "Partners & Services",
+    items: [
+      {
+        title: "Paytient — Health Payment Account",
+        desc: "Set up your interest-free Visa card for healthcare expenses.",
+        url: "https://www.paytient.com/kennion",
+      },
+      {
+        title: "Recuro Health — Virtual Care",
+        desc: "Access 24/7 virtual urgent care, behavioral health, and primary care.",
+        url: "https://recurohealth.com",
+      },
+      {
+        title: "HealthEZ — Plan Administrator",
+        desc: "Learn about HealthEZ, the independent TPA managing your health benefits.",
+        url: "https://healthez.com",
+      },
+    ],
+  },
+  {
+    category: "Documents & Resources",
+    items: [
+      {
+        title: "Benefit Overview 2024",
+        desc: "Download the comprehensive benefit overview document.",
+        url: "https://kennionplans.com/wp-content/uploads/sites/319/2023/12/Kennion-Freedom-Plans_2024_Benefit-Overview.pdf",
+      },
+      {
+        title: "Kennion Program Overview",
+        desc: "Download the employee benefits program overview.",
+        url: "https://www.kennion.com/content/files/2025/07/Kennion-Program-Overview.pdf",
+      },
+      {
+        title: "Kennion Benefit Advisors — Main Site",
+        desc: "Visit the main Kennion Benefit Advisors website.",
+        url: "https://www.kennion.com",
+      },
+    ],
+  },
+  {
+    category: "Support",
+    items: [
+      {
+        title: "Call HealthEZ Support",
+        desc: "844-839-6740 — Available during business hours.",
+        url: "tel:8448396740",
+      },
+      {
+        title: "Email HealthEZ Support",
+        desc: "Service@HealthEZ.com — Get help via email.",
+        url: "mailto:Service@HealthEZ.com",
+      },
+      {
+        title: "Contact Kennion",
+        desc: "Reach out to Kennion Benefit Advisors directly.",
+        url: "https://www.kennion.com/contact/",
+      },
+    ],
+  },
+];
+
+export default function AdditionalLinksPage() {
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16">
+      <h1 className="mb-2 text-3xl font-bold text-[var(--kennion-navy)]">
+        Additional Links
+      </h1>
+      <p className="mb-10 text-gray-600">
+        Quick access to all your benefits resources, portals, apps, and support
+        contacts.
+      </p>
+
+      <div className="space-y-10">
+        {links.map((section) => (
+          <div key={section.category}>
+            <h2 className="mb-4 text-lg font-semibold text-[var(--kennion-navy)]">
+              {section.category}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {section.items.map((item) => (
+                <a
+                  key={item.title}
+                  href={item.url}
+                  target={item.url.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    item.url.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                  className="group flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-[var(--kennion-blue)] hover:shadow-md"
+                >
+                  <h3 className="mb-1 text-sm font-semibold text-[var(--kennion-navy)]">
+                    {item.title}
+                  </h3>
+                  <p className="mb-3 flex-1 text-xs leading-relaxed text-gray-500">
+                    {item.desc}
+                  </p>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--kennion-blue)]">
+                    Open <ExternalLink size={12} />
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
