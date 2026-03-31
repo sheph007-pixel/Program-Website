@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "Kennion Benefits Program",
   description:
     "Everything you need to enroll, explore, and get care - all in one place.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
 };
 
 export default function RootLayout({
