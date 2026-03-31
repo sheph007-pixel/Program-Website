@@ -14,6 +14,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Pencil,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useUserName } from "./NameContext";
@@ -25,6 +26,15 @@ const navItems = [
   { href: "/app-download", label: "App", icon: Smartphone },
   { href: "/visa", label: "Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
+];
+
+// Bottom tab bar items for mobile (subset for thumb reach)
+const mobileTabItems = [
+  { href: "/", label: "Home", icon: Home },
+  { href: "/plans", label: "Plans", icon: FileText },
+  { href: "/enrollment", label: "Enroll", icon: ClipboardList },
+  { href: "/app-download", label: "App", icon: Smartphone },
+  { href: "/visa", label: "Visa", icon: CreditCard },
 ];
 
 export default function Sidebar() {
@@ -42,25 +52,65 @@ export default function Sidebar() {
 
   const sidebarWidth = collapsed ? "var(--sidebar-collapsed)" : "var(--sidebar-width)";
 
+  const saveName = () => {
+    if (nameInput.trim()) {
+      setName(nameInput);
+    }
+    setEditingName(false);
+  };
+
   return (
     <>
       {/* Mobile top bar */}
-      <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center gap-3 bg-[var(--kennion-navy)] px-4 md:hidden">
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="rounded-lg p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Open menu"
-        >
-          <Menu size={22} />
-        </button>
-        <img
-          src="/kennion-logo-white.svg"
-          alt="Kennion"
-          className="h-7"
-        />
+      <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between bg-[var(--kennion-navy)] px-4 md:hidden">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="rounded-lg p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Open menu"
+          >
+            <Menu size={22} />
+          </button>
+          <img
+            src="/kennion-logo-white.svg"
+            alt="Kennion"
+            className="h-6"
+          />
+        </div>
+        {hasName && (
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[11px] font-bold text-white">
+              {name.charAt(0)}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Overlay */}
+      {/* Mobile bottom tab bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
+        <div className="flex items-stretch justify-around px-1">
+          {mobileTabItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex flex-1 flex-col items-center gap-0.5 py-2 transition-colors ${
+                  isActive ? "text-blue-600" : "text-slate-400"
+                }`}
+              >
+                <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
+                <span className={`text-[10px] ${isActive ? "font-semibold" : "font-medium"}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mobile slide-out drawer overlay */}
       <div
         className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
           mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
@@ -68,13 +118,13 @@ export default function Sidebar() {
         onClick={() => setMobileOpen(false)}
       />
 
-      {/* Sidebar */}
+      {/* Sidebar (desktop persistent, mobile drawer) */}
       <aside
         className={`fixed top-0 left-0 z-50 flex h-full flex-col border-r border-white/[0.06] text-white transition-all duration-300 ease-in-out md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{
-          width: mobileOpen ? "var(--sidebar-width)" : sidebarWidth,
+          width: mobileOpen ? "280px" : sidebarWidth,
           background: "linear-gradient(180deg, #0a1929 0%, #0d2137 50%, #0a1929 100%)",
         }}
       >
@@ -107,59 +157,68 @@ export default function Sidebar() {
           )}
         </div>
 
-        {/* Personalized greeting */}
+        {/* User profile section */}
         {!collapsed && hasName && !editingName && (
-          <div className="border-b border-white/[0.06] px-5 py-3">
+          <div className="border-b border-white/[0.06] px-4 py-3.5">
             <button
               onClick={() => {
                 setNameInput(name);
                 setEditingName(true);
               }}
-              className="group flex items-center gap-2 text-left w-full"
-              title="Click to change your name"
+              className="group flex items-center gap-3 text-left w-full rounded-xl px-2.5 py-2 -mx-0.5 transition-colors hover:bg-white/[0.06]"
             >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[11px] font-bold text-white">
-                {name.charAt(0).toUpperCase()}
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white shadow-sm shadow-blue-500/20">
+                {name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[12px] text-white/40">Welcome back,</p>
-                <p className="text-[13px] font-semibold text-white/90 truncate group-hover:text-white transition-colors">
+                <p className="text-[13px] font-semibold text-white/90 truncate">
                   {name}
                 </p>
+                <p className="text-[11px] text-white/40">Tap to edit</p>
               </div>
+              <Pencil
+                size={13}
+                className="shrink-0 text-white/20 group-hover:text-white/50 transition-colors"
+              />
             </button>
           </div>
         )}
 
         {/* Name edit mode */}
         {!collapsed && editingName && (
-          <div className="border-b border-white/[0.06] px-5 py-3">
-            <p className="text-[11px] text-white/40 mb-1.5">Your first name</p>
+          <div className="border-b border-white/[0.06] px-5 py-3.5">
+            <p className="text-[11px] text-white/40 mb-2 font-medium">Your first name</p>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    setName(nameInput);
-                    setEditingName(false);
-                  }
+                  if (e.key === "Enter") saveName();
                   if (e.key === "Escape") setEditingName(false);
                 }}
                 autoFocus
-                className="flex-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-1.5 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-blue-400/50"
+                className="flex-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-2 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-blue-400/50"
                 placeholder="First name"
               />
               <button
-                onClick={() => {
-                  setName(nameInput);
-                  setEditingName(false);
-                }}
-                className="rounded-lg bg-blue-500/20 px-2.5 py-1.5 text-[12px] font-medium text-blue-400 hover:bg-blue-500/30 transition-colors"
+                onClick={saveName}
+                className="rounded-lg bg-blue-500/20 px-3 py-2 text-[12px] font-semibold text-blue-400 hover:bg-blue-500/30 transition-colors"
               >
                 Save
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Collapsed user avatar */}
+        {collapsed && hasName && (
+          <div className="flex justify-center py-3 border-b border-white/[0.06]">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white cursor-pointer shadow-sm shadow-blue-500/20"
+              title={name}
+            >
+              {name.charAt(0)}
             </div>
           </div>
         )}
@@ -209,7 +268,7 @@ export default function Sidebar() {
               window.dispatchEvent(new CustomEvent("open-kennion-chat"));
             }}
             title={collapsed ? "Get Help" : undefined}
-            className={`group relative flex items-center rounded-xl transition-all duration-200 ${
+            className={`group relative flex items-center rounded-xl transition-all duration-200 w-full ${
               collapsed
                 ? "justify-center px-0 py-2.5 mx-auto w-10 h-10"
                 : "gap-3 px-3 py-2.5"

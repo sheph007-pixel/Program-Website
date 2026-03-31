@@ -11,6 +11,9 @@ import {
   Paperclip,
   File,
   XCircle,
+  CheckCircle,
+  ThumbsUp,
+  AlertCircle,
 } from "lucide-react";
 import { useUserName } from "./NameContext";
 
@@ -20,7 +23,7 @@ type Message = {
 };
 
 type Attachment = {
-  file: File;
+  file: globalThis.File;
   preview?: string;
 };
 
@@ -30,6 +33,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [summaryReady, setSummaryReady] = useState(false);
   const [ticketSent, setTicketSent] = useState(false);
   const [ticketSending, setTicketSending] = useState(false);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
@@ -43,13 +47,13 @@ export default function ChatWidget() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, scrollToBottom]);
+  }, [messages, summaryReady, ticketSent, scrollToBottom]);
 
   useEffect(() => {
-    if (open && inputRef.current) {
+    if (open && inputRef.current && !summaryReady && !ticketSent) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [open]);
+  }, [open, summaryReady, ticketSent]);
 
   useEffect(() => {
     const handler = () => setOpen(true);
@@ -115,7 +119,7 @@ export default function ChatWidget() {
         try {
           const parsed = JSON.parse(data);
           fullText += parsed.text;
-          const cleanText = fullText.replace(/\n?TICKET_READY\n?/g, "").trim();
+          const cleanText = fullText.replace(/\n?SUMMARY_READY\n?/g, "").trim();
 
           setMessages((prev) => {
             const updated = [...prev];
@@ -128,15 +132,16 @@ export default function ChatWidget() {
       }
     }
 
-    // If confirmed and ticket ready, auto-submit
-    if (fullText.includes("TICKET_READY")) {
-      await autoSubmitTicket();
+    // If the AI presented a summary, show confirm/deny buttons
+    if (fullText.includes("SUMMARY_READY")) {
+      setSummaryReady(true);
     }
 
     return fullText;
   };
 
-  const autoSubmitTicket = async () => {
+  const handleConfirm = async () => {
+    setSummaryReady(false);
     setTicketSending(true);
 
     const allText = messages
@@ -147,7 +152,6 @@ export default function ChatWidget() {
       .map((m) => m.content)
       .join("\n");
 
-    // Extract fields
     const extract = (patterns: RegExp[]) => {
       for (const msg of [...messages].reverse().filter((m) => m.role === "user")) {
         for (const p of patterns) {
@@ -162,7 +166,7 @@ export default function ChatWidget() {
     const phoneMatch = extract([/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/]);
 
     try {
-      const res = await fetch("/api/support-ticket", {
+      await fetch("/api/support-ticket", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -174,14 +178,40 @@ export default function ChatWidget() {
           chatTranscript: allText,
         }),
       });
-
-      if (res.ok) {
-        setTicketSent(true);
-      }
     } catch {
-      // silent - the AI already told them it was sent
+      // silent
     } finally {
       setTicketSending(false);
+      setTicketSent(true);
+    }
+  };
+
+  const handleDeny = async () => {
+    setSummaryReady(false);
+    // Send "something's not right" to the AI so it can fix
+    const fixMsg: Message = { role: "user", content: "Something's not right. Let me correct it." };
+    const newMessages = [...messages, fixMsg];
+    setMessages(newMessages);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+      if (!res.ok) throw new Error();
+      await streamResponse(res);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "No problem! What needs to be changed?",
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -189,7 +219,6 @@ export default function ChatWidget() {
     const text = input.trim();
     if (!text || loading) return;
 
-    // If they attached files, note it in the message
     let fullMessage = text;
     if (attachments.length > 0) {
       const fileNames = attachments.map((a) => a.file.name).join(", ");
@@ -235,11 +264,10 @@ export default function ChatWidget() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-
     const newAttachments: Attachment[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (file.size > 10 * 1024 * 1024) continue; // 10MB limit
+      if (file.size > 10 * 1024 * 1024) continue;
       const att: Attachment = { file };
       if (file.type.startsWith("image/")) {
         att.preview = URL.createObjectURL(file);
@@ -261,6 +289,7 @@ export default function ChatWidget() {
 
   const resetChat = () => {
     setMessages([]);
+    setSummaryReady(false);
     setTicketSent(false);
     setAttachments([]);
   };
@@ -271,7 +300,7 @@ export default function ChatWidget() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-5 right-5 z-[60] flex items-center gap-2.5 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 pl-4 pr-5 py-3 text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/40 md:bottom-6 md:right-6"
+          className="fixed bottom-5 right-5 z-[60] flex items-center gap-2.5 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 pl-4 pr-5 py-3 text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/40 md:bottom-6 md:right-6 mb-safe"
           aria-label="Get Help"
         >
           <MessageCircle size={20} strokeWidth={1.8} />
@@ -350,10 +379,46 @@ export default function ChatWidget() {
               </div>
             )}
 
+            {/* Confirm / Deny buttons */}
+            {summaryReady && !ticketSent && !ticketSending && (
+              <div className="flex flex-col gap-2 pt-2 pb-1 animate-fade-in-up">
+                <button
+                  onClick={handleConfirm}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 text-[14px] font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:shadow-lg active:scale-[0.98]"
+                >
+                  <ThumbsUp size={16} strokeWidth={2} />
+                  Looks Good, Send It!
+                </button>
+                <button
+                  onClick={handleDeny}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 text-[13px] font-medium text-slate-500 transition-all hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98]"
+                >
+                  <AlertCircle size={14} strokeWidth={2} />
+                  Something's Not Right
+                </button>
+              </div>
+            )}
+
+            {/* Sending indicator */}
             {ticketSending && (
-              <div className="flex items-center justify-center gap-2 py-2">
-                <Loader2 size={14} className="animate-spin text-blue-500" />
-                <span className="text-[12px] text-slate-400">Sending to the Kennion team...</span>
+              <div className="flex items-center justify-center gap-2 py-3">
+                <Loader2 size={16} className="animate-spin text-blue-500" />
+                <span className="text-[13px] text-slate-500 font-medium">Sending to the Kennion team...</span>
+              </div>
+            )}
+
+            {/* Success state */}
+            {ticketSent && (
+              <div className="flex flex-col items-center text-center py-4 animate-fade-in-up">
+                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
+                  <CheckCircle size={28} className="text-emerald-500" strokeWidth={1.5} />
+                </div>
+                <h4 className="text-[15px] font-bold text-[var(--kennion-navy)] mb-1">
+                  Request Sent!
+                </h4>
+                <p className="text-[13px] text-slate-500 max-w-[280px] leading-relaxed">
+                  A member of the Kennion team will reach out to you personally. Our team is available Monday through Friday, 8 AM to 5 PM.
+                </p>
               </div>
             )}
 
@@ -361,7 +426,7 @@ export default function ChatWidget() {
           </div>
 
           {/* Attachments preview */}
-          {attachments.length > 0 && (
+          {attachments.length > 0 && !summaryReady && !ticketSent && (
             <div className="shrink-0 border-t border-slate-100 bg-slate-50 px-3 py-2 flex flex-wrap gap-2">
               {attachments.map((att, i) => (
                 <div
@@ -369,19 +434,12 @@ export default function ChatWidget() {
                   className="relative flex items-center gap-1.5 rounded-lg bg-white border border-slate-200 px-2 py-1.5 text-[11px] text-slate-600"
                 >
                   {att.preview ? (
-                    <img
-                      src={att.preview}
-                      alt=""
-                      className="h-6 w-6 rounded object-cover"
-                    />
+                    <img src={att.preview} alt="" className="h-6 w-6 rounded object-cover" />
                   ) : (
                     <File size={12} className="text-slate-400" />
                   )}
                   <span className="max-w-[100px] truncate">{att.file.name}</span>
-                  <button
-                    onClick={() => removeAttachment(i)}
-                    className="ml-0.5 text-slate-400 hover:text-red-500 transition-colors"
-                  >
+                  <button onClick={() => removeAttachment(i)} className="ml-0.5 text-slate-400 hover:text-red-500 transition-colors">
                     <XCircle size={12} />
                   </button>
                 </div>
@@ -389,66 +447,78 @@ export default function ChatWidget() {
             </div>
           )}
 
-          {/* Input area */}
-          <div className="shrink-0 border-t border-slate-200 bg-white p-3 sm:rounded-b-2xl">
-            <div className="flex items-end gap-2">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={ticketSent}
-                className="flex h-10 w-8 shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-blue-500 disabled:opacity-30"
-                aria-label="Attach file"
-                title="Attach a file"
-              >
-                <Paperclip size={18} strokeWidth={1.8} />
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                onChange={handleFileSelect}
-                className="hidden"
-                accept="image/*,.pdf,.doc,.docx,.txt"
-              />
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={ticketSent ? "Chat complete. Thank you!" : "Type your message..."}
-                disabled={ticketSent}
-                rows={1}
-                className="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-400/20 disabled:opacity-50"
-                style={{ maxHeight: 80 }}
-              />
-              <button
-                onClick={sendMessage}
-                disabled={!input.trim() || loading || ticketSent}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white transition-all hover:shadow-md disabled:opacity-30 disabled:hover:shadow-none"
-                aria-label="Send message"
-              >
-                {loading ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : (
-                  <Send size={16} strokeWidth={1.8} />
-                )}
-              </button>
-            </div>
-            <div className="mt-2 flex justify-between items-center">
-              <span className="text-[10px] text-slate-300">
-                {attachments.length > 0
-                  ? `${attachments.length} file${attachments.length > 1 ? "s" : ""} attached`
-                  : ""}
-              </span>
-              {messages.length > 2 && !ticketSent && (
+          {/* Input area - hidden when summary is showing or ticket sent */}
+          {!summaryReady && !ticketSent && (
+            <div className="shrink-0 border-t border-slate-200 bg-white p-3 sm:rounded-b-2xl">
+              <div className="flex items-end gap-2">
                 <button
-                  onClick={resetChat}
-                  className="text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-500"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex h-10 w-8 shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-blue-500"
+                  aria-label="Attach file"
+                  title="Attach a file"
                 >
-                  Start over
+                  <Paperclip size={18} strokeWidth={1.8} />
                 </button>
-              )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  accept="image/*,.pdf,.doc,.docx,.txt"
+                />
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Type your message..."
+                  rows={1}
+                  className="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-400/20"
+                  style={{ maxHeight: 80 }}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || loading}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white transition-all hover:shadow-md disabled:opacity-30 disabled:hover:shadow-none"
+                  aria-label="Send message"
+                >
+                  {loading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Send size={16} strokeWidth={1.8} />
+                  )}
+                </button>
+              </div>
+              <div className="mt-2 flex justify-between items-center">
+                <span className="text-[10px] text-slate-300">
+                  {attachments.length > 0
+                    ? `${attachments.length} file${attachments.length > 1 ? "s" : ""} attached`
+                    : ""}
+                </span>
+                {messages.length > 2 && (
+                  <button
+                    onClick={resetChat}
+                    className="text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-500"
+                  >
+                    Start over
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Post-submission footer */}
+          {ticketSent && (
+            <div className="shrink-0 border-t border-slate-200 bg-white p-4 sm:rounded-b-2xl text-center">
+              <button
+                onClick={resetChat}
+                className="rounded-xl border border-slate-200 px-5 py-2.5 text-[13px] font-medium text-slate-500 transition-all hover:bg-slate-50"
+              >
+                Start a New Conversation
+              </button>
+            </div>
+          )}
         </div>
       )}
     </>

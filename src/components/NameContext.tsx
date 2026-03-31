@@ -20,6 +20,11 @@ export function useUserName() {
   return useContext(NameContext);
 }
 
+function capitalize(s: string) {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
+
 export function NameProvider({ children }: { children: ReactNode }) {
   const [name, setNameState] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -31,7 +36,7 @@ export function NameProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setName = useCallback((n: string) => {
-    const trimmed = n.trim();
+    const trimmed = capitalize(n.trim());
     setNameState(trimmed);
     if (trimmed) {
       localStorage.setItem("kennion_name", trimmed);
