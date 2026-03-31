@@ -1,5 +1,8 @@
+"use client";
+
 import { CreditCard, Monitor, LogIn, ArrowUpRight, Zap } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
+import { useUserName } from "@/components/NameContext";
 
 const buttons = [
   {
@@ -35,13 +38,17 @@ const highlights = [
 ];
 
 export default function VisaPage() {
+  const { name } = useUserName();
+
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/25">
           <Zap size={26} className="text-white" strokeWidth={1.8} />
         </div>
-        <h1 className="page-title">Paytient Visa</h1>
+        <h1 className="page-title">
+          {name ? `${name}, Meet Your Paytient Card` : "Paytient Visa"}
+        </h1>
         <p className="page-subtitle">
           Enrolled in any benefits? You can get the Paytient Visa card for free
           as part of the Kennion program. Use it to pay for medical, dental,

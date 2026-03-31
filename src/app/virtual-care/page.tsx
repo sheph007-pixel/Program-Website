@@ -1,4 +1,7 @@
+"use client";
+
 import { Smartphone, Play, ArrowUpRight, Heart, Stethoscope, ShieldCheck, Activity } from "lucide-react";
+import { useUserName } from "@/components/NameContext";
 
 const benefits = [
   {
@@ -50,13 +53,17 @@ const actionButtons = [
 ];
 
 export default function VirtualCarePage() {
+  const { name } = useUserName();
+
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-500 shadow-lg shadow-teal-500/25">
           <Heart size={26} className="text-white" strokeWidth={1.8} />
         </div>
-        <h1 className="page-title">Free Virtual Care</h1>
+        <h1 className="page-title">
+          {name ? `${name}, You Have Free Virtual Care` : "Free Virtual Care"}
+        </h1>
         <p className="page-subtitle">
           One of the biggest perks of the Kennion program. Through HealthJoy
           Telemed, you and your family get free, unlimited access to doctors

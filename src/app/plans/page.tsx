@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
+import { useUserName } from "@/components/NameContext";
 
 type Plan = { name: string; summaryUrl: string };
 
@@ -77,6 +78,7 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
 };
 
 export default function PlansPage() {
+  const { name } = useUserName();
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
 
   const activePlans = staticPlans[activeCategory] || [];
@@ -85,11 +87,13 @@ export default function PlansPage() {
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
-        <h1 className="page-title">Plans</h1>
+        <h1 className="page-title">
+          {name ? `${name}, Explore Your Benefits` : "Plans"}
+        </h1>
         <p className="page-subtitle">
           Browse all benefits available through the Kennion program.
           These are the plans offered across all groups. Once you enroll,
-          you'll see the specific plans and rates for your group.
+          you&apos;ll see the specific plans and rates for your group.
         </p>
       </div>
 

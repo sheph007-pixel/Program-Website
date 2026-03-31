@@ -1,13 +1,20 @@
+"use client";
+
 import { Monitor, ArrowUpRight } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
+import { useUserName } from "@/components/NameContext";
 
 export default function EnrollmentPage() {
+  const { name } = useUserName();
+
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
-        <h1 className="page-title">Enrollment</h1>
+        <h1 className="page-title">
+          {name ? `Ready To Enroll, ${name}?` : "Enrollment"}
+        </h1>
         <p className="page-subtitle">
-          Ready to enroll? Log in to the Enrollment Portal to see the specific
+          Log in to the Enrollment Portal to see the specific
           plans and rates available for your group. Everything is customized for
           you based on your employer. Not sure where to start? Call the
           Enrollment Help Line and a Benefits Coach will walk you through it.

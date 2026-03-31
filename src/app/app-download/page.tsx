@@ -1,5 +1,8 @@
+"use client";
+
 import { Download, HelpCircle, Play, CheckCircle, ArrowUpRight, Sparkles } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
+import { useUserName } from "@/components/NameContext";
 
 const buttons = [
   {
@@ -33,13 +36,17 @@ const buttons = [
 ];
 
 export default function AppDownloadPage() {
+  const { name } = useUserName();
+
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-purple-500 shadow-lg shadow-violet-500/25">
           <Sparkles size={26} className="text-white" strokeWidth={1.8} />
         </div>
-        <h1 className="page-title">HealthJoy App</h1>
+        <h1 className="page-title">
+          {name ? `${name}, Meet Your Benefits App` : "HealthJoy App"}
+        </h1>
         <p className="page-subtitle">
           Once you&apos;re enrolled, download the HealthJoy app. It becomes your
           personalized benefits hub, showing only the plans you&apos;re enrolled in,

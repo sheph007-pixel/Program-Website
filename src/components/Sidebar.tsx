@@ -65,7 +65,7 @@ export default function Sidebar() {
         <img
           src="/kennion-logo-white.svg"
           alt="Kennion"
-          className="h-6"
+          className="h-7"
         />
         {hasName && (
           <button
@@ -147,9 +147,9 @@ export default function Sidebar() {
           <X size={20} />
         </button>
 
-        {/* Logo */}
+        {/* Logo - bigger and clearer */}
         <div className={`flex items-center border-b border-white/[0.06] transition-all duration-300 ${
-          collapsed ? "justify-center px-3 py-5" : "px-5 py-5"
+          collapsed ? "justify-center px-3 py-5" : "px-5 py-6"
         }`}>
           {collapsed ? (
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/20">
@@ -162,76 +162,10 @@ export default function Sidebar() {
             <img
               src="/kennion-logo-white.svg"
               alt="Kennion Benefits Program"
-              className="h-9 w-auto"
+              className="h-11 w-auto"
             />
           )}
         </div>
-
-        {/* User profile section */}
-        {!collapsed && hasName && !editingName && (
-          <div className="border-b border-white/[0.06] px-4 py-3.5">
-            <button
-              onClick={() => {
-                setNameInput(name);
-                setEditingName(true);
-              }}
-              className="group flex items-center gap-3 text-left w-full rounded-xl px-2.5 py-2 -mx-0.5 transition-colors hover:bg-white/[0.06]"
-            >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white shadow-sm shadow-blue-500/20">
-                {name.charAt(0)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-white/90 truncate">
-                  {name}
-                </p>
-                <p className="text-[11px] text-white/40">Tap to edit</p>
-              </div>
-              <Pencil
-                size={13}
-                className="shrink-0 text-white/20 group-hover:text-white/50 transition-colors"
-              />
-            </button>
-          </div>
-        )}
-
-        {/* Name edit mode */}
-        {!collapsed && editingName && (
-          <div className="border-b border-white/[0.06] px-5 py-3.5">
-            <p className="text-[11px] text-white/40 mb-2 font-medium">Your first name</p>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") saveName();
-                  if (e.key === "Escape") setEditingName(false);
-                }}
-                autoFocus
-                className="flex-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-2 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-blue-400/50"
-                placeholder="First name"
-              />
-              <button
-                onClick={saveName}
-                className="rounded-lg bg-blue-500/20 px-3 py-2 text-[12px] font-semibold text-blue-400 hover:bg-blue-500/30 transition-colors"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Collapsed user avatar */}
-        {collapsed && hasName && (
-          <div className="flex justify-center py-3 border-b border-white/[0.06]">
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white cursor-pointer shadow-sm shadow-blue-500/20"
-              title={name}
-            >
-              {name.charAt(0)}
-            </div>
-          </div>
-        )}
 
         {/* Navigation */}
         <nav className={`flex-1 space-y-1 overflow-y-auto py-4 ${collapsed ? "px-2" : "px-3"}`}>
@@ -298,6 +232,72 @@ export default function Sidebar() {
           </button>
         </nav>
 
+        {/* User profile section - at bottom, with clear border */}
+        {!collapsed && hasName && !editingName && (
+          <div className="border-t border-white/[0.08] px-4 py-3">
+            <button
+              onClick={() => {
+                setNameInput(name);
+                setEditingName(true);
+              }}
+              className="group flex items-center gap-3 text-left w-full rounded-xl px-2.5 py-2.5 -mx-0.5 transition-colors hover:bg-white/[0.06]"
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white shadow-sm shadow-blue-500/20">
+                {name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-semibold text-white/90 truncate">
+                  {name}
+                </p>
+                <p className="text-[11px] text-white/40">Tap to edit</p>
+              </div>
+              <Pencil
+                size={13}
+                className="shrink-0 text-white/20 group-hover:text-white/50 transition-colors"
+              />
+            </button>
+          </div>
+        )}
+
+        {/* Name edit mode - at bottom */}
+        {!collapsed && editingName && (
+          <div className="border-t border-white/[0.08] px-5 py-3.5">
+            <p className="text-[11px] text-white/40 mb-2 font-medium">Your first name</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveName();
+                  if (e.key === "Escape") setEditingName(false);
+                }}
+                autoFocus
+                className="flex-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-2 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-blue-400/50"
+                placeholder="First name"
+              />
+              <button
+                onClick={saveName}
+                className="rounded-lg bg-blue-500/20 px-3 py-2 text-[12px] font-semibold text-blue-400 hover:bg-blue-500/30 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Collapsed user avatar - at bottom */}
+        {collapsed && hasName && (
+          <div className="flex justify-center py-3 border-t border-white/[0.08]">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white cursor-pointer shadow-sm shadow-blue-500/20"
+              title={name}
+            >
+              {name.charAt(0)}
+            </div>
+          </div>
+        )}
+
         {/* Collapse toggle (desktop only) */}
         <div className="hidden border-t border-white/[0.06] p-3 md:block">
           <button
@@ -320,7 +320,7 @@ export default function Sidebar() {
 
         {/* Footer */}
         {!collapsed && (
-          <div className="border-t border-white/[0.06] px-5 py-4 text-[11px] text-white/30">
+          <div className="border-t border-white/[0.06] px-5 py-3 text-[11px] text-white/30">
             &copy; {new Date().getFullYear()} Kennion Benefits Program
           </div>
         )}
