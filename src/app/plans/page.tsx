@@ -157,7 +157,7 @@ export default function PlansPage() {
           <div className="divider" />
           <div className="badge mb-4 bg-slate-100 text-slate-500">
             <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-            Need Help?
+            Get Help
           </div>
           <div className="flex flex-col gap-3 animate-fade-in-up">
             {categorySupport[activeCategory]!.map((info) =>

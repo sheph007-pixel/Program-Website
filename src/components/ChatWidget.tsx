@@ -328,7 +328,7 @@ export default function ChatWidget() {
           aria-label="Get Help"
         >
           <MessageCircle size={20} strokeWidth={1.8} />
-          <span className="text-[13px] font-semibold">Need Help?</span>
+          <span className="text-[13px] font-semibold">Get Help</span>
         </button>
       )}
 
@@ -349,10 +349,10 @@ export default function ChatWidget() {
             </div>
             <button
               onClick={handleClose}
-              className="rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              className="rounded-xl p-2 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
               aria-label="Close chat"
             >
-              <X size={18} />
+              <X size={22} strokeWidth={2.5} />
             </button>
           </div>
 
