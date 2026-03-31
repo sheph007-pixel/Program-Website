@@ -125,22 +125,22 @@ const links = [
 
 export default function AdditionalLinksPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16">
-      <h1 className="mb-2 text-3xl font-bold text-[var(--kennion-navy)]">
+    <div className="mx-auto max-w-[680px] px-5 py-10 sm:py-14">
+      <h1 className="page-title mb-2 text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
         Additional Links
       </h1>
-      <p className="mb-10 text-gray-600">
+      <p className="mb-8 text-[15px] text-gray-500">
         Quick access to all your benefits resources, portals, apps, and support
         contacts.
       </p>
 
-      <div className="space-y-10">
+      <div className="space-y-8">
         {links.map((section) => (
           <div key={section.category}>
-            <h2 className="mb-4 text-lg font-semibold text-[var(--kennion-navy)]">
+            <h2 className="mb-3 text-base font-semibold text-[var(--kennion-navy)]">
               {section.category}
             </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               {section.items.map((item) => (
                 <a
                   key={item.title}
@@ -151,16 +151,16 @@ export default function AdditionalLinksPage() {
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  className="group flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-[var(--kennion-blue)] hover:shadow-md"
+                  className="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-[var(--kennion-blue)] hover:shadow-md"
                 >
-                  <h3 className="mb-1 text-sm font-semibold text-[var(--kennion-navy)]">
+                  <h3 className="mb-1 text-[13px] font-semibold text-[var(--kennion-navy)]">
                     {item.title}
                   </h3>
-                  <p className="mb-3 flex-1 text-xs leading-relaxed text-gray-500">
+                  <p className="mb-2 flex-1 text-[11px] leading-relaxed text-gray-400">
                     {item.desc}
                   </p>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--kennion-blue)]">
-                    Open <ExternalLink size={12} />
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[var(--kennion-blue)]">
+                    Open <ExternalLink size={11} />
                   </span>
                 </a>
               ))}

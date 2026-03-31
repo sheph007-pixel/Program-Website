@@ -29,31 +29,30 @@ const enrollSteps = [
 
 export default function EnrollmentPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="mb-2 text-3xl font-bold text-[var(--kennion-navy)]">
+    <div className="mx-auto max-w-[680px] px-5 py-10 sm:py-14">
+      <h1 className="page-title mb-2 text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
         Enrollment
       </h1>
-      <p className="mb-10 text-gray-600">
+      <p className="mb-8 text-[15px] text-gray-500">
         From onboarding to open enrollment, Kennion provides the tools, support,
         and service to make your enrollment easy.
       </p>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {enrollSteps.map((step) => {
-          const Icon = step.icon;
           return (
             <div
               key={step.num}
-              className="flex gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+              className="flex gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--kennion-blue)] text-lg font-bold text-white">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--kennion-blue)] text-sm font-bold text-white">
                 {step.num}
               </div>
               <div>
-                <h2 className="mb-1 text-lg font-semibold text-[var(--kennion-navy)]">
+                <h2 className="mb-1 text-base font-semibold text-[var(--kennion-navy)]">
                   {step.title}
                 </h2>
-                <p className="text-sm leading-relaxed text-gray-600">
+                <p className="text-[13px] leading-relaxed text-gray-500">
                   {step.desc}
                 </p>
               </div>
@@ -62,28 +61,28 @@ export default function EnrollmentPage() {
         })}
       </div>
 
-      <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <a
           href="https://kennionplans.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 rounded-xl bg-[var(--kennion-blue)] py-4 text-center font-semibold text-white shadow-md transition-all hover:bg-[var(--kennion-blue-hover)] hover:shadow-lg"
+          className="flex-1 rounded-lg bg-[var(--kennion-blue)] py-3.5 text-center text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[var(--kennion-blue-hover)] hover:shadow-lg"
         >
           Go to Enrollment Portal
         </a>
         <a
           href="tel:8448396740"
-          className="flex-1 rounded-xl border-2 border-[var(--kennion-blue)] py-4 text-center font-semibold text-[var(--kennion-blue)] transition-all hover:bg-[var(--kennion-light)]"
+          className="flex-1 rounded-lg border-2 border-[var(--kennion-blue)] py-3.5 text-center text-[15px] font-semibold text-[var(--kennion-blue)] transition-all hover:bg-[var(--kennion-light)]"
         >
           Call 844-839-6740
         </a>
       </div>
 
-      <div className="mt-8 rounded-xl bg-[var(--kennion-light)] p-6">
-        <h3 className="mb-2 font-semibold text-[var(--kennion-navy)]">
+      <div className="mt-6 rounded-xl bg-[var(--kennion-light)] p-5">
+        <h3 className="mb-1.5 text-[15px] font-semibold text-[var(--kennion-navy)]">
           Current Members
         </h3>
-        <p className="text-sm text-gray-600">
+        <p className="text-[13px] leading-relaxed text-gray-500">
           If you are a current HealthEZ member, you will receive a new medical
           ID card after open enrollment closes. Need a replacement? Log into
           your myHealthEZ account to request a new card or download a digital

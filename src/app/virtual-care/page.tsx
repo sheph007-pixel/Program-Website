@@ -59,32 +59,32 @@ const conditions = [
 
 export default function VirtualCarePage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="mb-2 text-3xl font-bold text-[var(--kennion-navy)]">
+    <div className="mx-auto max-w-[680px] px-5 py-10 sm:py-14">
+      <h1 className="page-title mb-2 text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
         Free Virtual Care
       </h1>
-      <p className="mb-10 text-gray-600">
+      <p className="mb-8 text-[15px] text-gray-500">
         Access board-certified doctors 24/7 from anywhere. No waiting rooms, no
         drive time. Get diagnosed, treated, and prescribed — all virtually.
       </p>
 
       {/* Features */}
-      <div className="mb-10 grid gap-5 sm:grid-cols-2">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2">
         {features.map((f) => {
           const Icon = f.icon;
           return (
             <div
               key={f.title}
-              className="flex gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+              className="flex gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--kennion-light)] text-[var(--kennion-blue)]">
-                <Icon size={20} />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--kennion-light)] text-[var(--kennion-blue)]">
+                <Icon size={18} strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="mb-1 text-sm font-semibold text-[var(--kennion-navy)]">
+                <h3 className="mb-0.5 text-[13px] font-semibold text-[var(--kennion-navy)]">
                   {f.title}
                 </h3>
-                <p className="text-xs leading-relaxed text-gray-600">
+                <p className="text-[12px] leading-relaxed text-gray-500">
                   {f.desc}
                 </p>
               </div>
@@ -94,15 +94,15 @@ export default function VirtualCarePage() {
       </div>
 
       {/* Common conditions */}
-      <div className="mb-10 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-[var(--kennion-navy)]">
+      <div className="mb-8 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 className="mb-3 text-base font-semibold text-[var(--kennion-navy)]">
           Common Conditions Treated
         </h2>
         <div className="flex flex-wrap gap-2">
           {conditions.map((c) => (
             <span
               key={c}
-              className="rounded-full bg-[var(--kennion-light)] px-3 py-1.5 text-xs font-medium text-[var(--kennion-navy)]"
+              className="rounded-full bg-[var(--kennion-light)] px-3 py-1 text-[11px] font-medium text-[var(--kennion-navy)]"
             >
               {c}
             </span>
@@ -111,39 +111,42 @@ export default function VirtualCarePage() {
       </div>
 
       {/* How it works */}
-      <div className="mb-10 rounded-xl bg-[var(--kennion-light)] p-6">
-        <h2 className="mb-4 text-lg font-semibold text-[var(--kennion-navy)]">
+      <div className="mb-8 rounded-xl bg-[var(--kennion-light)] p-5">
+        <h2 className="mb-3 text-base font-semibold text-[var(--kennion-navy)]">
           How It Works
         </h2>
-        <div className="space-y-4">
-          <div className="flex items-start gap-3">
+        <div className="space-y-3">
+          <div className="flex items-start gap-2.5">
             <Stethoscope
-              size={20}
+              size={18}
               className="mt-0.5 shrink-0 text-[var(--kennion-blue)]"
+              strokeWidth={1.5}
             />
-            <p className="text-sm text-gray-600">
-              <strong>Urgent Care:</strong> Connect with a doctor in under 10
+            <p className="text-[13px] text-gray-500">
+              <strong className="text-[var(--kennion-navy)]">Urgent Care:</strong> Connect with a doctor in under 10
               minutes for common medical concerns. Available 24/7/365.
             </p>
           </div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2.5">
             <Brain
-              size={20}
+              size={18}
               className="mt-0.5 shrink-0 text-[var(--kennion-blue)]"
+              strokeWidth={1.5}
             />
-            <p className="text-sm text-gray-600">
-              <strong>Behavioral Health:</strong> Schedule appointments with
+            <p className="text-[13px] text-gray-500">
+              <strong className="text-[var(--kennion-navy)]">Behavioral Health:</strong> Schedule appointments with
               licensed psychiatrists and therapists for ongoing mental health
               support.
             </p>
           </div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2.5">
             <Phone
-              size={20}
+              size={18}
               className="mt-0.5 shrink-0 text-[var(--kennion-blue)]"
+              strokeWidth={1.5}
             />
-            <p className="text-sm text-gray-600">
-              <strong>Follow-up Care:</strong> Personalized, ongoing
+            <p className="text-[13px] text-gray-500">
+              <strong className="text-[var(--kennion-navy)]">Follow-up Care:</strong> Personalized, ongoing
               communication ensures you get the follow-up care you need.
             </p>
           </div>
@@ -154,7 +157,7 @@ export default function VirtualCarePage() {
         href="https://recurohealth.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full rounded-xl bg-[var(--kennion-blue)] py-4 text-center font-semibold text-white shadow-md transition-all hover:bg-[var(--kennion-blue-hover)] hover:shadow-lg"
+        className="block w-full rounded-lg bg-[var(--kennion-blue)] py-3.5 text-center text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[var(--kennion-blue-hover)] hover:shadow-lg"
       >
         Access Virtual Care Now
       </a>

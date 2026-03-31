@@ -8,8 +8,8 @@ import {
   ClipboardList,
   Smartphone,
   CreditCard,
-  Heart,
-  Grid3X3,
+  Stethoscope,
+  LayoutGrid,
   Menu,
   X,
 } from "lucide-react";
@@ -21,8 +21,8 @@ const navItems = [
   { href: "/enrollment", label: "Enrollment", icon: ClipboardList },
   { href: "/app-download", label: "App", icon: Smartphone },
   { href: "/visa", label: "Visa", icon: CreditCard },
-  { href: "/virtual-care", label: "Free Virtual Care", icon: Heart },
-  { href: "/additional-links", label: "Additional Links", icon: Grid3X3 },
+  { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
+  { href: "/additional-links", label: "Additional Links", icon: LayoutGrid },
 ];
 
 export default function Sidebar() {
@@ -50,9 +50,10 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 flex h-full w-60 flex-col bg-[var(--kennion-navy)] text-white transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 flex h-full flex-col bg-[var(--kennion-navy)] text-white transition-transform duration-300 md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{ width: "var(--sidebar-width)" }}
       >
         {/* Close button (mobile) */}
         <button
@@ -64,22 +65,22 @@ export default function Sidebar() {
         </button>
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 pt-6 pb-8">
-          <div className="flex h-9 w-9 items-center justify-center rounded bg-white/20 text-sm font-bold">
+        <div className="flex items-center gap-2.5 px-4 pt-5 pb-6">
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-[var(--kennion-blue)] text-xs font-bold text-white">
             K
           </div>
           <div>
-            <div className="text-base font-bold leading-tight tracking-wide">
+            <div className="text-sm font-bold leading-tight tracking-wide">
               kennion
             </div>
-            <div className="text-[10px] tracking-widest text-white/70">
+            <div className="text-[9px] tracking-wider text-blue-300" style={{ borderBottom: "1px solid #3b82f6", paddingBottom: "2px" }}>
               Benefit Advisors
             </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 px-3">
+        <nav className="flex-1 space-y-0.5 px-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -88,13 +89,13 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-colors ${
                   isActive
                     ? "bg-white/15 font-medium text-white"
-                    : "text-white/75 hover:bg-white/10 hover:text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
                 }`}
               >
-                <Icon size={18} />
+                <Icon size={16} strokeWidth={1.5} />
                 {item.label}
               </Link>
             );
@@ -102,7 +103,7 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-white/10 px-5 py-4 text-xs text-white/50">
+        <div className="border-t border-white/10 px-4 py-3 text-[10px] text-white/40">
           &copy; {new Date().getFullYear()} Kennion Benefit Advisors
         </div>
       </aside>
