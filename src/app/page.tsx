@@ -10,6 +10,7 @@ import {
   HelpCircle,
   ArrowRight,
 } from "lucide-react";
+import { useUserName } from "@/components/NameContext";
 
 const steps = [
   {
@@ -70,6 +71,8 @@ const steps = [
 ];
 
 export default function HomePage() {
+  const { name } = useUserName();
+
   const handleClick = (step: (typeof steps)[number]) => {
     if (step.chat) {
       window.dispatchEvent(new CustomEvent("open-kennion-chat"));
@@ -82,10 +85,12 @@ export default function HomePage() {
         {/* Header */}
         <div className="mb-5 text-center animate-fade-in-up">
           <h1 className="text-[26px] font-extrabold tracking-tight text-[var(--kennion-navy)] sm:text-[32px]" style={{ letterSpacing: "-0.02em" }}>
-            Your Benefits Program
+            {name ? `Hey ${name}, Welcome!` : "Your Benefits Program"}
           </h1>
           <p className="mt-1.5 text-[14px] text-slate-500 sm:text-[15px]">
-            Welcome to the Kennion Benefits Program. Whether you're new or already enrolled, everything you need is right here.
+            {name
+              ? "Everything you need to explore your benefits, enroll, and get care is right here."
+              : "Welcome to the Kennion Benefits Program. Whether you're new or already enrolled, everything you need is right here."}
           </p>
         </div>
 

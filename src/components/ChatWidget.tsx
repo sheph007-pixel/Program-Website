@@ -10,6 +10,7 @@ import {
   User,
   Headphones,
 } from "lucide-react";
+import { useUserName } from "./NameContext";
 
 type Message = {
   role: "user" | "assistant";
@@ -17,6 +18,7 @@ type Message = {
 };
 
 export default function ChatWidget() {
+  const { name: userName } = useUserName();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -58,11 +60,14 @@ export default function ChatWidget() {
 
   const sendGreeting = async () => {
     setLoading(true);
+    const greeting = userName
+      ? `Hi, my name is ${userName}. I need some help.`
+      : "Hi, I need some help.";
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: "Hi, I need some help." }] }),
+        body: JSON.stringify({ messages: [{ role: "user", content: greeting }] }),
       });
 
       if (!res.ok) throw new Error();
@@ -71,7 +76,9 @@ export default function ChatWidget() {
       setMessages([
         {
           role: "assistant",
-          content: "Hey there! Welcome to Kennion Support. How can we help you today?",
+          content: userName
+            ? `Hey ${userName}! Welcome to Kennion Support. How can we help you today?`
+            : "Hey there! Welcome to Kennion Support. How can we help you today?",
         },
       ]);
     } finally {

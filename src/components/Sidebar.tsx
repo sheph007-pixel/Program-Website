@@ -16,6 +16,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useUserName } from "./NameContext";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -28,9 +29,12 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { name, setName, hasName } = useUserName();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -99,6 +103,63 @@ export default function Sidebar() {
             />
           )}
         </div>
+
+        {/* Personalized greeting */}
+        {!collapsed && hasName && !editingName && (
+          <div className="border-b border-white/[0.06] px-5 py-3">
+            <button
+              onClick={() => {
+                setNameInput(name);
+                setEditingName(true);
+              }}
+              className="group flex items-center gap-2 text-left w-full"
+              title="Click to change your name"
+            >
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[11px] font-bold text-white">
+                {name.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[12px] text-white/40">Welcome back,</p>
+                <p className="text-[13px] font-semibold text-white/90 truncate group-hover:text-white transition-colors">
+                  {name}
+                </p>
+              </div>
+            </button>
+          </div>
+        )}
+
+        {/* Name edit mode */}
+        {!collapsed && editingName && (
+          <div className="border-b border-white/[0.06] px-5 py-3">
+            <p className="text-[11px] text-white/40 mb-1.5">Your first name</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setName(nameInput);
+                    setEditingName(false);
+                  }
+                  if (e.key === "Escape") setEditingName(false);
+                }}
+                autoFocus
+                className="flex-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-1.5 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-blue-400/50"
+                placeholder="First name"
+              />
+              <button
+                onClick={() => {
+                  setName(nameInput);
+                  setEditingName(false);
+                }}
+                className="rounded-lg bg-blue-500/20 px-2.5 py-1.5 text-[12px] font-medium text-blue-400 hover:bg-blue-500/30 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Navigation */}
         <nav className={`flex-1 space-y-1 overflow-y-auto py-4 ${collapsed ? "px-2" : "px-3"}`}>
