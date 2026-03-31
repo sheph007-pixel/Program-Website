@@ -4,22 +4,22 @@ const buttons = [
   {
     label: "Download The App",
     icon: Download,
-    href: "https://www.healthjoy.com/app",
+    href: "https://healthjoy.com/download/",
   },
   {
     label: "Frequently Asked Questions",
     icon: HelpCircle,
-    href: "https://www.healthjoy.com/faq",
+    href: "https://healthjoymemberservices.zendesk.com/hc/en-us/p/FAQ",
   },
   {
     label: "Educational Videos",
     icon: Play,
-    href: "https://www.healthjoy.com/videos",
+    href: "https://healthjoymemberservices.zendesk.com/hc/en-us/p/educational-videos",
   },
   {
     label: "Activation",
     icon: CheckCircle,
-    href: "https://www.healthjoy.com/activate",
+    href: "https://mygroups.healthjoy.com/membership",
   },
 ];
 
