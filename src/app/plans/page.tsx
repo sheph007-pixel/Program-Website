@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink } from "lucide-react";
+import PhoneContact from "@/components/PhoneContact";
 
 type Plan = { name: string; summaryUrl: string };
 
@@ -57,6 +58,13 @@ const staticPlans: Record<string, Plan[]> = {
 };
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
+
+const categorySupport: Record<string, { number: string; label: string; sublabel: string; gradient: string; shadow: string } | null> = {
+  "Health Plans": { number: "(See ID Card)", label: "Health Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20" },
+  "Dental Plans": { number: "(See ID Card)", label: "Dental Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-indigo-600 to-violet-500", shadow: "shadow-violet-500/20" },
+  "Vision Plans": { number: "(800) 877-7195", label: "VSP Vision Care", sublabel: "Call VSP for vision plan support", gradient: "from-violet-600 to-purple-500", shadow: "shadow-purple-500/20" },
+  "Supplemental": null,
+};
 
 export default function PlansPage() {
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
@@ -127,6 +135,38 @@ export default function PlansPage() {
           </a>
         ))}
       </div>
+
+      {/* Support Contact for Category */}
+      {categorySupport[activeCategory] && (
+        <>
+          <div className="divider" />
+          <div className="animate-fade-in-up">
+            {categorySupport[activeCategory]!.number === "(See ID Card)" ? (
+              <div className="card flex items-center gap-4 p-5">
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${categorySupport[activeCategory]!.gradient} shadow-lg ${categorySupport[activeCategory]!.shadow}`}>
+                  <FileText size={20} className="text-white" strokeWidth={1.8} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[14px] font-bold text-[var(--kennion-navy)]">
+                    {categorySupport[activeCategory]!.label}
+                  </div>
+                  <div className="text-[12px] text-slate-400 mt-0.5">
+                    {categorySupport[activeCategory]!.sublabel}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <PhoneContact
+                number={categorySupport[activeCategory]!.number}
+                label={categorySupport[activeCategory]!.label}
+                sublabel={categorySupport[activeCategory]!.sublabel}
+                gradient={categorySupport[activeCategory]!.gradient}
+                shadow={categorySupport[activeCategory]!.shadow}
+              />
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

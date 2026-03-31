@@ -1,4 +1,5 @@
-import { Monitor, Phone, ArrowUpRight } from "lucide-react";
+import { Monitor, ArrowUpRight } from "lucide-react";
+import PhoneContact from "@/components/PhoneContact";
 
 export default function EnrollmentPage() {
   return (
@@ -36,15 +37,18 @@ export default function EnrollmentPage() {
           <span className="text-[13px] font-medium text-slate-500">Live support available now</span>
         </div>
         <p className="mb-5 text-[15px] text-slate-500">
-          Call <span className="font-semibold text-[var(--kennion-navy)]">833-614-1622</span> to get live enrollment support from your Benefits Coach
+          Call your Benefits Coach for live enrollment support.
         </p>
-        <a
-          href="tel:8336141622"
-          className="btn-primary"
-        >
-          <Phone size={20} strokeWidth={1.8} />
-          Call Enrollment Help Line
-        </a>
+      </div>
+
+      <div className="animate-fade-in-up stagger-3">
+        <PhoneContact
+          number="(833) 614-1622"
+          label="Enrollment Help Line"
+          sublabel="Live enrollment support from your Benefits Coach"
+          gradient="from-emerald-600 to-teal-500"
+          shadow="shadow-emerald-500/20"
+        />
       </div>
     </div>
   );

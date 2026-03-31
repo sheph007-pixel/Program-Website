@@ -1,4 +1,5 @@
-import { Download, HelpCircle, Play, CheckCircle, Phone, ArrowUpRight, Sparkles } from "lucide-react";
+import { Download, HelpCircle, Play, CheckCircle, ArrowUpRight, Sparkles } from "lucide-react";
+import PhoneContact from "@/components/PhoneContact";
 
 const buttons = [
   {
@@ -73,29 +74,14 @@ export default function AppDownloadPage() {
 
       {/* HealthJoy Concierge */}
       <div className="divider" />
-      <div className="card animate-fade-in-up stagger-5 flex items-center gap-4 p-5">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-500 shadow-lg shadow-purple-500/20">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-            <path d="M9 2h6l3 7H6L9 2z" />
-            <path d="M12 9v13" />
-            <path d="M8 13h8" />
-          </svg>
-        </div>
-        <div className="flex-1">
-          <div className="text-[14px] font-bold text-[var(--kennion-navy)]">
-            HealthJoy Concierge
-          </div>
-          <div className="text-[13px] text-slate-400">
-            Available 24/7 &middot; (877) 500-3212
-          </div>
-        </div>
-        <a
-          href="tel:8775003212"
-          className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-[var(--kennion-blue)] shadow-sm transition-all hover:border-blue-200 hover:bg-blue-50 hover:shadow-md"
-        >
-          <Phone size={15} strokeWidth={1.8} />
-          Call
-        </a>
+      <div className="animate-fade-in-up stagger-5">
+        <PhoneContact
+          number="(877) 500-3212"
+          label="HealthJoy Concierge"
+          sublabel="Available 24/7 for app and benefits help"
+          gradient="from-purple-600 to-fuchsia-500"
+          shadow="shadow-purple-500/20"
+        />
       </div>
     </div>
   );

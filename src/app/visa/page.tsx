@@ -1,4 +1,5 @@
 import { CreditCard, Monitor, LogIn, ArrowUpRight, Zap } from "lucide-react";
+import PhoneContact from "@/components/PhoneContact";
 
 const buttons = [
   {
@@ -81,6 +82,18 @@ export default function VisaPage() {
             </a>
           );
         })}
+      </div>
+
+      {/* Paytient Support */}
+      <div className="divider" />
+      <div className="animate-fade-in-up stagger-5">
+        <PhoneContact
+          number="(866) 345-9591"
+          label="Paytient Support"
+          sublabel="Help with your Paytient Visa card"
+          gradient="from-blue-600 to-indigo-500"
+          shadow="shadow-blue-500/20"
+        />
       </div>
     </div>
   );
