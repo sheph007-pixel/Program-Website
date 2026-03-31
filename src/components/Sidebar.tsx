@@ -296,28 +296,28 @@ export default function Sidebar() {
           </button>
         </nav>
 
-        {/* User profile section - at bottom, with clear border */}
+        {/* User profile section - at bottom, with distinct background */}
         {!collapsed && hasName && !editingName && (
-          <div className="border-t border-white/[0.08] px-4 py-3">
+          <div className="mx-3 mb-3 mt-1">
             <button
               onClick={() => {
                 setNameInput(name);
                 setEditingName(true);
               }}
-              className="group flex items-center gap-3 text-left w-full rounded-xl px-2.5 py-2.5 -mx-0.5 transition-colors hover:bg-white/[0.06]"
+              className="group flex items-center gap-3 text-left w-full rounded-2xl bg-white/[0.07] border border-white/[0.1] px-3.5 py-3 transition-all hover:bg-white/[0.12] hover:border-white/[0.15]"
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white shadow-sm shadow-blue-500/20">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-[14px] font-bold text-white shadow-md shadow-emerald-500/25">
                 {name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-white/90 truncate">
+                <p className="text-[13px] font-semibold text-white truncate">
                   {name}
                 </p>
                 <p className="text-[11px] text-white/40">Tap to edit</p>
               </div>
               <Pencil
                 size={13}
-                className="shrink-0 text-white/20 group-hover:text-white/50 transition-colors"
+                className="shrink-0 text-white/30 group-hover:text-white/60 transition-colors"
               />
             </button>
           </div>
@@ -352,9 +352,9 @@ export default function Sidebar() {
 
         {/* Collapsed user avatar - at bottom */}
         {collapsed && hasName && (
-          <div className="flex justify-center py-3 border-t border-white/[0.08]">
+          <div className="flex justify-center py-3">
             <div
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[13px] font-bold text-white cursor-pointer shadow-sm shadow-blue-500/20"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-[13px] font-bold text-white cursor-pointer shadow-md shadow-emerald-500/25"
               title={name}
             >
               {name.charAt(0)}
