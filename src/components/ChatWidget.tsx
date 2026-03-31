@@ -14,6 +14,35 @@ import {
 } from "lucide-react";
 import { useUserName } from "./NameContext";
 
+/** Render markdown links [text](url) and bare URLs as clickable <a> tags */
+function renderMessageContent(content: string, isUser: boolean) {
+  // Split on markdown links: [text](url)
+  const parts = content.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return parts.map((part, i) => {
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (linkMatch) {
+      const [, text, url] = linkMatch;
+      const isTel = url.startsWith("tel:");
+      return (
+        <a
+          key={i}
+          href={url}
+          target={isTel ? undefined : "_blank"}
+          rel={isTel ? undefined : "noopener noreferrer"}
+          className={`underline font-medium transition-colors ${
+            isUser
+              ? "text-white/90 hover:text-white"
+              : "text-blue-600 hover:text-blue-700"
+          }`}
+        >
+          {text}
+        </a>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 type Message = {
   role: "user" | "assistant";
   content: string;
@@ -315,7 +344,7 @@ export default function ChatWidget() {
                       : "bg-white text-slate-700 rounded-tl-md shadow-sm border border-slate-100"
                   }`}
                 >
-                  {msg.content}
+                  {renderMessageContent(msg.content, msg.role === "user")}
                 </div>
               </div>
             ))}
