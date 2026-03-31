@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
-import ClientProviders from "@/components/ClientProviders";
+import LayoutShell from "@/components/LayoutShell";
 
 export const metadata: Metadata = {
   title: "KENNION Benefits Program",
@@ -25,15 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClientProviders>
-          <Sidebar />
-          <main
-            className="min-h-screen bg-[#f8fafc] pt-14 pb-16 transition-all duration-300 ease-in-out md:pt-0 md:pb-0"
-            style={{ marginLeft: "var(--current-sidebar-width, var(--sidebar-width))" }}
-          >
-            {children}
-          </main>
-        </ClientProviders>
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );

@@ -14,9 +14,8 @@ import {
 } from "lucide-react";
 import { useUserName } from "./NameContext";
 
-/** Render markdown links [text](url) and bare URLs as clickable <a> tags */
+/** Render markdown links [text](url) as clickable <a> tags */
 function renderMessageContent(content: string, isUser: boolean) {
-  // Split on markdown links: [text](url)
   const parts = content.split(/(\[[^\]]+\]\([^)]+\))/g);
   return parts.map((part, i) => {
     const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
@@ -57,6 +56,7 @@ export default function ChatWidget() {
   const [summaryReady, setSummaryReady] = useState(false);
   const [ticketSent, setTicketSent] = useState(false);
   const [ticketSending, setTicketSending] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -88,6 +88,16 @@ export default function ChatWidget() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  const finalizeSession = (sid?: string | null) => {
+    const id = sid || sessionId;
+    if (!id || messages.length < 2) return;
+    fetch("/api/chat/finalize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId: id }),
+    }).catch(() => {});
+  };
+
   const sendGreeting = async () => {
     setLoading(true);
     const greeting = userName
@@ -97,7 +107,10 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: greeting }] }),
+        body: JSON.stringify({
+          messages: [{ role: "user", content: greeting }],
+          userName: userName || undefined,
+        }),
       });
       if (!res.ok) throw new Error();
       await streamResponse(res);
@@ -137,21 +150,29 @@ export default function ChatWidget() {
 
         try {
           const parsed = JSON.parse(data);
-          fullText += parsed.text;
-          const cleanText = fullText.replace(/\n?SUMMARY_READY\n?/g, "").trim();
 
-          setMessages((prev) => {
-            const updated = [...prev];
-            updated[updated.length - 1] = { role: "assistant", content: cleanText };
-            return updated;
-          });
+          // Handle sessionId event (no text field)
+          if (parsed.sessionId && !parsed.text) {
+            setSessionId(parsed.sessionId);
+            continue;
+          }
+
+          if (parsed.text) {
+            fullText += parsed.text;
+            const cleanText = fullText.replace(/\n?SUMMARY_READY\n?/g, "").trim();
+
+            setMessages((prev) => {
+              const updated = [...prev];
+              updated[updated.length - 1] = { role: "assistant", content: cleanText };
+              return updated;
+            });
+          }
         } catch {
           // skip
         }
       }
     }
 
-    // If the AI presented a summary, show confirm/deny buttons
     if (fullText.includes("SUMMARY_READY")) {
       setSummaryReady(true);
     }
@@ -195,6 +216,7 @@ export default function ChatWidget() {
           email: emailMatch || "See transcript",
           issue: userMessages,
           chatTranscript: allText,
+          sessionId: sessionId || undefined,
         }),
       });
     } catch {
@@ -202,12 +224,12 @@ export default function ChatWidget() {
     } finally {
       setTicketSending(false);
       setTicketSent(true);
+      finalizeSession();
     }
   };
 
   const handleDeny = async () => {
     setSummaryReady(false);
-    // Send "something's not right" to the AI so it can fix
     const fixMsg: Message = { role: "user", content: "Something's not right. Let me correct it." };
     const newMessages = [...messages, fixMsg];
     setMessages(newMessages);
@@ -217,7 +239,11 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({
+          messages: newMessages,
+          sessionId: sessionId || undefined,
+          userName: userName || undefined,
+        }),
       });
       if (!res.ok) throw new Error();
       await streamResponse(res);
@@ -248,7 +274,11 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({
+          messages: newMessages,
+          sessionId: sessionId || undefined,
+          userName: userName || undefined,
+        }),
       });
       if (!res.ok) throw new Error();
       await streamResponse(res);
@@ -273,10 +303,19 @@ export default function ChatWidget() {
     }
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    if (messages.length >= 2) {
+      finalizeSession();
+    }
+  };
+
   const resetChat = () => {
+    finalizeSession();
     setMessages([]);
     setSummaryReady(false);
     setTicketSent(false);
+    setSessionId(null);
   };
 
   return (
@@ -309,7 +348,7 @@ export default function ChatWidget() {
               <p className="text-[11px] text-emerald-400/90">Online now</p>
             </div>
             <button
-              onClick={() => setOpen(false)}
+              onClick={handleClose}
               className="rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
               aria-label="Close chat"
             >
@@ -410,7 +449,7 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input area - hidden when summary is showing or ticket sent */}
+          {/* Input area */}
           {!summaryReady && !ticketSent && (
             <div className="shrink-0 border-t border-slate-200 bg-white p-3 sm:rounded-b-2xl">
               <div className="flex items-end gap-2">

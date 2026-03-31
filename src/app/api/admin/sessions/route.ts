@@ -1,0 +1,40 @@
+import { NextRequest } from "next/server";
+import { prisma } from "@/lib/db";
+
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const status = url.searchParams.get("status") || "all";
+  const search = url.searchParams.get("search") || "";
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const perPage = 20;
+
+  const where: Record<string, unknown> = {};
+  if (status !== "all") {
+    where.status = status;
+  }
+  if (search) {
+    where.userName = { contains: search, mode: "insensitive" };
+  }
+
+  try {
+    const [sessions, totalCount] = await Promise.all([
+      prisma.chatSession.findMany({
+        where,
+        include: { _count: { select: { messages: true } } },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * perPage,
+        take: perPage,
+      }),
+      prisma.chatSession.count({ where }),
+    ]);
+
+    return Response.json({
+      sessions,
+      totalCount,
+      totalPages: Math.ceil(totalCount / perPage),
+      page,
+    });
+  } catch {
+    return Response.json({ sessions: [], totalCount: 0, totalPages: 0, page: 1 });
+  }
+}

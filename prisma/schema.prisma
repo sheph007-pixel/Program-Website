@@ -59,9 +59,50 @@ model Plan {
   category    String
   sortOrder   Int      @default(0)
   summaryUrl  String
+  pdfData     Bytes?
+  pdfName     String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([category, sortOrder])
+}
+
+model ChatSession {
+  id         String        @id @default(cuid())
+  userName   String?
+  userEmail  String?
+  userPhone  String?
+  employer   String?
+  summary    String?       @db.Text
+  status     String        @default("new")
+  ticketSent Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  messages   ChatMessage[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String      @db.Text
+  createdAt DateTime    @default(now())
+
+  @@index([sessionId])
+}
+
+model AIMemoryRule {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
 }

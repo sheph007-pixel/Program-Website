@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { Resend } from "resend";
+import { prisma } from "@/lib/db";
 
 function getResend() {
   return new Resend(process.env.RESEND || process.env.RESEND_API_KEY || "");
@@ -7,7 +8,7 @@ function getResend() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, employer, phone, email, issue, chatTranscript } = await req.json();
+    const { name, employer, phone, email, issue, chatTranscript, sessionId } = await req.json();
 
     if (!name || !email || !issue) {
       return Response.json({ error: "Missing required fields" }, { status: 400 });
@@ -80,6 +81,22 @@ export async function POST(req: NextRequest) {
     if (error) {
       console.error("Resend error:", error);
       return Response.json({ error: "Failed to send email" }, { status: 500 });
+    }
+
+    // Link to chat session in DB
+    if (sessionId) {
+      prisma.chatSession
+        .update({
+          where: { id: sessionId },
+          data: {
+            ticketSent: true,
+            userName: name !== "See transcript" ? name : undefined,
+            userEmail: email !== "See transcript" ? email : undefined,
+            userPhone: phone !== "See transcript" ? phone : undefined,
+            employer: employer !== "See transcript" ? employer : undefined,
+          },
+        })
+        .catch(() => {});
     }
 
     return Response.json({ success: true });

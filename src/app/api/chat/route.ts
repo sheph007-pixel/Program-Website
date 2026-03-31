@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
+import { prisma } from "@/lib/db";
 
 function getClient() {
   return new OpenAI({ apiKey: process.env.openai || process.env.OPENAI_API_KEY || "" });
@@ -108,27 +109,89 @@ IMPORTANT RULES:
 - Make them feel like you genuinely want to help, not like you're deflecting them.
 - The vibe is: "Let me see if I can point you in the right direction. And if not, our team has your back."`;
 
+async function buildSystemPrompt(): Promise<string> {
+  try {
+    const rules = await prisma.aIMemoryRule.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: "asc" },
+    });
+    if (rules.length === 0) return SYSTEM_PROMPT;
+    const rulesBlock = rules.map((r) => `- ${r.content}`).join("\n");
+    return `${SYSTEM_PROMPT}\n\nADMIN RULES (follow these strictly):\n${rulesBlock}`;
+  } catch {
+    return SYSTEM_PROMPT;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const { messages, sessionId: existingSessionId, userName } = await req.json();
+
+    // Create or reuse session
+    let sessionId = existingSessionId;
+    if (!sessionId) {
+      try {
+        const session = await prisma.chatSession.create({
+          data: { userName: userName || null },
+        });
+        sessionId = session.id;
+      } catch {
+        // DB might not be ready, continue without persistence
+      }
+    }
+
+    // Save the latest user message
+    const lastMsg = messages[messages.length - 1];
+    if (sessionId && lastMsg?.role === "user") {
+      try {
+        await prisma.chatMessage.create({
+          data: { sessionId, role: "user", content: lastMsg.content },
+        });
+      } catch {
+        // silent
+      }
+    }
+
+    const systemPrompt = await buildSystemPrompt();
 
     const stream = await getClient().chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
       stream: true,
       max_tokens: 400,
       temperature: 0.7,
     });
 
     const encoder = new TextEncoder();
+    let fullResponse = "";
+
     const readable = new ReadableStream({
       async start(controller) {
+        // Send sessionId as first event
+        if (sessionId) {
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ sessionId })}\n\n`)
+          );
+        }
+
         for await (const chunk of stream) {
           const text = chunk.choices[0]?.delta?.content || "";
           if (text) {
+            fullResponse += text;
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
           }
         }
+
+        // Save assistant response to DB
+        if (sessionId && fullResponse) {
+          const cleanResponse = fullResponse.replace(/\n?SUMMARY_READY\n?/g, "").trim();
+          prisma.chatMessage
+            .create({
+              data: { sessionId, role: "assistant", content: cleanResponse },
+            })
+            .catch(() => {});
+        }
+
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
       },
