@@ -1,37 +1,66 @@
-import { CreditCard, Monitor, LogIn } from "lucide-react";
+import { CreditCard, Monitor, LogIn, ArrowUpRight, Zap } from "lucide-react";
 
 const buttons = [
   {
     label: "Get Your Card",
+    desc: "Set up your interest-free Paytient Visa card",
     icon: CreditCard,
     href: "https://www.paytient.com/kennion",
+    color: "from-blue-600 to-blue-500",
+    shadow: "shadow-blue-500/20",
   },
   {
     label: "Learn More",
+    desc: "See how Paytient works and what it covers",
     icon: Monitor,
     href: "https://www.paytient.com",
+    color: "from-indigo-600 to-violet-500",
+    shadow: "shadow-violet-500/20",
   },
   {
     label: "Log In",
+    desc: "Access your existing Paytient account",
     icon: LogIn,
     href: "https://app.paytient.com",
+    color: "from-violet-600 to-purple-500",
+    shadow: "shadow-purple-500/20",
   },
+];
+
+const highlights = [
+  { label: "0% Interest", sub: "Always. No fees." },
+  { label: "Instant Card", sub: "Ready immediately" },
+  { label: "Flexible Pay", sub: "Your schedule" },
 ];
 
 export default function VisaPage() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-[680px] flex-col items-center px-5 py-10 sm:py-14">
-      <h1 className="page-title mb-3 text-center text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
-        Paytient Visa
-      </h1>
-      <p className="mb-10 text-center text-[15px] leading-relaxed text-gray-500 sm:text-base">
-        If you&apos;re enrolled in a group health plan, you can get the Paytient
-        Visa card for free. Use it to pay for medical, dental, vision, pharmacy,
-        and even vet bills&mdash;with no fees or interest, ever.
-      </p>
+    <div className="page-container">
+      <div className="page-header animate-fade-in-up">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/25">
+          <Zap size={26} className="text-white" strokeWidth={1.8} />
+        </div>
+        <h1 className="page-title">Paytient Visa</h1>
+        <p className="page-subtitle">
+          If you&apos;re enrolled in a group health plan, you can get the Paytient
+          Visa card for free. Use it to pay for medical, dental, vision, pharmacy,
+          and even vet bills&mdash;with no fees or interest, ever.
+        </p>
+      </div>
 
-      <div className="flex w-full flex-col gap-3">
-        {buttons.map((btn) => {
+      {/* Highlights */}
+      <div className="mb-8 grid grid-cols-3 gap-3 animate-fade-in-up stagger-1">
+        {highlights.map((h) => (
+          <div key={h.label} className="card flex flex-col items-center p-4 text-center">
+            <span className="text-[14px] font-bold text-[var(--kennion-navy)]">{h.label}</span>
+            <span className="mt-0.5 text-[11px] text-slate-400">{h.sub}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Action Cards */}
+      <div className="flex flex-col gap-3">
+        {buttons.map((btn, i) => {
           const Icon = btn.icon;
           return (
             <a
@@ -39,10 +68,16 @@ export default function VisaPage() {
               href={btn.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
+              className={`card card-interactive group flex items-center gap-4 p-4 animate-fade-in-up stagger-${i + 2}`}
             >
-              <Icon size={18} strokeWidth={1.5} />
-              {btn.label}
+              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${btn.color} shadow-md ${btn.shadow} transition-transform duration-300 group-hover:scale-105`}>
+                <Icon size={20} className="text-white" strokeWidth={1.8} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)]">{btn.label}</h3>
+                <p className="text-[12px] text-slate-400">{btn.desc}</p>
+              </div>
+              <ArrowUpRight size={16} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
             </a>
           );
         })}

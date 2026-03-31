@@ -1,42 +1,51 @@
-import { Monitor, Phone } from "lucide-react";
+import { Monitor, Phone, ArrowUpRight } from "lucide-react";
 
 export default function EnrollmentPage() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-[680px] flex-col items-center px-5 py-10 sm:py-14">
-      <h1 className="page-title mb-3 text-center text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
-        Enrollment
-      </h1>
-      <p className="mb-10 text-center text-[15px] leading-relaxed text-gray-500 sm:text-base">
-        Enrollment instructions vary by group. Most employees use the Employee
-        Navigator Enrollment Portal or Kennion&apos;s Enrollment Help Line, but
-        some may follow a different process. If you&apos;re unsure, check with
-        your HR team before enrolling.
-      </p>
+    <div className="page-container">
+      <div className="page-header animate-fade-in-up">
+        <h1 className="page-title">Enrollment</h1>
+        <p className="page-subtitle">
+          Enrollment instructions vary by group. Most employees use the Employee
+          Navigator Enrollment Portal or Kennion&apos;s Enrollment Help Line, but
+          some may follow a different process. If you&apos;re unsure, check with
+          your HR team before enrolling.
+        </p>
+      </div>
 
-      {/* Enrollment Portal Button */}
-      <a
-        href="https://goenroll.employeenavigator.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
-      >
-        <Monitor size={18} strokeWidth={1.5} />
-        Enrollment Portal
-      </a>
+      {/* Enrollment Portal */}
+      <div className="animate-fade-in-up stagger-1">
+        <a
+          href="https://goenroll.employeenavigator.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-primary"
+        >
+          <Monitor size={20} strokeWidth={1.8} />
+          Enrollment Portal
+          <ArrowUpRight size={16} className="ml-1 opacity-60" />
+        </a>
+      </div>
 
-      {/* Help Line Section */}
-      <p className="mt-10 mb-4 text-center text-[14px] text-gray-400">
-        Call 833-614-1622 Now To Get Live Enrollment Support From Your Benefits
-        Coach!
-      </p>
+      <div className="divider" />
 
-      <a
-        href="tel:8336141622"
-        className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
-      >
-        <Phone size={18} strokeWidth={1.5} />
-        Call Enrollment Help Line
-      </a>
+      {/* Help Line */}
+      <div className="animate-fade-in-up stagger-2 text-center">
+        <div className="card inline-flex items-center gap-2 px-4 py-2 mb-5">
+          <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[13px] font-medium text-slate-500">Live support available now</span>
+        </div>
+        <p className="mb-5 text-[15px] text-slate-500">
+          Call <span className="font-semibold text-[var(--kennion-navy)]">833-614-1622</span> to get live enrollment support from your Benefits Coach
+        </p>
+        <a
+          href="tel:8336141622"
+          className="btn-primary"
+        >
+          <Phone size={20} strokeWidth={1.8} />
+          Call Enrollment Help Line
+        </a>
+      </div>
     </div>
   );
 }

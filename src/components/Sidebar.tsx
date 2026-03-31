@@ -12,10 +12,10 @@ import {
   LayoutGrid,
   Menu,
   X,
-  ChevronsLeft,
-  ChevronsRight,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -31,65 +31,79 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const sidebarWidth = collapsed ? "64px" : "var(--sidebar-width)";
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const sidebarWidth = collapsed ? "var(--sidebar-collapsed)" : "var(--sidebar-width)";
 
   return (
     <>
-      {/* Mobile hamburger */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 rounded-lg bg-[var(--kennion-navy)] p-2 text-white md:hidden"
-        aria-label="Open menu"
-      >
-        <Menu size={24} />
-      </button>
+      {/* Mobile top bar */}
+      <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center gap-3 bg-[var(--kennion-navy)] px-4 md:hidden">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="rounded-lg p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          aria-label="Open menu"
+        >
+          <Menu size={22} />
+        </button>
+        <img
+          src="/kennion-logo-white.svg"
+          alt="Kennion"
+          className="h-7"
+        />
+      </div>
 
       {/* Overlay */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
+      <div
+        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setMobileOpen(false)}
+      />
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 flex h-full flex-col bg-[var(--kennion-navy)] text-white transition-all duration-300 ease-in-out md:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 flex h-full flex-col border-r border-white/[0.06] text-white transition-all duration-300 ease-in-out md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        style={{ width: mobileOpen ? "var(--sidebar-width)" : sidebarWidth }}
+        style={{
+          width: mobileOpen ? "var(--sidebar-width)" : sidebarWidth,
+          background: "linear-gradient(180deg, #0a1929 0%, #0d2137 50%, #0a1929 100%)",
+        }}
       >
         {/* Close button (mobile) */}
         <button
           onClick={() => setMobileOpen(false)}
-          className="absolute top-4 right-4 text-white md:hidden"
+          className="absolute top-4 right-4 rounded-lg p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white md:hidden"
           aria-label="Close menu"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
 
         {/* Logo */}
-        <div className={`flex items-center px-4 pt-5 pb-6 ${collapsed ? "justify-center" : ""}`}>
+        <div className={`flex items-center border-b border-white/[0.06] transition-all duration-300 ${
+          collapsed ? "justify-center px-3 py-5" : "px-5 py-5"
+        }`}>
           {collapsed ? (
-            <img
-              src="/kennion-logo-white.svg"
-              alt="Kennion"
-              className="h-8 w-8 object-contain object-left"
-              style={{ clipPath: "inset(0 75% 0 0)" }}
-            />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 text-sm font-bold shadow-lg shadow-blue-500/20">
+              K
+            </div>
           ) : (
             <img
               src="/kennion-logo-white.svg"
               alt="Kennion Benefit Advisors"
-              className="h-10 w-auto"
+              className="h-9 w-auto"
             />
           )}
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-0.5 px-2">
-          {navItems.map((item) => {
+        <nav className={`flex-1 space-y-1 overflow-y-auto py-4 ${collapsed ? "px-2" : "px-3"}`}>
+          {navItems.map((item, index) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
             return (
@@ -98,49 +112,67 @@ export default function Sidebar() {
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 title={collapsed ? item.label : undefined}
-                className={`flex items-center rounded-lg transition-colors ${
+                className={`group relative flex items-center rounded-xl transition-all duration-200 ${
                   collapsed
-                    ? "justify-center px-2 py-2.5"
-                    : "gap-2.5 px-3 py-2"
-                } text-[13px] ${
+                    ? "justify-center px-0 py-2.5"
+                    : "gap-3 px-3 py-2.5"
+                } ${
                   isActive
-                    ? "bg-white/15 font-medium text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`}
+                    ? "bg-white/[0.12] text-white shadow-sm shadow-black/10"
+                    : "text-white/60 hover:bg-white/[0.06] hover:text-white/90"
+                } ${mounted ? "animate-slide-in" : ""}`}
+                style={{ animationDelay: `${index * 0.04}s` }}
               >
-                <Icon size={16} strokeWidth={1.5} className="shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-gradient-to-b from-blue-400 to-cyan-400" />
+                )}
+                <Icon
+                  size={18}
+                  strokeWidth={1.8}
+                  className={`shrink-0 transition-colors ${
+                    isActive ? "text-blue-400" : "text-white/50 group-hover:text-white/80"
+                  }`}
+                />
+                {!collapsed && (
+                  <span className="text-[13px] font-medium">{item.label}</span>
+                )}
               </Link>
             );
           })}
         </nav>
 
         {/* Collapse toggle (desktop only) */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex items-center justify-center border-t border-white/10 py-3 text-white/40 transition-colors hover:text-white/70"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? (
-            <ChevronsRight size={16} />
-          ) : (
-            <ChevronsLeft size={16} />
-          )}
-        </button>
+        <div className="hidden border-t border-white/[0.06] p-3 md:block">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className={`flex w-full items-center rounded-lg py-2 text-white/40 transition-all duration-200 hover:bg-white/[0.06] hover:text-white/70 ${
+              collapsed ? "justify-center px-0" : "gap-3 px-3"
+            }`}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight size={16} />
+            ) : (
+              <>
+                <ChevronLeft size={16} />
+                <span className="text-[12px] font-medium">Collapse</span>
+              </>
+            )}
+          </button>
+        </div>
 
         {/* Footer */}
         {!collapsed && (
-          <div className="border-t border-white/10 px-4 py-3 text-[10px] text-white/40">
+          <div className="border-t border-white/[0.06] px-5 py-4 text-[11px] text-white/30">
             &copy; {new Date().getFullYear()} Kennion Benefit Advisors
           </div>
         )}
       </aside>
 
-      {/* Spacer for main content - communicates width via CSS variable */}
+      {/* Dynamic CSS variable for main content offset */}
       <style>{`
-        :root {
-          --current-sidebar-width: ${sidebarWidth};
-        }
+        :root { --current-sidebar-width: ${sidebarWidth}; }
+        @media (max-width: 767px) { :root { --current-sidebar-width: 0px; } }
       `}</style>
     </>
   );

@@ -1,3 +1,5 @@
+import { ExternalLink, Shield, Stethoscope, Eye, HeartPulse } from "lucide-react";
+
 const healthPlans = [
   { name: "Deluxe Platinum", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDjbxGFQKCtTLE-pAQjj6HAAaS3JHitaKhwlw2QteYgfDs?e=FdajUc" },
   { name: "Elite Health", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDiF-qR_lnSR46Cd9NCz5qgAculq2WeagWDxidEQ9i7DIc?e=aVy6jZ" },
@@ -43,82 +45,74 @@ const supplementalPlans = [
   { name: "Voluntary Life (Max $100k)", link: "https://kennionplans.com" },
 ];
 
-function PlanTable({
-  plans,
-  numbered,
-}: {
-  plans: { name: string; link: string }[];
-  numbered: boolean;
-}) {
-  return (
-    <div>
-      <div className="mb-1 px-1 text-[11px] font-semibold tracking-widest text-gray-400 uppercase">
-        Plan Summary
-      </div>
-      <div className="divide-y divide-gray-100">
-        {plans.map((plan, i) => (
-          <div key={plan.name} className="flex items-center gap-6 py-3 px-1">
-            {numbered && (
-              <span className="w-8 text-[15px] text-gray-400">{i + 1}</span>
-            )}
-            <a
-              href={plan.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[15px] font-medium text-[var(--kennion-blue)] hover:underline"
-            >
-              {plan.name}
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+const sections = [
+  { title: "Health Plans", icon: Shield, plans: healthPlans, numbered: true, color: "from-blue-600 to-blue-500", count: 15 },
+  { title: "Dental Plans", icon: Stethoscope, plans: dentalPlans, numbered: true, color: "from-indigo-600 to-violet-500", count: 7 },
+  { title: "Vision Plans", icon: Eye, plans: visionPlans, numbered: true, color: "from-violet-600 to-purple-500", count: 4 },
+  { title: "Supplemental", icon: HeartPulse, plans: supplementalPlans, numbered: false, color: "from-cyan-600 to-teal-500", count: 7 },
+];
 
 export default function PlansPage() {
   return (
-    <div className="mx-auto max-w-[680px] px-5 py-10 sm:py-14">
-      <h1 className="page-title mb-3 text-center text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
-        Plans
-      </h1>
-      <p className="mb-10 text-center text-[15px] leading-relaxed text-gray-500">
-        This page gives you a quick look at all the benefits available through
-        our national program. After you enroll, you&apos;ll find all your
-        personal benefit information in the HealthJoy app.
-      </p>
+    <div className="page-container">
+      <div className="page-header animate-fade-in-up">
+        <h1 className="page-title">Plans</h1>
+        <p className="page-subtitle">
+          This page gives you a quick look at all the benefits available through
+          our national program. After you enroll, you&apos;ll find all your
+          personal benefit information in the HealthJoy app.
+        </p>
+      </div>
 
-      {/* Health Plans */}
-      <section className="mb-10">
-        <h2 className="page-title mb-4 text-[22px] font-bold text-[var(--kennion-navy)] sm:text-[26px]">
-          Health Plans
-        </h2>
-        <PlanTable plans={healthPlans} numbered={true} />
-      </section>
+      <div className="space-y-8">
+        {sections.map((section, sIdx) => {
+          const SectionIcon = section.icon;
+          return (
+            <section key={section.title} className="animate-fade-in-up" style={{ animationDelay: `${sIdx * 0.1}s` }}>
+              <div className="mb-4 flex items-center gap-3">
+                <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${section.color} shadow-md`}>
+                  <SectionIcon size={18} className="text-white" strokeWidth={1.8} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--kennion-navy)]">{section.title}</h2>
+                </div>
+                <span className="ml-auto rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-500">
+                  {section.count} plans
+                </span>
+              </div>
 
-      {/* Dental Plans */}
-      <section className="mb-10">
-        <h2 className="page-title mb-4 text-[22px] font-bold text-[var(--kennion-navy)] sm:text-[26px]">
-          Dental Plans
-        </h2>
-        <PlanTable plans={dentalPlans} numbered={true} />
-      </section>
-
-      {/* Vision Plans */}
-      <section className="mb-10">
-        <h2 className="page-title mb-4 text-[22px] font-bold text-[var(--kennion-navy)] sm:text-[26px]">
-          Vision Plans
-        </h2>
-        <PlanTable plans={visionPlans} numbered={true} />
-      </section>
-
-      {/* Supplemental */}
-      <section className="mb-10">
-        <h2 className="page-title mb-4 text-[22px] font-bold text-[var(--kennion-navy)] sm:text-[26px]">
-          Supplemental
-        </h2>
-        <PlanTable plans={supplementalPlans} numbered={false} />
-      </section>
+              <div className="card overflow-hidden">
+                <div className="px-4 py-2 border-b border-slate-100">
+                  <span className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">
+                    Plan Summary
+                  </span>
+                </div>
+                <div className="divide-y divide-slate-50">
+                  {section.plans.map((plan, i) => (
+                    <a
+                      key={plan.name}
+                      href={plan.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-blue-50/50"
+                    >
+                      {section.numbered && (
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[12px] font-semibold text-slate-400 transition-colors group-hover:bg-blue-100 group-hover:text-blue-600">
+                          {i + 1}
+                        </span>
+                      )}
+                      <span className="flex-1 text-[14px] font-medium text-[var(--kennion-navy)] group-hover:text-blue-600 transition-colors">
+                        {plan.name}
+                      </span>
+                      <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }
