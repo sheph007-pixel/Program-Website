@@ -33,8 +33,8 @@ const mobileTabItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/plans", label: "Plans", icon: FileText },
   { href: "/enrollment", label: "Enroll", icon: ClipboardList },
-  { href: "#help", label: "Help", icon: MessageCircle, isChat: true },
   { href: "#more", label: "More", icon: MoreHorizontal, isMore: true },
+  { href: "#help", label: "Get Help", icon: MessageCircle, isChat: true },
 ];
 
 // Items shown in the "More" menu on mobile

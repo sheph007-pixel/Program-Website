@@ -15,6 +15,7 @@ export default function WelcomeModal() {
     const trimmed = input.trim();
     if (trimmed) {
       setName(trimmed);
+      window.scrollTo(0, 0);
     } else {
       setShake(true);
       setTimeout(() => setShake(false), 500);

@@ -11,6 +11,9 @@ import {
   CheckCircle,
   ThumbsUp,
   AlertCircle,
+  Clock,
+  Plus,
+  ChevronLeft,
 } from "lucide-react";
 import { useUserName } from "./NameContext";
 
@@ -47,9 +50,18 @@ type Message = {
   content: string;
 };
 
+type PastSession = {
+  id: string;
+  summary: string | null;
+  ticketSent: boolean;
+  createdAt: string;
+  _count: { messages: number };
+};
+
 export default function ChatWidget() {
   const { name: userName } = useUserName();
   const [open, setOpen] = useState(false);
+  const [view, setView] = useState<"history" | "chat">("history");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,6 +69,8 @@ export default function ChatWidget() {
   const [ticketSent, setTicketSent] = useState(false);
   const [ticketSending, setTicketSending] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [pastSessions, setPastSessions] = useState<PastSession[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -69,10 +83,10 @@ export default function ChatWidget() {
   }, [messages, summaryReady, ticketSent, scrollToBottom]);
 
   useEffect(() => {
-    if (open && inputRef.current && !summaryReady && !ticketSent) {
+    if (open && view === "chat" && inputRef.current && !summaryReady && !ticketSent) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [open, summaryReady, ticketSent]);
+  }, [open, view, summaryReady, ticketSent]);
 
   useEffect(() => {
     const handler = () => setOpen(true);
@@ -80,13 +94,72 @@ export default function ChatWidget() {
     return () => window.removeEventListener("open-kennion-chat", handler);
   }, []);
 
-  // Auto-greeting on first open
+  // Load history when chat opens
   useEffect(() => {
-    if (open && messages.length === 0 && !loading) {
-      sendGreeting();
+    if (open && userName) {
+      loadHistory();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, userName]);
+
+  // If chat is already active (has messages), show chat view when reopened
+  useEffect(() => {
+    if (open && messages.length > 0) {
+      setView("chat");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  const loadHistory = async () => {
+    if (!userName) return;
+    setHistoryLoading(true);
+    try {
+      const res = await fetch(`/api/chat/history?userName=${encodeURIComponent(userName)}`);
+      const data = await res.json();
+      setPastSessions(data.sessions || []);
+    } catch {
+      setPastSessions([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const loadSession = async (id: string) => {
+    setLoading(true);
+    setView("chat");
+    try {
+      const res = await fetch(`/api/chat/history/${id}`);
+      const data = await res.json();
+      if (data.messages) {
+        setMessages(data.messages);
+        setSessionId(data.sessionId);
+        setTicketSent(data.ticketSent || false);
+        setSummaryReady(false);
+      }
+    } catch {
+      setMessages([
+        { role: "assistant", content: "Sorry, I couldn't load that conversation. Let's start fresh!" },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startNewChat = () => {
+    setMessages([]);
+    setSessionId(null);
+    setSummaryReady(false);
+    setTicketSent(false);
+    setView("chat");
+  };
+
+  // Auto-greeting when entering chat view with no messages
+  useEffect(() => {
+    if (open && view === "chat" && messages.length === 0 && !loading) {
+      sendGreeting();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
 
   const finalizeSession = (sid?: string | null) => {
     const id = sid || sessionId;
@@ -310,12 +383,26 @@ export default function ChatWidget() {
     }
   };
 
-  const resetChat = () => {
-    finalizeSession();
+  const handleBackToHistory = () => {
+    if (messages.length >= 2) {
+      finalizeSession();
+    }
     setMessages([]);
+    setSessionId(null);
     setSummaryReady(false);
     setTicketSent(false);
-    setSessionId(null);
+    setView("history");
+    loadHistory();
+  };
+
+  const timeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
   };
 
   return (
@@ -337,15 +424,29 @@ export default function ChatWidget() {
         <div className="fixed bottom-0 right-0 z-[60] flex h-full w-full flex-col bg-white shadow-2xl sm:bottom-5 sm:right-5 sm:h-[600px] sm:w-[400px] sm:rounded-2xl sm:border sm:border-slate-200 md:bottom-6 md:right-6">
           {/* Header */}
           <div className="flex shrink-0 items-center gap-3 bg-gradient-to-r from-[#0a1929] to-[#132f4c] px-5 py-4 sm:rounded-t-2xl">
-            <div className="relative">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
-                <Headphones size={18} className="text-white" strokeWidth={1.8} />
+            {view === "chat" && pastSessions.length > 0 ? (
+              <button
+                onClick={handleBackToHistory}
+                className="rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                aria-label="Back to chats"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            ) : (
+              <div className="relative">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
+                  <Headphones size={18} className="text-white" strokeWidth={1.8} />
+                </div>
+                <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0a1929] bg-emerald-400" />
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0a1929] bg-emerald-400" />
-            </div>
+            )}
             <div className="flex-1">
-              <h3 className="text-[14px] font-semibold text-white">Kennion Support</h3>
-              <p className="text-[11px] text-emerald-400/90">Online now</p>
+              <h3 className="text-[14px] font-semibold text-white">
+                {view === "history" ? "Your Chats" : "Kennion Support"}
+              </h3>
+              <p className="text-[11px] text-emerald-400/90">
+                {view === "history" ? "Recent conversations" : "Online now"}
+              </p>
             </div>
             <button
               onClick={handleClose}
@@ -356,149 +457,210 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-slate-50/50">
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
-              >
-                <div
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                    msg.role === "user"
-                      ? "bg-slate-200"
-                      : "bg-gradient-to-br from-blue-500 to-cyan-400"
-                  }`}
-                >
-                  {msg.role === "user" ? (
-                    <User size={14} className="text-slate-500" />
-                  ) : (
-                    <Headphones size={13} className="text-white" />
-                  )}
+          {/* History view */}
+          {view === "history" && (
+            <>
+              <div className="flex-1 overflow-y-auto bg-slate-50/50">
+                {/* New chat button */}
+                <div className="p-3 border-b border-slate-100">
+                  <button
+                    onClick={startNewChat}
+                    className="flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-3 text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg active:scale-[0.98]"
+                  >
+                    <Plus size={18} strokeWidth={2} />
+                    <span className="text-[14px] font-semibold">New Conversation</span>
+                  </button>
                 </div>
-                <div
-                  className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed whitespace-pre-line ${
-                    msg.role === "user"
-                      ? "bg-[var(--kennion-navy)] text-white rounded-tr-md"
-                      : "bg-white text-slate-700 rounded-tl-md shadow-sm border border-slate-100"
-                  }`}
-                >
-                  {renderMessageContent(msg.content, msg.role === "user")}
-                </div>
-              </div>
-            ))}
 
-            {loading && (
-              <div className="flex gap-2.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
-                  <Headphones size={13} className="text-white" />
-                </div>
-                <div className="rounded-2xl rounded-tl-md bg-white px-4 py-3 shadow-sm border border-slate-100">
-                  <div className="flex gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "300ms" }} />
+                {historyLoading ? (
+                  <div className="text-center py-12 text-slate-400 text-sm">Loading...</div>
+                ) : pastSessions.length === 0 ? (
+                  <div className="text-center py-12 px-6">
+                    <MessageCircle size={32} className="mx-auto mb-2 text-slate-300" />
+                    <p className="text-slate-400 text-sm">No past conversations</p>
+                    <p className="text-slate-300 text-[12px] mt-1">Start a new chat above</p>
+                  </div>
+                ) : (
+                  <div className="p-3 space-y-1.5">
+                    {pastSessions.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => loadSession(s.id)}
+                        className="flex w-full items-start gap-3 rounded-xl border border-slate-200 bg-white p-3.5 text-left transition-all hover:shadow-sm hover:border-slate-300 active:scale-[0.99]"
+                      >
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
+                          <Headphones size={14} className="text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[13px] text-slate-700 font-medium truncate">
+                            {s.summary || "Chat conversation"}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="flex items-center gap-1 text-[11px] text-slate-400">
+                              <Clock size={10} /> {timeAgo(s.createdAt)}
+                            </span>
+                            <span className="text-[11px] text-slate-400">
+                              {s._count.messages} messages
+                            </span>
+                            {s.ticketSent && (
+                              <span className="text-[10px] text-emerald-600 font-medium">
+                                Ticket sent
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* Chat view */}
+          {view === "chat" && (
+            <>
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-slate-50/50">
+                {messages.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                  >
+                    <div
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                        msg.role === "user"
+                          ? "bg-slate-200"
+                          : "bg-gradient-to-br from-blue-500 to-cyan-400"
+                      }`}
+                    >
+                      {msg.role === "user" ? (
+                        <User size={14} className="text-slate-500" />
+                      ) : (
+                        <Headphones size={13} className="text-white" />
+                      )}
+                    </div>
+                    <div
+                      className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed whitespace-pre-line ${
+                        msg.role === "user"
+                          ? "bg-[var(--kennion-navy)] text-white rounded-tr-md"
+                          : "bg-white text-slate-700 rounded-tl-md shadow-sm border border-slate-100"
+                      }`}
+                    >
+                      {renderMessageContent(msg.content, msg.role === "user")}
+                    </div>
+                  </div>
+                ))}
+
+                {loading && messages.length > 0 && (
+                  <div className="flex gap-2.5">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
+                      <Headphones size={13} className="text-white" />
+                    </div>
+                    <div className="rounded-2xl rounded-tl-md bg-white px-4 py-3 shadow-sm border border-slate-100">
+                      <div className="flex gap-1">
+                        <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "0ms" }} />
+                        <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "150ms" }} />
+                        <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "300ms" }} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {loading && messages.length === 0 && (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 size={20} className="animate-spin text-slate-400" />
+                  </div>
+                )}
+
+                {/* Confirm / Deny buttons */}
+                {summaryReady && !ticketSent && !ticketSending && (
+                  <div className="flex flex-col gap-2 pt-2 pb-1 animate-fade-in-up">
+                    <button
+                      onClick={handleConfirm}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 text-[14px] font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:shadow-lg active:scale-[0.98]"
+                    >
+                      <ThumbsUp size={16} strokeWidth={2} />
+                      Looks Good, Send It!
+                    </button>
+                    <button
+                      onClick={handleDeny}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 text-[13px] font-medium text-slate-500 transition-all hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98]"
+                    >
+                      <AlertCircle size={14} strokeWidth={2} />
+                      Something's Not Right
+                    </button>
+                  </div>
+                )}
+
+                {/* Sending indicator */}
+                {ticketSending && (
+                  <div className="flex items-center justify-center gap-2 py-3">
+                    <Loader2 size={16} className="animate-spin text-blue-500" />
+                    <span className="text-[13px] text-slate-500 font-medium">Sending to the Kennion team...</span>
+                  </div>
+                )}
+
+                {/* Success state */}
+                {ticketSent && (
+                  <div className="flex flex-col items-center text-center py-4 animate-fade-in-up">
+                    <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
+                      <CheckCircle size={28} className="text-emerald-500" strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-[15px] font-bold text-[var(--kennion-navy)] mb-1">
+                      Request Sent!
+                    </h4>
+                    <p className="text-[13px] text-slate-500 max-w-[280px] leading-relaxed">
+                      A member of the Kennion team will reach out to you personally. Our team is available Monday through Friday, 8 AM to 5 PM.
+                    </p>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input area */}
+              {!summaryReady && !ticketSent && (
+                <div className="shrink-0 border-t border-slate-200 bg-white p-3 sm:rounded-b-2xl">
+                  <div className="flex items-end gap-2">
+                    <textarea
+                      ref={inputRef}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Type your message..."
+                      rows={1}
+                      className="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-400/20"
+                      style={{ maxHeight: 80 }}
+                    />
+                    <button
+                      onClick={sendMessage}
+                      disabled={!input.trim() || loading}
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white transition-all hover:shadow-md disabled:opacity-30 disabled:hover:shadow-none"
+                      aria-label="Send message"
+                    >
+                      {loading ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <Send size={16} strokeWidth={1.8} />
+                      )}
+                    </button>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Confirm / Deny buttons */}
-            {summaryReady && !ticketSent && !ticketSending && (
-              <div className="flex flex-col gap-2 pt-2 pb-1 animate-fade-in-up">
-                <button
-                  onClick={handleConfirm}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 text-[14px] font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:shadow-lg active:scale-[0.98]"
-                >
-                  <ThumbsUp size={16} strokeWidth={2} />
-                  Looks Good, Send It!
-                </button>
-                <button
-                  onClick={handleDeny}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 text-[13px] font-medium text-slate-500 transition-all hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98]"
-                >
-                  <AlertCircle size={14} strokeWidth={2} />
-                  Something's Not Right
-                </button>
-              </div>
-            )}
-
-            {/* Sending indicator */}
-            {ticketSending && (
-              <div className="flex items-center justify-center gap-2 py-3">
-                <Loader2 size={16} className="animate-spin text-blue-500" />
-                <span className="text-[13px] text-slate-500 font-medium">Sending to the Kennion team...</span>
-              </div>
-            )}
-
-            {/* Success state */}
-            {ticketSent && (
-              <div className="flex flex-col items-center text-center py-4 animate-fade-in-up">
-                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
-                  <CheckCircle size={28} className="text-emerald-500" strokeWidth={1.5} />
-                </div>
-                <h4 className="text-[15px] font-bold text-[var(--kennion-navy)] mb-1">
-                  Request Sent!
-                </h4>
-                <p className="text-[13px] text-slate-500 max-w-[280px] leading-relaxed">
-                  A member of the Kennion team will reach out to you personally. Our team is available Monday through Friday, 8 AM to 5 PM.
-                </p>
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input area */}
-          {!summaryReady && !ticketSent && (
-            <div className="shrink-0 border-t border-slate-200 bg-white p-3 sm:rounded-b-2xl">
-              <div className="flex items-end gap-2">
-                <textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Type your message..."
-                  rows={1}
-                  className="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-400/20"
-                  style={{ maxHeight: 80 }}
-                />
-                <button
-                  onClick={sendMessage}
-                  disabled={!input.trim() || loading}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white transition-all hover:shadow-md disabled:opacity-30 disabled:hover:shadow-none"
-                  aria-label="Send message"
-                >
-                  {loading ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <Send size={16} strokeWidth={1.8} />
-                  )}
-                </button>
-              </div>
-              {messages.length > 2 && (
-                <div className="mt-2 flex justify-end">
+              {/* Post-submission footer */}
+              {ticketSent && (
+                <div className="shrink-0 border-t border-slate-200 bg-white p-4 sm:rounded-b-2xl text-center">
                   <button
-                    onClick={resetChat}
-                    className="text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-500"
+                    onClick={handleBackToHistory}
+                    className="rounded-xl border border-slate-200 px-5 py-2.5 text-[13px] font-medium text-slate-500 transition-all hover:bg-slate-50"
                   >
-                    Start over
+                    Back to Chats
                   </button>
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Post-submission footer */}
-          {ticketSent && (
-            <div className="shrink-0 border-t border-slate-200 bg-white p-4 sm:rounded-b-2xl text-center">
-              <button
-                onClick={resetChat}
-                className="rounded-xl border border-slate-200 px-5 py-2.5 text-[13px] font-medium text-slate-500 transition-all hover:bg-slate-50"
-              >
-                Start a New Conversation
-              </button>
-            </div>
+            </>
           )}
         </div>
       )}
