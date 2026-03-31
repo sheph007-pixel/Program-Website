@@ -11,14 +11,14 @@ export async function GET() {
         category: true,
         summaryUrl: true,
         pdfName: true,
-        pdfData: false,
         isActive: true,
         sortOrder: true,
       },
     });
     return Response.json({ plans });
-  } catch {
-    return Response.json({ plans: [] });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Failed to load plans";
+    return Response.json({ plans: [], error: message });
   }
 }
 

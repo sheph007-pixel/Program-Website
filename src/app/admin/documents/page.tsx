@@ -13,6 +13,7 @@ type Plan = {
 };
 
 type UploadResult = { fileName: string; matched: boolean; planName?: string };
+type UploadError = string | null;
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
 
@@ -20,6 +21,7 @@ export default function DocumentsPage() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [uploading, setUploading] = useState(false);
   const [results, setResults] = useState<UploadResult[] | null>(null);
+  const [uploadError, setUploadError] = useState<UploadError>(null);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,6 +47,7 @@ export default function DocumentsPage() {
 
     setUploading(true);
     setResults(null);
+    setUploadError(null);
 
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
@@ -57,10 +60,14 @@ export default function DocumentsPage() {
         body: formData,
       });
       const data = await res.json();
+      if (!res.ok) {
+        setUploadError(data.error || `Upload failed (${res.status})`);
+        return;
+      }
       setResults(data.results || []);
       fetchPlans();
-    } catch {
-      setResults([]);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed. Check your connection.");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -100,6 +107,22 @@ export default function DocumentsPage() {
           </button>
         </div>
       </div>
+
+      {/* Upload error */}
+      {uploadError && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4">
+          <div className="flex items-center gap-2 text-[13px] font-semibold text-red-700 mb-1">
+            <AlertCircle size={14} /> Upload Error
+          </div>
+          <p className="text-[13px] text-red-600">{uploadError}</p>
+          <button
+            onClick={() => setUploadError(null)}
+            className="mt-2 text-[12px] text-red-400 hover:text-red-500"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Upload results */}
       {results && (

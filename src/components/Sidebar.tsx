@@ -144,7 +144,7 @@ export default function Sidebar() {
 
       {/* Mobile bottom tab bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
-        <div className="flex items-stretch justify-around px-1">
+        <div className="flex items-stretch justify-around px-2">
           {mobileTabItems.map((item) => {
             const isActive = !(item as { isMore?: boolean }).isMore && pathname === item.href;
             const isMoreActive = (item as { isMore?: boolean }).isMore && moreMenuItems.some(m => !((m as { isChat?: boolean }).isChat) && pathname === m.href);
@@ -155,12 +155,12 @@ export default function Sidebar() {
                 <button
                   key={item.href}
                   onClick={() => setMoreOpen(!moreOpen)}
-                  className={`flex flex-1 flex-col items-center gap-0.5 py-2 transition-colors ${
-                    moreOpen || isMoreActive ? "text-blue-600" : "text-slate-400"
+                  className={`flex flex-1 flex-col items-center gap-1 py-2.5 transition-colors ${
+                    moreOpen || isMoreActive ? "text-blue-600" : "text-slate-500"
                   }`}
                 >
-                  <Icon size={20} strokeWidth={moreOpen || isMoreActive ? 2 : 1.5} />
-                  <span className={`text-[10px] ${moreOpen || isMoreActive ? "font-semibold" : "font-medium"}`}>
+                  <Icon size={24} strokeWidth={moreOpen || isMoreActive ? 2.2 : 1.8} />
+                  <span className={`text-[11px] ${moreOpen || isMoreActive ? "font-bold" : "font-semibold"}`}>
                     {item.label}
                   </span>
                 </button>
@@ -172,12 +172,12 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMoreOpen(false)}
-                className={`flex flex-1 flex-col items-center gap-0.5 py-2 transition-colors ${
-                  isActive ? "text-blue-600" : "text-slate-400"
+                className={`flex flex-1 flex-col items-center gap-1 py-2.5 transition-colors ${
+                  isActive ? "text-blue-600" : "text-slate-500"
                 }`}
               >
-                <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
-                <span className={`text-[10px] ${isActive ? "font-semibold" : "font-medium"}`}>
+                <Icon size={24} strokeWidth={isActive ? 2.2 : 1.8} />
+                <span className={`text-[11px] ${isActive ? "font-bold" : "font-semibold"}`}>
                   {item.label}
                 </span>
               </Link>
