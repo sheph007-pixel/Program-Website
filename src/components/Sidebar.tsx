@@ -33,15 +33,15 @@ const mobileTabItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/plans", label: "Plans", icon: FileText },
   { href: "/enrollment", label: "Enroll", icon: ClipboardList },
+  { href: "/app-download", label: "App", icon: Smartphone },
   { href: "#more", label: "More", icon: MoreHorizontal, isMore: true },
-  { href: "#help", label: "Get Help", icon: MessageCircle, isChat: true },
 ];
 
 // Items shown in the "More" menu on mobile
 const moreMenuItems = [
-  { href: "/app-download", label: "HealthJoy App", icon: Smartphone },
   { href: "/visa", label: "Paytient Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
+  { href: "#help", label: "Get Help", icon: MessageCircle, isChat: true },
 ];
 
 export default function Sidebar() {
@@ -97,7 +97,25 @@ export default function Sidebar() {
           <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10">
             {moreMenuItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isChatItem = (item as { isChat?: boolean }).isChat;
+              const isActive = !isChatItem && pathname === item.href;
+
+              if (isChatItem) {
+                return (
+                  <button
+                    key={item.href}
+                    onClick={() => {
+                      setMoreOpen(false);
+                      window.dispatchEvent(new CustomEvent("open-kennion-chat"));
+                    }}
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-emerald-600 hover:bg-emerald-50 transition-colors"
+                  >
+                    <Icon size={18} strokeWidth={1.8} />
+                    <span className="text-[14px] font-medium">{item.label}</span>
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={item.href}
@@ -128,25 +146,9 @@ export default function Sidebar() {
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
         <div className="flex items-stretch justify-around px-1">
           {mobileTabItems.map((item) => {
-            const isActive = !item.isChat && !(item as { isMore?: boolean }).isMore && pathname === item.href;
-            const isMoreActive = (item as { isMore?: boolean }).isMore && moreMenuItems.some(m => pathname === m.href);
+            const isActive = !(item as { isMore?: boolean }).isMore && pathname === item.href;
+            const isMoreActive = (item as { isMore?: boolean }).isMore && moreMenuItems.some(m => !((m as { isChat?: boolean }).isChat) && pathname === m.href);
             const Icon = item.icon;
-
-            if (item.isChat) {
-              return (
-                <button
-                  key={item.href}
-                  onClick={() => {
-                    setMoreOpen(false);
-                    window.dispatchEvent(new CustomEvent("open-kennion-chat"));
-                  }}
-                  className="flex flex-1 flex-col items-center gap-0.5 py-2 text-emerald-500 transition-colors"
-                >
-                  <Icon size={20} strokeWidth={1.5} />
-                  <span className="text-[10px] font-semibold">{item.label}</span>
-                </button>
-              );
-            }
 
             if ((item as { isMore?: boolean }).isMore) {
               return (
