@@ -10,7 +10,6 @@ import {
   CreditCard,
   Stethoscope,
   MessageCircle,
-  Menu,
   X,
   ChevronLeft,
   ChevronRight,
@@ -34,7 +33,7 @@ const mobileTabItems = [
   { href: "/plans", label: "Plans", icon: FileText },
   { href: "/enrollment", label: "Enroll", icon: ClipboardList },
   { href: "/app-download", label: "App", icon: Smartphone },
-  { href: "/visa", label: "Visa", icon: CreditCard },
+  { href: "#help", label: "Help", icon: MessageCircle, isChat: true },
 ];
 
 export default function Sidebar() {
@@ -61,28 +60,25 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile top bar */}
+      {/* Mobile top bar - clean, just logo and avatar */}
       <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between bg-[var(--kennion-navy)] px-4 md:hidden">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="rounded-lg p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-            aria-label="Open menu"
-          >
-            <Menu size={22} />
-          </button>
-          <img
-            src="/kennion-logo-white.svg"
-            alt="Kennion"
-            className="h-6"
-          />
-        </div>
+        <img
+          src="/kennion-logo-white.svg"
+          alt="Kennion"
+          className="h-6"
+        />
         {hasName && (
-          <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              setNameInput(name);
+              setMobileOpen(true);
+            }}
+            className="flex items-center gap-2"
+          >
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[11px] font-bold text-white">
               {name.charAt(0)}
             </div>
-          </div>
+          </button>
         )}
       </div>
 
@@ -90,8 +86,22 @@ export default function Sidebar() {
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
         <div className="flex items-stretch justify-around px-1">
           {mobileTabItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = !item.isChat && pathname === item.href;
             const Icon = item.icon;
+
+            if (item.isChat) {
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => window.dispatchEvent(new CustomEvent("open-kennion-chat"))}
+                  className="flex flex-1 flex-col items-center gap-0.5 py-2 text-emerald-500 transition-colors"
+                >
+                  <Icon size={20} strokeWidth={1.5} />
+                  <span className="text-[10px] font-semibold">{item.label}</span>
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={item.href}

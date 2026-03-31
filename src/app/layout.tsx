@@ -28,7 +28,7 @@ export default function RootLayout({
         <ClientProviders>
           <Sidebar />
           <main
-            className="min-h-screen bg-[#f8fafc] pt-14 transition-all duration-300 ease-in-out md:pt-0"
+            className="min-h-screen bg-[#f8fafc] pt-14 pb-16 transition-all duration-300 ease-in-out md:pt-0 md:pb-0"
             style={{ marginLeft: "var(--current-sidebar-width, var(--sidebar-width))" }}
           >
             {children}
