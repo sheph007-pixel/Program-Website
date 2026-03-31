@@ -9,6 +9,7 @@ import {
   Smartphone,
   CreditCard,
   Stethoscope,
+  MessageCircle,
   Menu,
   X,
   ChevronLeft,
@@ -137,6 +138,31 @@ export default function Sidebar() {
               </Link>
             );
           })}
+          {/* Get Help button */}
+          <button
+            onClick={() => {
+              setMobileOpen(false);
+              window.dispatchEvent(new CustomEvent("open-kennion-chat"));
+            }}
+            title={collapsed ? "Get Help" : undefined}
+            className={`group relative flex items-center rounded-xl transition-all duration-200 ${
+              collapsed
+                ? "justify-center px-0 py-2.5"
+                : "gap-3 px-3 py-2.5"
+            } text-white/60 hover:bg-white/[0.06] hover:text-white/90`}
+          >
+            <MessageCircle
+              size={18}
+              strokeWidth={1.8}
+              className="shrink-0 text-emerald-400/80 transition-colors group-hover:text-emerald-300"
+            />
+            {!collapsed && (
+              <span className="text-[13px] font-medium">Get Help</span>
+            )}
+            {!collapsed && (
+              <span className="ml-auto flex h-2 w-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
+            )}
+          </button>
         </nav>
 
         {/* Collapse toggle (desktop only) */}

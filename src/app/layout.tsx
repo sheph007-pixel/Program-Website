@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import ChatWidget from "@/components/ChatWidget";
 
 export const metadata: Metadata = {
   title: "Kennion Benefits Program",
@@ -31,6 +32,7 @@ export default function RootLayout({
         >
           {children}
         </main>
+        <ChatWidget />
       </body>
     </html>
   );
