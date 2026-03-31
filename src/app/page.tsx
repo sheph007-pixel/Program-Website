@@ -45,7 +45,7 @@ const steps = [
   },
   {
     num: 5,
-    label: "Find Care + 24/7 Access",
+    label: "Free Virtual Care",
     icon: UserSearch,
     href: "/virtual-care",
     color: "from-cyan-600 to-teal-500",
