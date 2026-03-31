@@ -15,7 +15,7 @@ export default function EnrollmentPage() {
 
       {/* Enrollment Portal Button */}
       <a
-        href="https://www.employeenavigator.com"
+        href="https://goenroll.employeenavigator.com/"
         target="_blank"
         rel="noopener noreferrer"
         className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
