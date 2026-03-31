@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   ClipboardList,
@@ -6,7 +8,6 @@ import {
   CreditCard,
   UserSearch,
   HelpCircle,
-  Mail,
   ArrowRight,
 } from "lucide-react";
 
@@ -55,18 +56,24 @@ const steps = [
     num: 6,
     label: "Ask For Help",
     icon: HelpCircle,
-    href: "tel:8448396740",
-    external: true,
+    href: "#",
+    chat: true,
     color: "from-teal-600 to-emerald-500",
     shadow: "shadow-emerald-500/20",
   },
 ];
 
 export default function HomePage() {
+  const handleClick = (step: (typeof steps)[number]) => {
+    if (step.chat) {
+      window.dispatchEvent(new CustomEvent("open-kennion-chat"));
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col justify-center px-5 py-6 sm:px-8">
       <div className="mx-auto w-full max-w-[620px]">
-        {/* Header - compact */}
+        {/* Header */}
         <div className="mb-5 text-center animate-fade-in-up">
           <h1 className="text-[26px] font-extrabold tracking-tight text-[var(--kennion-navy)] sm:text-[32px]" style={{ letterSpacing: "-0.02em" }}>
             Your Benefits Program
@@ -76,7 +83,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Steps - tight grid */}
+        {/* Steps */}
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {steps.map((step) => {
             const Icon = step.icon;
@@ -94,24 +101,20 @@ export default function HomePage() {
               </div>
             );
 
-            return step.external ? (
-              <a key={step.num} href={step.href}>
-                {inner}
-              </a>
-            ) : (
+            if (step.chat) {
+              return (
+                <button key={step.num} onClick={() => handleClick(step)} className="text-left">
+                  {inner}
+                </button>
+              );
+            }
+
+            return (
               <Link key={step.num} href={step.href}>
                 {inner}
               </Link>
             );
           })}
-        </div>
-
-        {/* Footer - compact */}
-        <div className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-slate-50 to-blue-50 px-4 py-3 animate-fade-in-up stagger-7">
-          <Mail size={14} className="text-blue-500" />
-          <p className="text-[12px] font-medium text-slate-400">
-            Powered by <span className="text-slate-600 font-semibold">Kennion Benefit Advisors</span>
-          </p>
         </div>
       </div>
     </div>
