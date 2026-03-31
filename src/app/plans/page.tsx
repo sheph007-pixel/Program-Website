@@ -17,13 +17,13 @@ const healthPlans = [
 ];
 
 const dentalPlans = [
-  { name: "Advantage Dental (W Ortho)", link: "https://kennionplans.com" },
-  { name: "Complete Dental (W Ortho)", link: "https://kennionplans.com" },
-  { name: "Value Dental (W Ortho)", link: "https://kennionplans.com" },
-  { name: "Complete Dental", link: "https://kennionplans.com" },
-  { name: "Value Dental", link: "https://kennionplans.com" },
-  { name: "Basic Dental", link: "https://kennionplans.com" },
-  { name: "Choice Dental", link: "https://kennionplans.com" },
+  { name: "Advantage Dental (W Ortho)", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQC1zNTdLbCfSKJSl0nZut-jAZYEVN2E6i8ehEcKIM0tdrU?e=D0Dbhr" },
+  { name: "Complete Dental (W Ortho)", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQARyqwnbTxmT5p_V5yPCvuFAeeaj1qBW6bltnCw1DGaadY?e=etPWcd" },
+  { name: "Value Dental (W Ortho)", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAJhfPyTeISR6g630yMPL7rAfIh0KqKCBDdMKy8wXNt1RI?e=9DW6ON" },
+  { name: "Complete Dental", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDsmA3LxY0xSa5Ubz-9uLD_AZOiVrHXjk3aF0lw2s-AHPg?e=h3KHAD" },
+  { name: "Value Dental", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCqpwo6dBnASrxCgQEZbj6bAZVQHgQnGK27Qb0dIvwQcic?e=vz2T5A" },
+  { name: "Basic Dental", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCCBYcyLhXyTKz3ztcFG6nSAaeCZYIRmoscfv-ODP183nA?e=VAmfh0" },
+  { name: "Choice Dental", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDRZP1EmrZjTYo6OxTAP5YNAe6cInudHdmeAe4EsgYdWGM?e=bNOAAW" },
 ];
 
 const visionPlans = [
