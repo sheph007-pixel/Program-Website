@@ -27,10 +27,10 @@ const dentalPlans = [
 ];
 
 const visionPlans = [
-  { name: "Premium Vision", link: "https://kennionplans.com" },
-  { name: "Standard Vision", link: "https://kennionplans.com" },
-  { name: "Value Vision", link: "https://kennionplans.com" },
-  { name: "Base Vision", link: "https://kennionplans.com" },
+  { name: "Premium Vision", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCGHsTU0pS-QJebH4j_09OWAZ2zV-EPZw4G8dajTD1RAco?e=Lctihu" },
+  { name: "Standard Vision", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDz2khRMs-8T6K52hyB6XyOAa_nb61a4xrpZDMRGjP4_K4?e=YIEVCe" },
+  { name: "Value Vision", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCIB4xpeM3hR7gJ-3b-FvRxAWidQM4y69kLD7txvrPpATA?e=ezJ4ic" },
+  { name: "Base Vision", link: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCrPHVJa5-_Qo4F9rgxl2M6ARVgvx_XsqusN1EzYWgPQbY?e=MRuc8G" },
 ];
 
 const supplementalPlans = [
