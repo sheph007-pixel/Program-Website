@@ -92,13 +92,16 @@ export default function Sidebar() {
           collapsed ? "justify-center px-3 py-5" : "px-5 py-5"
         }`}>
           {collapsed ? (
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 text-sm font-bold shadow-lg shadow-blue-500/20">
-              K
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/20">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3l9 4.5v5.5c0 5.25-3.75 9.5-9 11-5.25-1.5-9-5.75-9-11V7.5L12 3z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
             </div>
           ) : (
             <img
               src="/kennion-logo-white.svg"
-              alt="Kennion Benefit Advisors"
+              alt="Kennion Benefits Program"
               className="h-9 w-auto"
             />
           )}
@@ -174,7 +177,7 @@ export default function Sidebar() {
                 title={collapsed ? item.label : undefined}
                 className={`group relative flex items-center rounded-xl transition-all duration-200 ${
                   collapsed
-                    ? "justify-center px-0 py-2.5"
+                    ? "justify-center px-0 py-2.5 mx-auto w-10 h-10"
                     : "gap-3 px-3 py-2.5"
                 } ${
                   isActive
@@ -208,7 +211,7 @@ export default function Sidebar() {
             title={collapsed ? "Get Help" : undefined}
             className={`group relative flex items-center rounded-xl transition-all duration-200 ${
               collapsed
-                ? "justify-center px-0 py-2.5"
+                ? "justify-center px-0 py-2.5 mx-auto w-10 h-10"
                 : "gap-3 px-3 py-2.5"
             } text-white/60 hover:bg-white/[0.06] hover:text-white/90`}
           >
@@ -249,7 +252,7 @@ export default function Sidebar() {
         {/* Footer */}
         {!collapsed && (
           <div className="border-t border-white/[0.06] px-5 py-4 text-[11px] text-white/30">
-            &copy; {new Date().getFullYear()} Kennion Benefit Advisors
+            &copy; {new Date().getFullYear()} Kennion Benefits Program
           </div>
         )}
       </aside>

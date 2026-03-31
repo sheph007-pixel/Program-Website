@@ -4,7 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import ClientProviders from "@/components/ClientProviders";
 
 export const metadata: Metadata = {
-  title: "Kennion Benefits Program",
+  title: "KENNION Benefits Program",
   description:
     "Welcome to the Kennion Benefits Program. Explore plans, enroll, and get care - all in one place.",
   robots: {

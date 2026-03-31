@@ -36,13 +36,13 @@ const plans = [
   { name: "Base Vision", category: "Vision Plans", sortOrder: 4, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCrPHVJa5-_Qo4F9rgxl2M6ARVgvx_XsqusN1EzYWgPQbY?e=MRuc8G" },
 
   // Supplemental
-  { name: "Accident Insurance", category: "Supplemental", sortOrder: 1, summaryUrl: "https://kennionplans.com" },
-  { name: "Cancer Insurance", category: "Supplemental", sortOrder: 2, summaryUrl: "https://kennionplans.com" },
-  { name: "Critical Illness Insurance", category: "Supplemental", sortOrder: 3, summaryUrl: "https://kennionplans.com" },
-  { name: "Disability Insurance", category: "Supplemental", sortOrder: 4, summaryUrl: "https://kennionplans.com" },
-  { name: "Hospital + Surgery Insurance (GAP)", category: "Supplemental", sortOrder: 5, summaryUrl: "https://kennionplans.com" },
-  { name: "Individual Life ($100k+)", category: "Supplemental", sortOrder: 6, summaryUrl: "https://kennionplans.com" },
-  { name: "Voluntary Life (Max $100k)", category: "Supplemental", sortOrder: 7, summaryUrl: "https://kennionplans.com" },
+  { name: "Voluntary Life (Max $100k)", category: "Supplemental", sortOrder: 1, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAaYn_MmPbvT4jrucA0vOZ7AdkclPSeVNyLMvlEyfUExVw?e=NJda67" },
+  { name: "Individual Life ($100k+)", category: "Supplemental", sortOrder: 2, summaryUrl: "https://agents.ethoslife.com/invite/kennion" },
+  { name: "Accident Insurance", category: "Supplemental", sortOrder: 3, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQA85TDfb-1oSIVbOXC0C892AQi-zs96Z_Kh1tkRT7YaPzU?e=k7YkAb" },
+  { name: "Cancer Insurance", category: "Supplemental", sortOrder: 4, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCd9_q-kRs0R56QhqOy5_qkAd2HyNsRbww7J-CLspiBMiI?e=jgPCIz" },
+  { name: "Critical Illness Insurance", category: "Supplemental", sortOrder: 5, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAMziJPxNoSSLs8EROh-3exARdY99FBFF90DdxZVbrwhcs?e=74myRz" },
+  { name: "Disability Insurance", category: "Supplemental", sortOrder: 6, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQBYlHMM431ITZzJzJtI_VT-AT0yAbDvayO6Rs0jvmDb35M?e=Uqcctu" },
+  { name: "Hospital + Surgery Insurance (GAP)", category: "Supplemental", sortOrder: 7, summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAE4gBK0LSiSK4wHpL-c7bsAQuWRTc_ENqSxeMD-pzuwlQ?e=55ZDLf" },
 ];
 
 async function seed() {
