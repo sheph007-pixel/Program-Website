@@ -96,11 +96,11 @@ export default function ChatWidget() {
 
   // Load history when chat opens
   useEffect(() => {
-    if (open && userCode) {
+    if (open && (userCode || userName)) {
       loadHistory();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, userCode]);
+  }, [open, userCode, userName]);
 
   // If chat is already active (has messages), show chat view when reopened
   useEffect(() => {
@@ -111,10 +111,13 @@ export default function ChatWidget() {
   }, [open]);
 
   const loadHistory = async () => {
-    if (!userCode) return;
+    if (!userCode && !userName) return;
     setHistoryLoading(true);
     try {
-      const res = await fetch(`/api/chat/history?userCode=${encodeURIComponent(userCode)}`);
+      const params = new URLSearchParams();
+      if (userCode) params.set("userCode", userCode);
+      if (userName) params.set("userName", userName);
+      const res = await fetch(`/api/chat/history?${params}`);
       const data = await res.json();
       setPastSessions(data.sessions || []);
     } catch {
