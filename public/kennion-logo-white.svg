@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 308 54" fill="none">
+  <!-- Blue square icon -->
+  <rect x="0" y="8" width="36" height="36" rx="4" fill="#3B82F6"/>
+  <rect x="8" y="14" width="20" height="24" rx="2" fill="white" fill-opacity="0.9"/>
+  <rect x="12" y="19" width="12" height="2" rx="1" fill="#3B82F6" fill-opacity="0.5"/>
+  <rect x="12" y="24" width="12" height="2" rx="1" fill="#3B82F6" fill-opacity="0.5"/>
+  <rect x="12" y="29" width="8" height="2" rx="1" fill="#3B82F6" fill-opacity="0.5"/>
+  <!-- "kennion" text -->
+  <text x="46" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" fill="white" letter-spacing="1">kennion</text>
+  <!-- "Benefit Advisors" text -->
+  <text x="46" y="46" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="white" fill-opacity="0.6" letter-spacing="2">Benefit Advisors</text>
+  <!-- Blue underline -->
+  <line x1="46" y1="49" x2="155" y2="49" stroke="#3B82F6" stroke-width="1"/>
+</svg>

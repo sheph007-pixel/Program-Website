@@ -15,7 +15,7 @@ export default function AdditionalLinksPage() {
           Find A Provider
         </a>
         <a
-          href="https://kennionplans.com"
+          href="https://medone-rx.com/members/drug-lookup/0114"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2.5 rounded-lg border border-gray-200 bg-white px-6 py-3.5 text-[15px] font-medium text-[var(--kennion-navy)] transition-all hover:bg-gray-50"

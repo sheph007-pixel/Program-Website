@@ -18,10 +18,10 @@ export default function RootLayout({
       <body>
         <Sidebar />
         <main
-          className="min-h-screen bg-white pt-14 md:pt-0"
-          style={{ paddingLeft: "0px" }}
+          className="min-h-screen bg-white pt-14 transition-all duration-300 ease-in-out md:pt-0"
+          style={{ marginLeft: "var(--current-sidebar-width, var(--sidebar-width))" }}
         >
-          <div className="md:ml-[var(--sidebar-width)]">{children}</div>
+          {children}
         </main>
       </body>
     </html>

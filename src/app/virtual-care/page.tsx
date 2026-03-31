@@ -14,7 +14,7 @@ export default function VirtualCarePage() {
       {/* Virtual Care Buttons */}
       <div className="flex w-full flex-col gap-3">
         <a
-          href="https://recurohealth.com"
+          href="https://onelink.to/k5x5jc"
           target="_blank"
           rel="noopener noreferrer"
           className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
@@ -23,7 +23,7 @@ export default function VirtualCarePage() {
           Talk To A Doctor Now For Free
         </a>
         <a
-          href="https://recurohealth.com"
+          href="https://healthjoymemberservices.zendesk.com/hc/en-us/p/educational-videos"
           target="_blank"
           rel="noopener noreferrer"
           className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
