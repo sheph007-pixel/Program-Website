@@ -9,7 +9,6 @@ import {
   Smartphone,
   CreditCard,
   Stethoscope,
-  LayoutGrid,
   Menu,
   X,
   ChevronLeft,
@@ -24,7 +23,6 @@ const navItems = [
   { href: "/app-download", label: "App", icon: Smartphone },
   { href: "/visa", label: "Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
-  { href: "/additional-links", label: "Additional Links", icon: LayoutGrid },
 ];
 
 export default function Sidebar() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, Stethoscope, Eye, HeartPulse, X, ExternalLink, FileText, ChevronRight } from "lucide-react";
+import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink } from "lucide-react";
 
 type Plan = { name: string; summaryUrl: string };
 
@@ -12,7 +12,6 @@ const categoryMeta: Record<string, { icon: typeof Shield; color: string; gradien
   "Supplemental": { icon: HeartPulse, color: "text-teal-600", gradient: "from-teal-600 to-emerald-500", shadow: "shadow-emerald-500/20", bg: "bg-teal-50" },
 };
 
-// Static plan data (works without DB - DB can override via API)
 const staticPlans: Record<string, Plan[]> = {
   "Health Plans": [
     { name: "Deluxe Platinum", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDjbxGFQKCtTLE-pAQjj6HAAaS3JHitaKhwlw2QteYgfDs?e=FdajUc" },
@@ -59,145 +58,75 @@ const staticPlans: Record<string, Plan[]> = {
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
 
-function PdfViewerModal({ plan, category, onClose }: { plan: Plan; category: string; onClose: () => void }) {
-  const meta = categoryMeta[category];
-  const Icon = meta?.icon || FileText;
-
-  // Convert SharePoint sharing link to embeddable format
-  const embedUrl = plan.summaryUrl.includes("sharepoint.com")
-    ? plan.summaryUrl.replace(":b:", ":b:") + "&action=embedview"
-    : plan.summaryUrl;
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" onClick={onClose}>
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in" />
-
-      {/* Modal */}
-      <div
-        className="relative z-10 flex h-[85vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl animate-fade-in-up"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4">
-          <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${meta?.gradient} shadow-md`}>
-            <Icon size={16} className="text-white" strokeWidth={1.8} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-[15px] font-bold text-[var(--kennion-navy)] truncate">{plan.name}</h3>
-            <p className="text-[12px] text-slate-400">{category} &middot; Plan Summary</p>
-          </div>
-          <a
-            href={plan.summaryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[12px] font-semibold text-[var(--kennion-blue)] transition-all hover:bg-blue-50 hover:border-blue-200"
-          >
-            <ExternalLink size={13} />
-            Open in New Tab
-          </a>
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* PDF Viewer */}
-        <div className="flex-1 bg-slate-50">
-          <iframe
-            src={embedUrl}
-            className="h-full w-full border-0"
-            title={`${plan.name} - Plan Summary`}
-            allow="fullscreen"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function PlansPage() {
-  const [selectedPlan, setSelectedPlan] = useState<{ plan: Plan; category: string } | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
 
   const activePlans = staticPlans[activeCategory] || [];
   const meta = categoryMeta[activeCategory];
-  const ActiveIcon = meta?.icon || Shield;
 
   return (
-    <>
-      <div className="page-container">
-        <div className="page-header animate-fade-in-up">
-          <h1 className="page-title">Plans</h1>
-          <p className="page-subtitle">
-            Explore all benefits available through our national program.
-            Click any plan to view its summary.
-          </p>
-        </div>
-
-        {/* Category Tabs */}
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-1 animate-fade-in-up stagger-1">
-          {categoryOrder.map((cat) => {
-            const catMeta = categoryMeta[cat];
-            const CatIcon = catMeta.icon;
-            const isActive = activeCategory === cat;
-            const count = (staticPlans[cat] || []).length;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
-                  isActive
-                    ? "bg-[var(--kennion-navy)] text-white shadow-lg shadow-slate-900/20"
-                    : "bg-white text-slate-500 border border-slate-200 hover:border-slate-300 hover:text-slate-700"
-                }`}
-              >
-                <CatIcon size={15} strokeWidth={1.8} />
-                {cat.replace(" Plans", "")}
-                <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                  isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-400"
-                }`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Plan Tiles Grid */}
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in-up stagger-2">
-          {activePlans.map((plan, i) => (
-            <button
-              key={plan.name}
-              onClick={() => setSelectedPlan({ plan, category: activeCategory })}
-              className="card card-interactive group flex items-center gap-3 p-3.5 text-left transition-all"
-              style={{ animationDelay: `${i * 0.03}s` }}
-            >
-              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
-                <FileText size={16} className={meta.color} strokeWidth={1.8} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] truncate leading-tight">
-                  {plan.name}
-                </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">View summary</p>
-              </div>
-              <ChevronRight size={14} className="shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-blue-500" />
-            </button>
-          ))}
-        </div>
+    <div className="page-container">
+      <div className="page-header animate-fade-in-up">
+        <h1 className="page-title">Plans</h1>
+        <p className="page-subtitle">
+          Explore all benefits available through our national program.
+          Click any plan to view its summary.
+        </p>
       </div>
 
-      {/* PDF Viewer Modal */}
-      {selectedPlan && (
-        <PdfViewerModal
-          plan={selectedPlan.plan}
-          category={selectedPlan.category}
-          onClose={() => setSelectedPlan(null)}
-        />
-      )}
-    </>
+      {/* Category Tabs */}
+      <div className="mb-6 flex gap-2 overflow-x-auto pb-1 animate-fade-in-up stagger-1">
+        {categoryOrder.map((cat) => {
+          const catMeta = categoryMeta[cat];
+          const CatIcon = catMeta.icon;
+          const isActive = activeCategory === cat;
+          const count = (staticPlans[cat] || []).length;
+          return (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                isActive
+                  ? "bg-[var(--kennion-navy)] text-white shadow-lg shadow-slate-900/20"
+                  : "bg-white text-slate-500 border border-slate-200 hover:border-slate-300 hover:text-slate-700"
+              }`}
+            >
+              <CatIcon size={15} strokeWidth={1.8} />
+              {cat.replace(" Plans", "")}
+              <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-400"
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Plan Tiles Grid */}
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in-up stagger-2">
+        {activePlans.map((plan, i) => (
+          <a
+            key={plan.name}
+            href={plan.summaryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card card-interactive group flex items-center gap-3 p-3.5 text-left transition-all"
+            style={{ animationDelay: `${i * 0.03}s` }}
+          >
+            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
+              <FileText size={16} className={meta.color} strokeWidth={1.8} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] truncate leading-tight">
+                {plan.name}
+              </h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">View summary</p>
+            </div>
+            <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
+          </a>
+        ))}
+      </div>
+    </div>
   );
 }
