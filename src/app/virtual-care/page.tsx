@@ -58,8 +58,10 @@ export default function VirtualCarePage() {
         </div>
         <h1 className="page-title">Free Virtual Care</h1>
         <p className="page-subtitle">
-          Through HealthJoy Telemed, you and your family get free unlimited
-          access to doctors. No copays. No surprise bills. All through the app.
+          One of the biggest perks of the Kennion program. Through HealthJoy
+          Telemed, you and your family get free, unlimited access to doctors
+          for primary care, urgent care, and virtual visits. No copays. No
+          surprise bills. Just open the app.
         </p>
       </div>
 
@@ -67,7 +69,7 @@ export default function VirtualCarePage() {
       <div className="mb-3">
         <div className="badge mb-4 bg-emerald-50 text-emerald-600">
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          Included With Your Plan
+          Included For All Enrolled Members
         </div>
       </div>
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 mb-6 animate-fade-in-up stagger-1">

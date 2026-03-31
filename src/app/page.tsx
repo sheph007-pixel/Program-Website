@@ -14,7 +14,8 @@ import {
 const steps = [
   {
     num: 1,
-    label: "View Plans",
+    label: "Explore Plans",
+    sub: "See all available benefits",
     icon: ClipboardList,
     href: "/plans",
     color: "from-blue-600 to-blue-500",
@@ -23,6 +24,7 @@ const steps = [
   {
     num: 2,
     label: "Enroll",
+    sub: "See your plans and rates",
     icon: Monitor,
     href: "/enrollment",
     color: "from-blue-600 to-indigo-500",
@@ -30,7 +32,8 @@ const steps = [
   },
   {
     num: 3,
-    label: "Download App",
+    label: "Get The App",
+    sub: "Your personalized benefits hub",
     icon: Smartphone,
     href: "/app-download",
     color: "from-indigo-600 to-violet-500",
@@ -39,6 +42,7 @@ const steps = [
   {
     num: 4,
     label: "Get Visa Card",
+    sub: "Pay for care with 0% interest",
     icon: CreditCard,
     href: "/visa",
     color: "from-violet-600 to-purple-500",
@@ -47,6 +51,7 @@ const steps = [
   {
     num: 5,
     label: "Free Virtual Care",
+    sub: "See a doctor at no cost",
     icon: UserSearch,
     href: "/virtual-care",
     color: "from-cyan-600 to-teal-500",
@@ -54,7 +59,8 @@ const steps = [
   },
   {
     num: 6,
-    label: "Ask For Help",
+    label: "Get Help",
+    sub: "We're here for you",
     icon: HelpCircle,
     href: "#",
     chat: true,
@@ -79,7 +85,7 @@ export default function HomePage() {
             Your Benefits Program
           </h1>
           <p className="mt-1.5 text-[14px] text-slate-500 sm:text-[15px]">
-            Everything you need to enroll, explore, and get care - all in one place.
+            Welcome to the Kennion Benefits Program. Whether you're new or already enrolled, everything you need is right here.
           </p>
         </div>
 
@@ -96,6 +102,9 @@ export default function HomePage() {
                   <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)] leading-tight">
                     {step.label}
                   </h3>
+                  {step.sub && (
+                    <p className="text-[11px] text-slate-400 mt-0.5">{step.sub}</p>
+                  )}
                 </div>
                 <ArrowRight size={16} className="shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-500" />
               </div>

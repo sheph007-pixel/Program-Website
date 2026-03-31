@@ -7,10 +7,10 @@ export default function EnrollmentPage() {
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">Enrollment</h1>
         <p className="page-subtitle">
-          Enrollment instructions vary by group. Most employees use the Employee
-          Navigator Enrollment Portal or Kennion&apos;s Enrollment Help Line, but
-          some may follow a different process. If you&apos;re unsure, check with
-          your HR team before enrolling.
+          Ready to enroll? Log in to the Enrollment Portal to see the specific
+          plans and rates available for your group. Everything is customized for
+          you based on your employer. Not sure where to start? Call the
+          Enrollment Help Line and a Benefits Coach will walk you through it.
         </p>
       </div>
 
@@ -37,7 +37,8 @@ export default function EnrollmentPage() {
           <span className="text-[13px] font-medium text-slate-500">Live support available now</span>
         </div>
         <p className="mb-5 text-[15px] text-slate-500">
-          Call your Benefits Coach for live enrollment support.
+          Need help enrolling? A Benefits Coach can walk you through your
+          options, explain your rates, and get you enrolled over the phone.
         </p>
       </div>
 

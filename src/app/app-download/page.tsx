@@ -41,10 +41,10 @@ export default function AppDownloadPage() {
         </div>
         <h1 className="page-title">HealthJoy App</h1>
         <p className="page-subtitle">
-          Once you&apos;re enrolled, HealthJoy becomes your starting point for
-          everything healthcare and benefits-related. The app gives you free,
-          unlimited access to medical professionals, healthcare experts, and all
-          your personalized employee benefits - in one place.
+          Once you&apos;re enrolled, download the HealthJoy app. It becomes your
+          personalized benefits hub, showing only the plans you&apos;re enrolled in,
+          your ID cards, and giving you free access to doctors, healthcare experts,
+          and everything you need to use your benefits.
         </p>
       </div>
 

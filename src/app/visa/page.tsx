@@ -43,9 +43,10 @@ export default function VisaPage() {
         </div>
         <h1 className="page-title">Paytient Visa</h1>
         <p className="page-subtitle">
-          If you&apos;re enrolled in a group health plan, you can get the Paytient
-          Visa card for free. Use it to pay for medical, dental, vision, pharmacy,
-          and even vet bills - with no fees or interest, ever.
+          Enrolled in a health plan? You can get the Paytient Visa card for free
+          as part of the Kennion program. Use it to pay for medical, dental,
+          vision, pharmacy, and even vet bills. No fees. No interest. Ever.
+          Pay back on your schedule.
         </p>
       </div>
 

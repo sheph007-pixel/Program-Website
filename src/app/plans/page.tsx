@@ -59,10 +59,20 @@ const staticPlans: Record<string, Plan[]> = {
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
 
-const categorySupport: Record<string, { number: string; label: string; sublabel: string; gradient: string; shadow: string } | null> = {
-  "Health Plans": { number: "(See ID Card)", label: "Health Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20" },
-  "Dental Plans": { number: "(See ID Card)", label: "Dental Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-indigo-600 to-violet-500", shadow: "shadow-violet-500/20" },
-  "Vision Plans": { number: "(800) 877-7195", label: "VSP Vision Care", sublabel: "Call VSP for vision plan support", gradient: "from-violet-600 to-purple-500", shadow: "shadow-purple-500/20" },
+type SupportInfo = { type: "idcard"; label: string; sublabel: string; gradient: string; shadow: string } | { type: "phone"; number: string; label: string; sublabel: string; gradient: string; shadow: string };
+
+const categorySupport: Record<string, SupportInfo[] | null> = {
+  "Health Plans": [
+    { type: "idcard", label: "Health Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20" },
+    { type: "phone", number: "(877) 500-3212", label: "HealthJoy Concierge", sublabel: "Don't have your ID card? Call HealthJoy 24/7 and they can help", gradient: "from-purple-600 to-fuchsia-500", shadow: "shadow-purple-500/20" },
+  ],
+  "Dental Plans": [
+    { type: "idcard", label: "Dental Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-indigo-600 to-violet-500", shadow: "shadow-violet-500/20" },
+    { type: "phone", number: "(877) 500-3212", label: "HealthJoy Concierge", sublabel: "Don't have your ID card? Call HealthJoy 24/7 and they can help", gradient: "from-purple-600 to-fuchsia-500", shadow: "shadow-purple-500/20" },
+  ],
+  "Vision Plans": [
+    { type: "phone", number: "(800) 877-7195", label: "VSP Vision Care", sublabel: "Call VSP for vision plan questions and support", gradient: "from-violet-600 to-purple-500", shadow: "shadow-purple-500/20" },
+  ],
   "Supplemental": null,
 };
 
@@ -77,8 +87,9 @@ export default function PlansPage() {
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">Plans</h1>
         <p className="page-subtitle">
-          Explore all benefits available through our national program.
-          Click any plan to view its summary.
+          Browse all benefits available through the Kennion program.
+          These are the plans offered across all groups. Once you enroll,
+          you'll see the specific plans and rates for your group.
         </p>
       </div>
 
@@ -136,33 +147,40 @@ export default function PlansPage() {
         ))}
       </div>
 
-      {/* Support Contact for Category */}
+      {/* Support Contacts for Category */}
       {categorySupport[activeCategory] && (
         <>
           <div className="divider" />
-          <div className="animate-fade-in-up">
-            {categorySupport[activeCategory]!.number === "(See ID Card)" ? (
-              <div className="card flex items-center gap-4 p-5">
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${categorySupport[activeCategory]!.gradient} shadow-lg ${categorySupport[activeCategory]!.shadow}`}>
-                  <FileText size={20} className="text-white" strokeWidth={1.8} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[14px] font-bold text-[var(--kennion-navy)]">
-                    {categorySupport[activeCategory]!.label}
+          <div className="badge mb-4 bg-slate-100 text-slate-500">
+            <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+            Need Help?
+          </div>
+          <div className="flex flex-col gap-3 animate-fade-in-up">
+            {categorySupport[activeCategory]!.map((info) =>
+              info.type === "idcard" ? (
+                <div key={info.label} className="card flex items-center gap-4 p-5">
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${info.gradient} shadow-lg ${info.shadow}`}>
+                    <FileText size={20} className="text-white" strokeWidth={1.8} />
                   </div>
-                  <div className="text-[12px] text-slate-400 mt-0.5">
-                    {categorySupport[activeCategory]!.sublabel}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[14px] font-bold text-[var(--kennion-navy)]">
+                      {info.label}
+                    </div>
+                    <div className="text-[12px] text-slate-400 mt-0.5">
+                      {info.sublabel}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <PhoneContact
-                number={categorySupport[activeCategory]!.number}
-                label={categorySupport[activeCategory]!.label}
-                sublabel={categorySupport[activeCategory]!.sublabel}
-                gradient={categorySupport[activeCategory]!.gradient}
-                shadow={categorySupport[activeCategory]!.shadow}
-              />
+              ) : (
+                <PhoneContact
+                  key={info.label}
+                  number={info.number}
+                  label={info.label}
+                  sublabel={info.sublabel}
+                  gradient={info.gradient}
+                  shadow={info.shadow}
+                />
+              )
             )}
           </div>
         </>
