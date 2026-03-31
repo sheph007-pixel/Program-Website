@@ -47,7 +47,7 @@ export default function VirtualCarePage() {
         </div>
         <h1 className="page-title">Free Virtual Care + Nationwide Access</h1>
         <p className="page-subtitle">
-          Get free unlimited 24/7 virtual care &mdash; plus access to providers
+          Get free unlimited 24/7 virtual care - plus access to providers
           nationwide.
         </p>
       </div>

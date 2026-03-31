@@ -72,7 +72,7 @@ export default function HomePage() {
             Your Benefits Program
           </h1>
           <p className="mt-1.5 text-[14px] text-slate-500 sm:text-[15px]">
-            Everything you need to enroll, explore, and get care&nbsp;&mdash; all in one place.
+            Everything you need to enroll, explore, and get care - all in one place.
           </p>
         </div>
 

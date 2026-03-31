@@ -44,7 +44,7 @@ export default function VisaPage() {
         <p className="page-subtitle">
           If you&apos;re enrolled in a group health plan, you can get the Paytient
           Visa card for free. Use it to pay for medical, dental, vision, pharmacy,
-          and even vet bills&mdash;with no fees or interest, ever.
+          and even vet bills - with no fees or interest, ever.
         </p>
       </div>
 

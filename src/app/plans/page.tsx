@@ -12,7 +12,7 @@ const categoryMeta: Record<string, { icon: typeof Shield; color: string; gradien
   "Supplemental": { icon: HeartPulse, color: "text-teal-600", gradient: "from-teal-600 to-emerald-500", shadow: "shadow-emerald-500/20", bg: "bg-teal-50" },
 };
 
-// Static plan data (works without DB — DB can override via API)
+// Static plan data (works without DB - DB can override via API)
 const staticPlans: Record<string, Plan[]> = {
   "Health Plans": [
     { name: "Deluxe Platinum", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDjbxGFQKCtTLE-pAQjj6HAAaS3JHitaKhwlw2QteYgfDs?e=FdajUc" },

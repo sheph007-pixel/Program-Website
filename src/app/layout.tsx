@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar";
 export const metadata: Metadata = {
   title: "Kennion Benefits Program",
   description:
-    "Everything you need to enroll, explore, and get care — all in one place.",
+    "Everything you need to enroll, explore, and get care - all in one place.",
 };
 
 export default function RootLayout({

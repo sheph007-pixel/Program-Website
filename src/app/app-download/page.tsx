@@ -43,7 +43,7 @@ export default function AppDownloadPage() {
           Once you&apos;re enrolled, HealthJoy becomes your starting point for
           everything healthcare and benefits-related. The app gives you free,
           unlimited access to medical professionals, healthcare experts, and all
-          your personalized employee benefits&mdash;in one place.
+          your personalized employee benefits - in one place.
         </p>
       </div>
 
