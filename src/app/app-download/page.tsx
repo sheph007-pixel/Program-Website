@@ -1,115 +1,84 @@
-import { Smartphone, CreditCard, Search, BarChart3, Bot, Wallet } from "lucide-react";
+import { Download, HelpCircle, Play, CheckCircle, Phone } from "lucide-react";
 
-const features = [
+const buttons = [
   {
-    icon: CreditCard,
-    title: "Digital ID Card",
-    desc: "Access your digital insurance card instantly — no need to carry a physical card.",
+    label: "Download The App",
+    icon: Download,
+    href: "https://www.healthjoy.com/app",
   },
   {
-    icon: Search,
-    title: "Find Providers",
-    desc: "Search, select, and schedule appointments. Filter by location, specialty, and network status.",
+    label: "Frequently Asked Questions",
+    icon: HelpCircle,
+    href: "https://www.healthjoy.com/faq",
   },
   {
-    icon: BarChart3,
-    title: "Track Expenses",
-    desc: "Monitor total healthcare expenses, deductible progress, out-of-pocket costs, and outstanding bills.",
+    label: "Educational Videos",
+    icon: Play,
+    href: "https://www.healthjoy.com/videos",
   },
   {
-    icon: Wallet,
-    title: "EZpay",
-    desc: "Save a payment method (credit card, FSA, or HSA), schedule automated payments, and view statements.",
-  },
-  {
-    icon: Bot,
-    title: "Virtual Assistant",
-    desc: "Find answers faster with a virtual assistant, support materials, or connect with a member rep.",
-  },
-  {
-    icon: Smartphone,
-    title: "Manage Benefits",
-    desc: "View your benefits, manage your plan, and access all your health information in one place.",
+    label: "Activation",
+    icon: CheckCircle,
+    href: "https://www.healthjoy.com/activate",
   },
 ];
 
 export default function AppDownloadPage() {
   return (
-    <div className="mx-auto max-w-[680px] px-5 py-10 sm:py-14">
-      <h1 className="page-title mb-2 text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
-        Download the App
+    <div className="mx-auto flex min-h-screen max-w-[680px] flex-col items-center px-5 py-10 sm:py-14">
+      <h1 className="page-title mb-3 text-center text-[28px] font-bold text-[var(--kennion-navy)] sm:text-[34px]">
+        HealthJoy App
       </h1>
-      <p className="mb-8 text-[15px] text-gray-500">
-        The myHealthEZ app lets you manage your health plan anytime, anywhere.
-        View benefits, pay bills, find providers, and access your digital ID
-        card.
+      <p className="mb-10 text-center text-[15px] leading-relaxed text-gray-500 sm:text-base">
+        Once you&apos;re enrolled, HealthJoy becomes your starting point for
+        everything healthcare and benefits-related. The app gives you free,
+        unlimited access to medical professionals, healthcare experts, and all
+        your personalized employee benefits&mdash;in one place.
       </p>
 
-      {/* Download buttons */}
-      <div className="mb-8 flex flex-col gap-3 sm:flex-row">
-        <a
-          href="https://apps.apple.com/us/app/myhealthez/id1571532368"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 rounded-lg bg-black py-3.5 text-center text-[15px] font-semibold text-white shadow-md transition-all hover:bg-gray-800 hover:shadow-lg"
-        >
-          Download on the App Store
-        </a>
-        <a
-          href="https://play.google.com/store/apps/details?id=healthez.mobile"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 rounded-lg bg-[#34A853] py-3.5 text-center text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[#2d9249] hover:shadow-lg"
-        >
-          Get it on Google Play
-        </a>
-      </div>
-
-      {/* Features grid */}
-      <h2 className="mb-4 text-lg font-semibold text-[var(--kennion-navy)]">
-        What You Can Do
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {features.map((f) => {
-          const Icon = f.icon;
+      {/* Action Buttons */}
+      <div className="flex w-full flex-col gap-3">
+        {buttons.map((btn) => {
+          const Icon = btn.icon;
           return (
-            <div
-              key={f.title}
-              className="flex gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+            <a
+              key={btn.label}
+              href={btn.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--kennion-blue)] px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-[var(--kennion-blue-hover)]"
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--kennion-light)] text-[var(--kennion-blue)]">
-                <Icon size={18} strokeWidth={1.5} />
-              </div>
-              <div>
-                <h3 className="mb-0.5 text-[13px] font-semibold text-[var(--kennion-navy)]">
-                  {f.title}
-                </h3>
-                <p className="text-[12px] leading-relaxed text-gray-500">
-                  {f.desc}
-                </p>
-              </div>
-            </div>
+              <Icon size={18} strokeWidth={1.5} />
+              {btn.label}
+            </a>
           );
         })}
       </div>
 
-      <div className="mt-8 rounded-xl bg-[var(--kennion-light)] p-5 text-center">
-        <p className="text-[13px] text-gray-500">
-          Questions about the app? Contact HealthEZ at{" "}
-          <a
-            href="tel:8448396740"
-            className="font-medium text-[var(--kennion-blue)]"
-          >
-            844-839-6740
-          </a>{" "}
-          or{" "}
-          <a
-            href="mailto:Service@HealthEZ.com"
-            className="font-medium text-[var(--kennion-blue)]"
-          >
-            Service@HealthEZ.com
-          </a>
-        </p>
+      {/* HealthJoy Concierge */}
+      <div className="mt-12 flex w-full items-center gap-4 rounded-xl bg-gray-50 px-5 py-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 2h6l3 7H6L9 2z" />
+            <path d="M12 9v13" />
+            <path d="M8 13h8" />
+          </svg>
+        </div>
+        <div className="flex-1">
+          <div className="text-[14px] font-bold text-[var(--kennion-navy)]">
+            HEALTHJOY CONCIERGE
+          </div>
+          <div className="text-[13px] text-gray-400">
+            CALL 24/7 (877) 500-3212
+          </div>
+        </div>
+        <a
+          href="tel:8775003212"
+          className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-[13px] font-medium text-[var(--kennion-blue)] transition-colors hover:bg-gray-50"
+        >
+          <Phone size={14} strokeWidth={1.5} />
+          Call
+        </a>
       </div>
     </div>
   );
