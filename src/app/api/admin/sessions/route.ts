@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
     where.status = status;
   }
   if (search) {
-    where.userName = { contains: search, mode: "insensitive" };
+    where.OR = [
+      { userName: { contains: search, mode: "insensitive" } },
+      { userCode: { contains: search, mode: "insensitive" } },
+    ];
   }
 
   try {

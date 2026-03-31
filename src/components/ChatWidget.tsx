@@ -59,7 +59,7 @@ type PastSession = {
 };
 
 export default function ChatWidget() {
-  const { name: userName } = useUserName();
+  const { name: userName, userCode } = useUserName();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"history" | "chat">("history");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -96,11 +96,11 @@ export default function ChatWidget() {
 
   // Load history when chat opens
   useEffect(() => {
-    if (open && userName) {
+    if (open && userCode) {
       loadHistory();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, userName]);
+  }, [open, userCode]);
 
   // If chat is already active (has messages), show chat view when reopened
   useEffect(() => {
@@ -111,10 +111,10 @@ export default function ChatWidget() {
   }, [open]);
 
   const loadHistory = async () => {
-    if (!userName) return;
+    if (!userCode) return;
     setHistoryLoading(true);
     try {
-      const res = await fetch(`/api/chat/history?userName=${encodeURIComponent(userName)}`);
+      const res = await fetch(`/api/chat/history?userCode=${encodeURIComponent(userCode)}`);
       const data = await res.json();
       setPastSessions(data.sessions || []);
     } catch {
@@ -183,6 +183,7 @@ export default function ChatWidget() {
         body: JSON.stringify({
           messages: [{ role: "user", content: greeting }],
           userName: userName || undefined,
+          userCode: userCode || undefined,
         }),
       });
       if (!res.ok) throw new Error();
@@ -316,6 +317,7 @@ export default function ChatWidget() {
           messages: newMessages,
           sessionId: sessionId || undefined,
           userName: userName || undefined,
+          userCode: userCode || undefined,
         }),
       });
       if (!res.ok) throw new Error();
@@ -351,6 +353,7 @@ export default function ChatWidget() {
           messages: newMessages,
           sessionId: sessionId || undefined,
           userName: userName || undefined,
+          userCode: userCode || undefined,
         }),
       });
       if (!res.ok) throw new Error();
@@ -442,10 +445,10 @@ export default function ChatWidget() {
             )}
             <div className="flex-1">
               <h3 className="text-[14px] font-semibold text-white">
-                {view === "history" ? "Your Chats" : "Kennion Support"}
+                {view === "history" ? (userName || "Your Chats") : "Kennion Support"}
               </h3>
-              <p className="text-[11px] text-emerald-400/90">
-                {view === "history" ? "Recent conversations" : "Online now"}
+              <p className="text-[11px] text-white/50 font-mono">
+                {view === "history" ? userCode : "Online now"}
               </p>
             </div>
             <button

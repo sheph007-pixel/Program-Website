@@ -7,6 +7,7 @@ import { MessageSquare, Send, Clock, Search, ChevronLeft, ChevronRight } from "l
 
 type Session = {
   id: string;
+  userCode: string | null;
   userName: string | null;
   summary: string | null;
   status: string;
@@ -106,7 +107,7 @@ function ConversationsContent() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name..."
+              placeholder="Search by name or code..."
               className="rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-1.5 text-[13px] outline-none focus:border-blue-400"
             />
           </div>
@@ -137,6 +138,11 @@ function ConversationsContent() {
                   <span className="text-[14px] font-semibold text-[var(--kennion-navy)]">
                     {s.userName || "Anonymous"}
                   </span>
+                  {s.userCode && (
+                    <span className="text-[10px] font-mono text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">
+                      {s.userCode}
+                    </span>
+                  )}
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${statusColors[s.status] || statusColors.new}`}>
                     {s.status}
                   </span>

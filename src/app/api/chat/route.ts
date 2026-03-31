@@ -125,14 +125,14 @@ async function buildSystemPrompt(): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, sessionId: existingSessionId, userName } = await req.json();
+    const { messages, sessionId: existingSessionId, userName, userCode } = await req.json();
 
     // Create or reuse session
     let sessionId = existingSessionId;
     if (!sessionId) {
       try {
         const session = await prisma.chatSession.create({
-          data: { userName: userName || null },
+          data: { userName: userName || null, userCode: userCode || null },
         });
         sessionId = session.id;
       } catch {

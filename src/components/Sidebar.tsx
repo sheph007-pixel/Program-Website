@@ -46,7 +46,7 @@ const moreMenuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { name, setName, hasName } = useUserName();
+  const { name, userCode, setName, hasName } = useUserName();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -315,7 +315,7 @@ export default function Sidebar() {
                 <p className="text-[13px] font-semibold text-white truncate">
                   {name}
                 </p>
-                <p className="text-[11px] text-white/40">Tap to edit</p>
+                <p className="text-[10px] text-white/40 font-mono">{userCode}</p>
               </div>
               <Pencil
                 size={13}

@@ -10,6 +10,7 @@ import {
   Mail,
   Phone,
   Building2,
+  Hash,
   Sparkles,
   Trash2,
   CheckCircle,
@@ -19,6 +20,7 @@ import {
 type Message = { id: string; role: string; content: string; createdAt: string };
 type Session = {
   id: string;
+  userCode: string | null;
   userName: string | null;
   userEmail: string | null;
   userPhone: string | null;
@@ -86,9 +88,16 @@ export default function ConversationDetailPage() {
           <ArrowLeft size={16} />
         </Link>
         <div className="flex-1">
-          <h1 className="text-lg font-bold text-[var(--kennion-navy)]">
-            {session.userName || "Anonymous"}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-bold text-[var(--kennion-navy)]">
+              {session.userName || "Anonymous"}
+            </h1>
+            {session.userCode && (
+              <span className="text-[11px] font-mono text-slate-400 bg-slate-100 rounded px-2 py-0.5">
+                {session.userCode}
+              </span>
+            )}
+          </div>
           <p className="text-[12px] text-slate-400">{formatTime(session.createdAt)}</p>
         </div>
         <div className="flex gap-2">
@@ -177,6 +186,12 @@ export default function ConversationDetailPage() {
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] mb-3">Member Info</h3>
             <div className="space-y-2.5">
+              {session.userCode && (
+                <div className="flex items-center gap-2 text-[13px] text-slate-600">
+                  <Hash size={14} className="text-slate-400" />
+                  <span className="font-mono">{session.userCode}</span>
+                </div>
+              )}
               {session.userEmail && (
                 <div className="flex items-center gap-2 text-[13px] text-slate-600">
                   <Mail size={14} className="text-slate-400" />
