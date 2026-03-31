@@ -104,7 +104,7 @@ export default function PlansPage() {
       </div>
 
       {/* Plan Tiles Grid */}
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in-up stagger-2">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 animate-fade-in-up stagger-2">
         {activePlans.map((plan, i) => (
           <a
             key={plan.name}
@@ -117,8 +117,8 @@ export default function PlansPage() {
             <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
               <FileText size={16} className={meta.color} strokeWidth={1.8} />
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] truncate leading-tight">
+            <div className="flex-1">
+              <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
                 {plan.name}
               </h3>
               <p className="text-[11px] text-slate-400 mt-0.5">View summary</p>
