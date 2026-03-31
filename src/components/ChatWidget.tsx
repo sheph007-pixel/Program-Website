@@ -8,9 +8,6 @@ import {
   Loader2,
   User,
   Headphones,
-  Paperclip,
-  File,
-  XCircle,
   CheckCircle,
   ThumbsUp,
   AlertCircle,
@@ -22,11 +19,6 @@ type Message = {
   content: string;
 };
 
-type Attachment = {
-  file: globalThis.File;
-  preview?: string;
-};
-
 export default function ChatWidget() {
   const { name: userName } = useUserName();
   const [open, setOpen] = useState(false);
@@ -36,10 +28,8 @@ export default function ChatWidget() {
   const [summaryReady, setSummaryReady] = useState(false);
   const [ticketSent, setTicketSent] = useState(false);
   const [ticketSending, setTicketSending] = useState(false);
-  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -219,17 +209,10 @@ export default function ChatWidget() {
     const text = input.trim();
     if (!text || loading) return;
 
-    let fullMessage = text;
-    if (attachments.length > 0) {
-      const fileNames = attachments.map((a) => a.file.name).join(", ");
-      fullMessage += `\n[Attached: ${fileNames}]`;
-    }
-
-    const userMsg: Message = { role: "user", content: fullMessage };
+    const userMsg: Message = { role: "user", content: text };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
-    setAttachments([]);
     setLoading(true);
 
     try {
@@ -246,7 +229,7 @@ export default function ChatWidget() {
         {
           role: "assistant",
           content:
-            "Sorry, I'm having a little trouble right now. You can call us directly at (844) 839-6740 and we'll help you right away!",
+            "Sorry, I'm having a little trouble right now. You can call the Enrollment Help Line at (833) 614-1622 and they'll help you right away!",
         },
       ]);
     } finally {
@@ -261,37 +244,10 @@ export default function ChatWidget() {
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    const newAttachments: Attachment[] = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.size > 10 * 1024 * 1024) continue;
-      const att: Attachment = { file };
-      if (file.type.startsWith("image/")) {
-        att.preview = URL.createObjectURL(file);
-      }
-      newAttachments.push(att);
-    }
-    setAttachments((prev) => [...prev, ...newAttachments]);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  const removeAttachment = (index: number) => {
-    setAttachments((prev) => {
-      const updated = [...prev];
-      if (updated[index].preview) URL.revokeObjectURL(updated[index].preview!);
-      updated.splice(index, 1);
-      return updated;
-    });
-  };
-
   const resetChat = () => {
     setMessages([]);
     setSummaryReady(false);
     setTicketSent(false);
-    setAttachments([]);
   };
 
   return (
@@ -425,48 +381,10 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Attachments preview */}
-          {attachments.length > 0 && !summaryReady && !ticketSent && (
-            <div className="shrink-0 border-t border-slate-100 bg-slate-50 px-3 py-2 flex flex-wrap gap-2">
-              {attachments.map((att, i) => (
-                <div
-                  key={i}
-                  className="relative flex items-center gap-1.5 rounded-lg bg-white border border-slate-200 px-2 py-1.5 text-[11px] text-slate-600"
-                >
-                  {att.preview ? (
-                    <img src={att.preview} alt="" className="h-6 w-6 rounded object-cover" />
-                  ) : (
-                    <File size={12} className="text-slate-400" />
-                  )}
-                  <span className="max-w-[100px] truncate">{att.file.name}</span>
-                  <button onClick={() => removeAttachment(i)} className="ml-0.5 text-slate-400 hover:text-red-500 transition-colors">
-                    <XCircle size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Input area - hidden when summary is showing or ticket sent */}
           {!summaryReady && !ticketSent && (
             <div className="shrink-0 border-t border-slate-200 bg-white p-3 sm:rounded-b-2xl">
               <div className="flex items-end gap-2">
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex h-10 w-8 shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-blue-500"
-                  aria-label="Attach file"
-                  title="Attach a file"
-                >
-                  <Paperclip size={18} strokeWidth={1.8} />
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  accept="image/*,.pdf,.doc,.docx,.txt"
-                />
                 <textarea
                   ref={inputRef}
                   value={input}
@@ -490,21 +408,16 @@ export default function ChatWidget() {
                   )}
                 </button>
               </div>
-              <div className="mt-2 flex justify-between items-center">
-                <span className="text-[10px] text-slate-300">
-                  {attachments.length > 0
-                    ? `${attachments.length} file${attachments.length > 1 ? "s" : ""} attached`
-                    : ""}
-                </span>
-                {messages.length > 2 && (
+              {messages.length > 2 && (
+                <div className="mt-2 flex justify-end">
                   <button
                     onClick={resetChat}
                     className="text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-500"
                   >
                     Start over
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
 

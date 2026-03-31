@@ -39,10 +39,6 @@ export default function EnrollmentPage() {
 
       {/* Help Line */}
       <div className="animate-fade-in-up stagger-2 text-center">
-        <div className="card inline-flex items-center gap-2 px-4 py-2 mb-5">
-          <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[13px] font-medium text-slate-500">Live support available now</span>
-        </div>
         <p className="mb-5 text-[15px] text-slate-500">
           Need help enrolling? A Benefits Coach can walk you through your
           options, explain your rates, and get you enrolled over the phone.

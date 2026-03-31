@@ -2,6 +2,7 @@
 
 import { Smartphone, Play, ArrowUpRight, Heart, Stethoscope, ShieldCheck, Activity } from "lucide-react";
 import { useUserName } from "@/components/NameContext";
+import PhoneContact from "@/components/PhoneContact";
 
 const benefits = [
   {
@@ -133,6 +134,18 @@ export default function VirtualCarePage() {
             </a>
           );
         })}
+      </div>
+
+      {/* HealthJoy Concierge */}
+      <div className="divider" />
+      <div className="animate-fade-in-up stagger-3">
+        <PhoneContact
+          number="(877) 500-3212"
+          label="HealthJoy Concierge"
+          sublabel="Available 24/7 for virtual care help"
+          gradient="from-purple-600 to-fuchsia-500"
+          shadow="shadow-purple-500/20"
+        />
       </div>
     </div>
   );

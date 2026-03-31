@@ -20,9 +20,14 @@ export function useUserName() {
   return useContext(NameContext);
 }
 
-function capitalize(s: string) {
+function smartCapitalize(s: string) {
   if (!s) return s;
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  // If all lowercase, capitalize first letter
+  if (s === s.toLowerCase()) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+  // Otherwise preserve their capitalization (handles MacDonald, JP, etc.)
+  return s;
 }
 
 export function NameProvider({ children }: { children: ReactNode }) {
@@ -36,7 +41,7 @@ export function NameProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setName = useCallback((n: string) => {
-    const trimmed = capitalize(n.trim());
+    const trimmed = smartCapitalize(n.trim());
     setNameState(trimmed);
     if (trimmed) {
       localStorage.setItem("kennion_name", trimmed);

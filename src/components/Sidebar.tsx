@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Pencil,
+  MoreHorizontal,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useUserName } from "./NameContext";
@@ -27,19 +28,27 @@ const navItems = [
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
 ];
 
-// Bottom tab bar items for mobile (subset for thumb reach)
+// Bottom tab bar items for mobile
 const mobileTabItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/plans", label: "Plans", icon: FileText },
   { href: "/enrollment", label: "Enroll", icon: ClipboardList },
-  { href: "/app-download", label: "App", icon: Smartphone },
   { href: "#help", label: "Help", icon: MessageCircle, isChat: true },
+  { href: "#more", label: "More", icon: MoreHorizontal, isMore: true },
+];
+
+// Items shown in the "More" menu on mobile
+const moreMenuItems = [
+  { href: "/app-download", label: "HealthJoy App", icon: Smartphone },
+  { href: "/visa", label: "Paytient Visa", icon: CreditCard },
+  { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { name, setName, hasName } = useUserName();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [editingName, setEditingName] = useState(false);
@@ -82,18 +91,55 @@ export default function Sidebar() {
         )}
       </div>
 
+      {/* Mobile "More" menu popup */}
+      {moreOpen && (
+        <div className="fixed bottom-16 right-3 z-50 md:hidden animate-fade-in-up">
+          <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10">
+            {moreMenuItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMoreOpen(false)}
+                  className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${
+                    isActive ? "bg-blue-50 text-blue-600" : "text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  <Icon size={18} strokeWidth={1.8} />
+                  <span className="text-[14px] font-medium">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* More menu backdrop */}
+      {moreOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          onClick={() => setMoreOpen(false)}
+        />
+      )}
+
       {/* Mobile bottom tab bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
         <div className="flex items-stretch justify-around px-1">
           {mobileTabItems.map((item) => {
-            const isActive = !item.isChat && pathname === item.href;
+            const isActive = !item.isChat && !(item as { isMore?: boolean }).isMore && pathname === item.href;
+            const isMoreActive = (item as { isMore?: boolean }).isMore && moreMenuItems.some(m => pathname === m.href);
             const Icon = item.icon;
 
             if (item.isChat) {
               return (
                 <button
                   key={item.href}
-                  onClick={() => window.dispatchEvent(new CustomEvent("open-kennion-chat"))}
+                  onClick={() => {
+                    setMoreOpen(false);
+                    window.dispatchEvent(new CustomEvent("open-kennion-chat"));
+                  }}
                   className="flex flex-1 flex-col items-center gap-0.5 py-2 text-emerald-500 transition-colors"
                 >
                   <Icon size={20} strokeWidth={1.5} />
@@ -102,10 +148,28 @@ export default function Sidebar() {
               );
             }
 
+            if ((item as { isMore?: boolean }).isMore) {
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => setMoreOpen(!moreOpen)}
+                  className={`flex flex-1 flex-col items-center gap-0.5 py-2 transition-colors ${
+                    moreOpen || isMoreActive ? "text-blue-600" : "text-slate-400"
+                  }`}
+                >
+                  <Icon size={20} strokeWidth={moreOpen || isMoreActive ? 2 : 1.5} />
+                  <span className={`text-[10px] ${moreOpen || isMoreActive ? "font-semibold" : "font-medium"}`}>
+                    {item.label}
+                  </span>
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setMoreOpen(false)}
                 className={`flex flex-1 flex-col items-center gap-0.5 py-2 transition-colors ${
                   isActive ? "text-blue-600" : "text-slate-400"
                 }`}
