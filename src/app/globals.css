@@ -252,3 +252,8 @@ html {
   background: linear-gradient(to right, transparent, #e2e8f0, transparent);
   margin: 32px 0;
 }
+
+/* Safe area for iPhone notch/home indicator */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
