@@ -254,6 +254,7 @@ html {
 }
 
 /* Safe area for iPhone notch/home indicator */
+/* Safe area for iPhone notch/home indicator - additive, won't override existing padding */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
