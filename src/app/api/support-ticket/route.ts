@@ -20,7 +20,21 @@ export async function POST(req: NextRequest) {
       year: "numeric",
     });
 
-    const subject = `${name} - ${today}`;
+    const subject = `${name}${employer && employer !== "See transcript" ? ` | ${employer}` : ""}`;
+
+    // Fetch AI summary from session if available
+    let aiSummary = "";
+    if (sessionId) {
+      try {
+        const session = await prisma.chatSession.findUnique({
+          where: { id: sessionId },
+          select: { summary: true },
+        });
+        if (session?.summary) aiSummary = session.summary;
+      } catch {
+        // continue without summary
+      }
+    }
 
     const htmlBody = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -51,6 +65,13 @@ export async function POST(req: NextRequest) {
             </tr>
           </table>
 
+          ${aiSummary ? `
+          <h2 style="color: #0a1929; font-size: 16px; margin: 0 0 12px; border-bottom: 2px solid #7c3aed; padding-bottom: 8px;">AI Summary</h2>
+          <div style="background: #f5f3ff; border-radius: 8px; padding: 16px; margin-bottom: 24px; border: 1px solid #ddd6fe;">
+            <p style="margin: 0; color: #4c1d95; font-size: 14px; line-height: 1.6;">${aiSummary}</p>
+          </div>
+          ` : ""}
+
           <h2 style="color: #0a1929; font-size: 16px; margin: 0 0 12px; border-bottom: 2px solid #0066cc; padding-bottom: 8px;">Issue Description</h2>
           <div style="background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 24px; border: 1px solid #e2e8f0;">
             <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${issue}</p>
@@ -73,6 +94,7 @@ export async function POST(req: NextRequest) {
     const { error } = await getResend().emails.send({
       from: "Kennion Benefits <support@kennion.com>",
       to: ["support@kennion.com"],
+      cc: ["hunter@kennion.com"],
       replyTo: email,
       subject,
       html: htmlBody,
