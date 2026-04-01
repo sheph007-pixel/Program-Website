@@ -10,6 +10,7 @@ export async function GET() {
         name: true,
         category: true,
         summaryUrl: true,
+        externalUrl: true,
         pdfName: true,
         isActive: true,
         sortOrder: true,
@@ -85,7 +86,7 @@ export async function POST(req: NextRequest) {
 
     // Get all plans for matching
     const plans = await prisma.plan.findMany({
-      select: { id: true, name: true, category: true },
+      select: { id: true, name: true, category: true, externalUrl: true, summaryUrl: true },
     });
 
     const results: { fileName: string; matched: boolean; planName?: string }[] = [];
@@ -114,6 +115,10 @@ export async function POST(req: NextRequest) {
             pdfData: buffer,
             pdfName: file.name,
             summaryUrl: `/api/plans/${bestMatch.id}/pdf`,
+            // Preserve original external URL if not already saved
+            ...(!bestMatch.externalUrl && bestMatch.summaryUrl.startsWith("http")
+              ? { externalUrl: bestMatch.summaryUrl }
+              : {}),
           },
         });
         results.push({ fileName: file.name, matched: true, planName: bestMatch.name });

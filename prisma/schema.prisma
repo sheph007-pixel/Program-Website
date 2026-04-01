@@ -59,6 +59,7 @@ model Plan {
   category    String
   sortOrder   Int      @default(0)
   summaryUrl  String
+  externalUrl String   @default("")
   pdfData     Bytes?
   pdfName     String?
   isActive    Boolean  @default(true)

@@ -10,6 +10,7 @@ import {
   X,
   Loader2,
   Trash2,
+  Link,
 } from "lucide-react";
 
 type Plan = {
@@ -33,6 +34,7 @@ const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Suppleme
 export default function DocumentsPage() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadingPlanId, setUploadingPlanId] = useState<string | null>(null);
@@ -41,17 +43,41 @@ export default function DocumentsPage() {
   const singleInputRef = useRef<HTMLInputElement>(null);
   const targetPlanIdRef = useRef<string | null>(null);
 
+  const seedPlans = useCallback(async () => {
+    setSeeding(true);
+    try {
+      const res = await fetch("/api/admin/plans/seed", { method: "POST" });
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+      }
+    } catch {
+      setError("Failed to seed plans");
+    } finally {
+      setSeeding(false);
+    }
+  }, []);
+
   const fetchPlans = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/plans");
       const data = await res.json();
-      setPlans(data.plans || []);
+      const fetched = data.plans || [];
+      if (fetched.length === 0) {
+        // Auto-seed if database has no plans
+        await seedPlans();
+        const res2 = await fetch("/api/admin/plans");
+        const data2 = await res2.json();
+        setPlans(data2.plans || []);
+      } else {
+        setPlans(fetched);
+      }
     } catch {
       setPlans([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [seedPlans]);
 
   useEffect(() => {
     fetchPlans();
@@ -129,7 +155,7 @@ export default function DocumentsPage() {
     }
   };
 
-  // Remove PDF from a plan
+  // Remove PDF from a plan (reverts to external link)
   const handleRemovePdf = async (planId: string) => {
     setRemovingPlanId(planId);
     try {
@@ -160,7 +186,17 @@ export default function DocumentsPage() {
   }));
 
   const totalPlans = plans.length;
-  const uploadedCount = plans.filter((p) => p.pdfName).length;
+  const pdfCount = plans.filter((p) => p.pdfName).length;
+  const linkCount = totalPlans - pdfCount;
+
+  if (loading || seeding) {
+    return (
+      <div className="flex items-center justify-center py-20 gap-3 text-slate-400">
+        <Loader2 size={20} className="animate-spin" />
+        <span className="text-sm">{seeding ? "Loading plans..." : "Loading..."}</span>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -169,7 +205,10 @@ export default function DocumentsPage() {
         <div>
           <h1 className="text-xl font-bold text-[var(--kennion-navy)]">Documents</h1>
           <p className="text-[12px] text-slate-400">
-            {totalPlans} plans total &middot; {uploadedCount} with PDFs &middot; {totalPlans - uploadedCount} missing
+            {totalPlans} plans &middot;{" "}
+            <span className="text-emerald-500">{pdfCount} PDF{pdfCount !== 1 ? "s" : ""}</span>
+            {" "}&middot;{" "}
+            <span className="text-blue-500">{linkCount} external link{linkCount !== 1 ? "s" : ""}</span>
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -229,7 +268,6 @@ export default function DocumentsPage() {
             )}
           </div>
 
-          {/* Progress bar */}
           {uploadProgress.active && (
             <div className="mb-4">
               <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -244,7 +282,6 @@ export default function DocumentsPage() {
             </div>
           )}
 
-          {/* Results */}
           {!uploadProgress.active && uploadProgress.results.length > 0 && (
             <div className="space-y-1.5">
               {uploadProgress.results.map((r, i) => (
@@ -274,114 +311,134 @@ export default function DocumentsPage() {
       )}
 
       {/* Plan grid by category */}
-      {loading ? (
-        <div className="text-center py-12 text-slate-400 text-sm">Loading plans...</div>
-      ) : (
-        <div className="space-y-8">
-          {grouped.map(({ category, plans: catPlans }) => (
+      <div className="space-y-8">
+        {grouped.map(({ category, plans: catPlans }) => {
+          const catPdfCount = catPlans.filter((p) => p.pdfName).length;
+          return (
             <div key={category}>
               <div className="flex items-center gap-3 mb-3">
                 <h2 className="text-[14px] font-semibold text-[var(--kennion-navy)]">
                   {category}
                 </h2>
                 <span className="text-[12px] text-slate-400">
-                  {catPlans.filter((p) => p.pdfName).length}/{catPlans.length} uploaded
+                  {catPdfCount}/{catPlans.length} with PDFs
                 </span>
               </div>
 
-              {catPlans.length === 0 ? (
-                <p className="text-[13px] text-slate-400 italic">No plans in this category</p>
-              ) : (
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {catPlans.map((plan) => {
-                    const hasPdf = !!plan.pdfName;
-                    const isUploading = uploadingPlanId === plan.id;
-                    const isRemoving = removingPlanId === plan.id;
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {catPlans.map((plan) => {
+                  const hasPdf = !!plan.pdfName;
+                  const isUploading = uploadingPlanId === plan.id;
+                  const isRemoving = removingPlanId === plan.id;
+                  const hasLink = !hasPdf && plan.summaryUrl && plan.summaryUrl.startsWith("http");
 
-                    return (
-                      <div
-                        key={plan.id}
-                        className={`group relative rounded-xl border bg-white p-4 transition-all ${
-                          hasPdf
-                            ? "border-emerald-200 hover:border-emerald-300 hover:shadow-md"
-                            : "border-dashed border-slate-300 hover:border-blue-400 hover:shadow-md"
-                        }`}
-                      >
-                        {/* Plan info */}
-                        <div className="flex items-start gap-3 mb-3">
-                          <div
-                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                              hasPdf ? "bg-emerald-50" : "bg-slate-50"
-                            }`}
-                          >
-                            {isUploading || isRemoving ? (
-                              <Loader2 size={18} className="text-blue-500 animate-spin" />
-                            ) : (
-                              <FileText
-                                size={18}
-                                className={hasPdf ? "text-emerald-600" : "text-slate-400"}
-                                strokeWidth={1.8}
-                              />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
-                              {plan.name}
-                            </h3>
-                            {hasPdf ? (
-                              <p className="text-[11px] text-emerald-600 truncate mt-0.5">
-                                {plan.pdfName}
-                              </p>
-                            ) : (
-                              <p className="text-[11px] text-slate-400 mt-0.5">No PDF uploaded</p>
-                            )}
-                          </div>
+                  return (
+                    <div
+                      key={plan.id}
+                      className={`group relative rounded-xl border bg-white p-4 transition-all ${
+                        hasPdf
+                          ? "border-emerald-200 hover:border-emerald-300 hover:shadow-md"
+                          : "border-slate-200 hover:border-blue-300 hover:shadow-md"
+                      }`}
+                    >
+                      {/* Source badge */}
+                      <div className="absolute top-3 right-3">
+                        {hasPdf ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                            <FileText size={10} /> PDF
+                          </span>
+                        ) : hasLink ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                            <Link size={10} /> Link
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+                            None
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Plan info */}
+                      <div className="flex items-start gap-3 mb-3 pr-14">
+                        <div
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
+                            hasPdf ? "bg-emerald-50" : "bg-slate-50"
+                          }`}
+                        >
+                          {isUploading || isRemoving ? (
+                            <Loader2 size={18} className="text-blue-500 animate-spin" />
+                          ) : (
+                            <FileText
+                              size={18}
+                              className={hasPdf ? "text-emerald-600" : "text-slate-400"}
+                              strokeWidth={1.8}
+                            />
+                          )}
                         </div>
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => triggerSingleUpload(plan.id)}
-                            disabled={isUploading || isRemoving}
-                            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-medium transition-all disabled:opacity-50 ${
-                              hasPdf
-                                ? "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                                : "bg-blue-50 text-blue-600 hover:bg-blue-100"
-                            }`}
-                          >
-                            <Upload size={13} />
-                            {hasPdf ? "Replace" : "Upload PDF"}
-                          </button>
-
-                          {hasPdf && (
-                            <>
-                              <a
-                                href={plan.summaryUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center rounded-lg bg-slate-50 px-3 py-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors"
-                              >
-                                <ExternalLink size={13} />
-                              </a>
-                              <button
-                                onClick={() => handleRemovePdf(plan.id)}
-                                disabled={isRemoving}
-                                className="flex items-center justify-center rounded-lg bg-slate-50 px-3 py-2 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors disabled:opacity-50"
-                              >
-                                <Trash2 size={13} />
-                              </button>
-                            </>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
+                            {plan.name}
+                          </h3>
+                          {hasPdf ? (
+                            <p className="text-[11px] text-emerald-600 truncate mt-0.5">
+                              {plan.pdfName}
+                            </p>
+                          ) : hasLink ? (
+                            <p className="text-[11px] text-blue-500 truncate mt-0.5">
+                              External link
+                            </p>
+                          ) : (
+                            <p className="text-[11px] text-slate-400 mt-0.5">No source</p>
                           )}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => triggerSingleUpload(plan.id)}
+                          disabled={isUploading || isRemoving}
+                          className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-medium transition-all disabled:opacity-50 ${
+                            hasPdf
+                              ? "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                          }`}
+                        >
+                          <Upload size={13} />
+                          {hasPdf ? "Replace PDF" : "Upload PDF"}
+                        </button>
+
+                        {(hasPdf || hasLink) && (
+                          <a
+                            href={plan.summaryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center rounded-lg bg-slate-50 px-3 py-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors"
+                            title="View"
+                          >
+                            <ExternalLink size={13} />
+                          </a>
+                        )}
+
+                        {hasPdf && (
+                          <button
+                            onClick={() => handleRemovePdf(plan.id)}
+                            disabled={isRemoving}
+                            className="flex items-center justify-center rounded-lg bg-slate-50 px-3 py-2 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors disabled:opacity-50"
+                            title="Remove PDF (revert to link)"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }

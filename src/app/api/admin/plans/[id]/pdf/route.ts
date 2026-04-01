@@ -17,12 +17,22 @@ export async function PUT(
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
+    // Save the current external URL before overwriting summaryUrl
+    const plan = await prisma.plan.findUnique({
+      where: { id },
+      select: { externalUrl: true, summaryUrl: true },
+    });
+
     await prisma.plan.update({
       where: { id },
       data: {
         pdfData: buffer,
         pdfName: file.name,
         summaryUrl: `/api/plans/${id}/pdf`,
+        // Preserve the original external URL if not already saved
+        ...(plan && !plan.externalUrl && plan.summaryUrl.startsWith("http")
+          ? { externalUrl: plan.summaryUrl }
+          : {}),
       },
     });
 
@@ -33,7 +43,7 @@ export async function PUT(
   }
 }
 
-/** Remove a PDF from a specific plan */
+/** Remove a PDF from a specific plan (reverts to external link) */
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -41,12 +51,18 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    // Get the original external URL to restore
+    const plan = await prisma.plan.findUnique({
+      where: { id },
+      select: { externalUrl: true },
+    });
+
     await prisma.plan.update({
       where: { id },
       data: {
         pdfData: null,
         pdfName: null,
-        summaryUrl: "",
+        summaryUrl: plan?.externalUrl || "",
       },
     });
 
