@@ -488,7 +488,7 @@ export default function ChatWidget() {
 
           {/* Input area - iMessage style */}
           {!summaryReady && !ticketSent && (
-            <div className="shrink-0 border-t border-slate-200 bg-white px-3 py-3 pb-5 sm:p-3 sm:pb-4 sm:rounded-b-2xl safe-area-bottom">
+            <div className="shrink-0 border-t border-slate-200 bg-white px-4 pt-3 pb-8 sm:px-4 sm:pt-3 sm:pb-6 sm:rounded-b-2xl safe-area-bottom">
               <div className="flex items-end gap-2">
                 <textarea
                   ref={inputRef}
@@ -531,7 +531,7 @@ export default function ChatWidget() {
 
           {/* Post-submission footer */}
           {ticketSent && (
-            <div className="shrink-0 border-t border-slate-200 bg-white p-4 pb-6 sm:pb-4 sm:rounded-b-2xl text-center safe-area-bottom">
+            <div className="shrink-0 border-t border-slate-200 bg-white p-4 pb-8 sm:pb-6 sm:rounded-b-2xl text-center safe-area-bottom">
               <button
                 onClick={resetChat}
                 className="rounded-2xl sm:rounded-xl border border-slate-200 px-6 py-3 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-slate-500 transition-all active:scale-[0.98]"
