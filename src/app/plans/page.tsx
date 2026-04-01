@@ -91,9 +91,9 @@ export default function PlansPage() {
           {name ? `${name}, Explore Your Benefits` : "Plans"}
         </h1>
         <p className="page-subtitle">
-          Browse all benefits available through the Kennion program.
-          These are the plans offered across all groups. Once you enroll,
-          you&apos;ll see the specific plans and rates for your group.
+          These are all the plans offered through the Kennion Benefits Program.
+          To see the specific plans and rates for your group, log in to enroll,
+          call the Benefits Enrollment Line, or check the HealthJoy app.
         </p>
       </div>
 
