@@ -394,8 +394,8 @@ export default function Sidebar() {
 
       {/* Dynamic CSS variable for main content offset */}
       <style>{`
-        :root { --current-sidebar-width: ${sidebarWidth}; }
-        @media (max-width: 767px) { :root { --current-sidebar-width: 0px; } }
+        :root { --current-sidebar-width: 0px; }
+        @media (min-width: 768px) { :root { --current-sidebar-width: ${sidebarWidth}; } }
       `}</style>
     </>
   );
