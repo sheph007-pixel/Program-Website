@@ -8,10 +8,45 @@ function getResend() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, employer, phone, email, issue, chatTranscript, sessionId } = await req.json();
+    const contentType = req.headers.get("content-type") || "";
 
-    if (!name || !email || !issue) {
-      return Response.json({ error: "Missing required fields" }, { status: 400 });
+    let name: string,
+      employer: string,
+      phone: string,
+      email: string,
+      issue: string,
+      chatTranscript: string,
+      sessionId: string | undefined;
+    let attachment: { filename: string; content: Buffer } | null = null;
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await req.formData();
+      name = (formData.get("name") as string) || "";
+      employer = (formData.get("employer") as string) || "";
+      phone = (formData.get("phone") as string) || "";
+      email = (formData.get("email") as string) || "";
+      issue = (formData.get("issue") as string) || "";
+      chatTranscript = (formData.get("chatTranscript") as string) || "";
+      sessionId = (formData.get("sessionId") as string) || undefined;
+
+      const file = formData.get("attachment") as File | null;
+      if (file && file.size > 0) {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        attachment = { filename: file.name, content: buffer };
+      }
+    } else {
+      const json = await req.json();
+      name = json.name || "";
+      employer = json.employer || "";
+      phone = json.phone || "";
+      email = json.email || "";
+      issue = json.issue || "";
+      chatTranscript = json.chatTranscript || "";
+      sessionId = json.sessionId || undefined;
+    }
+
+    if (!name || !email) {
+      return Response.json({ error: "Name and email are required" }, { status: 400 });
     }
 
     const today = new Date().toLocaleDateString("en-US", {
@@ -52,10 +87,6 @@ export async function POST(req: NextRequest) {
               <td style="padding: 8px 0; color: #0a1929; font-size: 14px; font-weight: 600;">${name}</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Employer</td>
-              <td style="padding: 8px 0; color: #0a1929; font-size: 14px; font-weight: 600;">${employer || "Not provided"}</td>
-            </tr>
-            <tr>
               <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Phone</td>
               <td style="padding: 8px 0; color: #0a1929; font-size: 14px; font-weight: 600;">${phone || "Not provided"}</td>
             </tr>
@@ -63,6 +94,12 @@ export async function POST(req: NextRequest) {
               <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Email</td>
               <td style="padding: 8px 0; color: #0a1929; font-size: 14px; font-weight: 600;"><a href="mailto:${email}" style="color: #0066cc; text-decoration: none;">${email}</a></td>
             </tr>
+            ${attachment ? `
+            <tr>
+              <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Attachment</td>
+              <td style="padding: 8px 0; color: #0a1929; font-size: 14px; font-weight: 600;">${attachment.filename}</td>
+            </tr>
+            ` : ""}
           </table>
 
           ${aiSummary ? `
@@ -72,10 +109,12 @@ export async function POST(req: NextRequest) {
           </div>
           ` : ""}
 
+          ${issue ? `
           <h2 style="color: #0a1929; font-size: 16px; margin: 0 0 12px; border-bottom: 2px solid #0066cc; padding-bottom: 8px;">Issue Description</h2>
           <div style="background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 24px; border: 1px solid #e2e8f0;">
             <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${issue}</p>
           </div>
+          ` : ""}
 
           ${chatTranscript ? `
           <h2 style="color: #0a1929; font-size: 16px; margin: 0 0 12px; border-bottom: 2px solid #0066cc; padding-bottom: 8px;">Chat Transcript</h2>
@@ -86,19 +125,31 @@ export async function POST(req: NextRequest) {
         </div>
 
         <div style="background: #f1f5f9; padding: 16px 32px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; border-top: none;">
-          <p style="margin: 0; color: #64748b; font-size: 12px;">This support ticket was submitted via the Kennion Benefits Program portal at site.kennion.com</p>
+          <p style="margin: 0; color: #64748b; font-size: 12px;">This support ticket was submitted via the Kennion Benefits Program portal.</p>
         </div>
       </div>
     `;
 
-    const { error } = await getResend().emails.send({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const emailPayload: any = {
       from: "Kennion Benefits <support@kennion.com>",
       to: ["support@kennion.com"],
       cc: ["hunter@kennion.com"],
       replyTo: email,
       subject,
       html: htmlBody,
-    });
+    };
+
+    if (attachment) {
+      emailPayload.attachments = [
+        {
+          filename: attachment.filename,
+          content: attachment.content,
+        },
+      ];
+    }
+
+    const { error } = await getResend().emails.send(emailPayload);
 
     if (error) {
       console.error("Resend error:", error);

@@ -8,9 +8,8 @@ import {
   Loader2,
   Headphones,
   CheckCircle,
-  ThumbsUp,
-  AlertCircle,
   ArrowUp,
+  Paperclip,
 } from "lucide-react";
 import { useUserName } from "./NameContext";
 
@@ -53,7 +52,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [summaryReady, setSummaryReady] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [ticketSent, setTicketSent] = useState(false);
   const [ticketSending, setTicketSending] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -61,19 +60,34 @@ export default function ChatWidget() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // Form state
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formDetails, setFormDetails] = useState("");
+  const [formFile, setFormFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Pre-fill name when form opens
+  useEffect(() => {
+    if (showForm && userName) {
+      setFormName(userName);
+    }
+  }, [showForm, userName]);
+
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, summaryReady, ticketSent, scrollToBottom]);
+  }, [messages, showForm, ticketSent, scrollToBottom]);
 
   useEffect(() => {
-    if (open && inputRef.current && !summaryReady && !ticketSent) {
+    if (open && inputRef.current && !showForm && !ticketSent) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [open, summaryReady, ticketSent]);
+  }, [open, showForm, ticketSent]);
 
   useEffect(() => {
     const handler = () => setOpen(true);
@@ -91,7 +105,7 @@ export default function ChatWidget() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Handle mobile keyboard: resize chat area using visualViewport
+  // Handle mobile keyboard
   useEffect(() => {
     if (!open) return;
     const vv = window.visualViewport;
@@ -211,14 +225,15 @@ export default function ChatWidget() {
     }
 
     if (fullText.includes("SUMMARY_READY")) {
-      setSummaryReady(true);
+      setShowForm(true);
     }
 
     return fullText;
   };
 
-  const handleConfirm = async () => {
-    setSummaryReady(false);
+  const handleSubmitForm = async () => {
+    if (!formName.trim() || !formEmail.trim()) return;
+
     setTicketSending(true);
 
     const allText = messages
@@ -229,72 +244,32 @@ export default function ChatWidget() {
       .map((m) => m.content)
       .join("\n");
 
-    const extract = (patterns: RegExp[]) => {
-      for (const msg of [...messages].reverse().filter((m) => m.role === "user")) {
-        for (const p of patterns) {
-          const match = msg.content.match(p);
-          if (match) return match[1] || match[0];
-        }
-      }
-      return "";
-    };
-
-    const emailMatch = extract([/[\w.-]+@[\w.-]+\.\w+/]);
-    const phoneMatch = extract([/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/]);
+    const formData = new FormData();
+    formData.append("name", formName.trim());
+    formData.append("email", formEmail.trim());
+    formData.append("phone", formPhone.trim() || "Not provided");
+    formData.append("employer", "See transcript");
+    formData.append("issue", formDetails.trim() || userMessages);
+    formData.append("chatTranscript", allText);
+    if (sessionId) formData.append("sessionId", sessionId);
+    if (formFile) formData.append("attachment", formFile);
 
     try {
-      await fetch("/api/support-ticket", {
+      const res = await fetch("/api/support-ticket", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: userName || "See transcript",
-          employer: "See transcript",
-          phone: phoneMatch || "See transcript",
-          email: emailMatch || "See transcript",
-          issue: userMessages,
-          chatTranscript: allText,
-          sessionId: sessionId || undefined,
-        }),
+        body: formData,
       });
+      if (!res.ok) {
+        const data = await res.json();
+        console.error("Ticket error:", data.error);
+      }
     } catch {
       // silent
     } finally {
       setTicketSending(false);
       setTicketSent(true);
+      setShowForm(false);
       finalizeSession();
-    }
-  };
-
-  const handleDeny = async () => {
-    setSummaryReady(false);
-    const fixMsg: Message = { role: "user", content: "Something's not right. Let me correct it." };
-    const newMessages = [...messages, fixMsg];
-    setMessages(newMessages);
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages,
-          sessionId: sessionId || undefined,
-          userName: userName || undefined,
-          userCode: userCode || undefined,
-        }),
-      });
-      if (!res.ok) throw new Error();
-      await streamResponse(res);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "No problem! What needs to be changed?",
-        },
-      ]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -352,9 +327,14 @@ export default function ChatWidget() {
   const resetChat = () => {
     finalizeSession();
     setMessages([]);
-    setSummaryReady(false);
+    setShowForm(false);
     setTicketSent(false);
     setSessionId(null);
+    setFormName(userName || "");
+    setFormEmail("");
+    setFormPhone("");
+    setFormDetails("");
+    setFormFile(null);
   };
 
   return (
@@ -403,7 +383,7 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          {/* Messages - iMessage style on mobile */}
+          {/* Messages area */}
           <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 bg-white sm:bg-slate-50/50">
             {messages.map((msg, i) => (
               <div
@@ -440,29 +420,131 @@ export default function ChatWidget() {
               </div>
             )}
 
-            {/* Confirm / Deny buttons */}
-            {summaryReady && !ticketSent && !ticketSending && (
-              <div className="flex flex-col gap-2.5 pt-3 pb-1 px-1">
+            {/* ===== SUPPORT REQUEST FORM ===== */}
+            {showForm && !ticketSent && !ticketSending && (
+              <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50/50 p-4 sm:p-5">
+                <h4 className="text-[15px] sm:text-[14px] font-bold text-[#0a1929] mb-1">
+                  Submit a Support Request
+                </h4>
+                <p className="text-[12px] text-slate-500 mb-4">
+                  Fill in your details and our team will follow up with you directly.
+                </p>
+
+                <div className="space-y-3">
+                  {/* Name */}
+                  <div>
+                    <label className="block text-[12px] font-semibold text-slate-600 mb-1">
+                      Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formName}
+                      onChange={(e) => setFormName(e.target.value)}
+                      placeholder="Your full name"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-[14px] sm:text-[13px] text-slate-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/20"
+                      style={{ fontSize: "16px" }}
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-[12px] font-semibold text-slate-600 mb-1">
+                      Email <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={formEmail}
+                      onChange={(e) => setFormEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-[14px] sm:text-[13px] text-slate-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/20"
+                      style={{ fontSize: "16px" }}
+                    />
+                  </div>
+
+                  {/* Phone */}
+                  <div>
+                    <label className="block text-[12px] font-semibold text-slate-600 mb-1">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      value={formPhone}
+                      onChange={(e) => setFormPhone(e.target.value)}
+                      placeholder="(555) 123-4567"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-[14px] sm:text-[13px] text-slate-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/20"
+                      style={{ fontSize: "16px" }}
+                    />
+                  </div>
+
+                  {/* Details */}
+                  <div>
+                    <label className="block text-[12px] font-semibold text-slate-600 mb-1">
+                      Additional Details
+                    </label>
+                    <textarea
+                      value={formDetails}
+                      onChange={(e) => setFormDetails(e.target.value)}
+                      placeholder="Anything else we should know?"
+                      rows={3}
+                      className="w-full resize-none rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-[14px] sm:text-[13px] text-slate-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/20"
+                      style={{ fontSize: "16px" }}
+                    />
+                  </div>
+
+                  {/* Attachment */}
+                  <div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      onChange={(e) => setFormFile(e.target.files?.[0] || null)}
+                      className="hidden"
+                      accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-2 rounded-xl border border-dashed border-slate-300 bg-white px-3.5 py-2.5 text-[13px] sm:text-[12px] text-slate-500 transition-colors hover:border-blue-400 hover:text-blue-600 w-full"
+                    >
+                      <Paperclip size={14} />
+                      {formFile ? (
+                        <span className="truncate text-blue-600 font-medium">{formFile.name}</span>
+                      ) : (
+                        "Attach a file (optional)"
+                      )}
+                    </button>
+                    {formFile && (
+                      <button
+                        onClick={() => { setFormFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                        className="mt-1 text-[11px] text-red-400 hover:text-red-500"
+                      >
+                        Remove file
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit */}
                 <button
-                  onClick={handleConfirm}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3.5 text-[15px] sm:text-[14px] font-semibold text-white shadow-md shadow-emerald-500/20 transition-all active:scale-[0.98]"
+                  onClick={handleSubmitForm}
+                  disabled={!formName.trim() || !formEmail.trim() || ticketSending}
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3.5 text-[15px] sm:text-[14px] font-bold text-white shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
-                  <ThumbsUp size={18} strokeWidth={2} />
-                  Looks Good, Send It!
+                  <Send size={16} strokeWidth={2} />
+                  Submit Support Request
                 </button>
+
                 <button
-                  onClick={handleDeny}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white py-3 text-[14px] sm:text-[13px] font-medium text-slate-500 transition-all active:scale-[0.98]"
+                  onClick={() => setShowForm(false)}
+                  className="mt-2 w-full text-center text-[12px] text-slate-400 hover:text-slate-500"
                 >
-                  <AlertCircle size={16} strokeWidth={2} />
-                  Something's Not Right
+                  Continue chatting instead
                 </button>
               </div>
             )}
 
             {/* Sending indicator */}
             {ticketSending && (
-              <div className="flex items-center justify-center gap-2 py-4">
+              <div className="flex items-center justify-center gap-2 py-6">
                 <Loader2 size={18} className="animate-spin text-blue-500" />
                 <span className="text-[14px] sm:text-[13px] text-slate-500 font-medium">Sending to the Kennion team...</span>
               </div>
@@ -475,7 +557,7 @@ export default function ChatWidget() {
                   <CheckCircle size={32} className="text-emerald-500" strokeWidth={1.5} />
                 </div>
                 <h4 className="text-[17px] sm:text-[15px] font-bold text-slate-900 sm:text-[var(--kennion-navy)] mb-1">
-                  Request Sent!
+                  Request Submitted!
                 </h4>
                 <p className="text-[14px] sm:text-[13px] text-slate-500 max-w-[280px] leading-relaxed">
                   A member of the Kennion team will reach out to you personally. Available Monday through Friday, 8 AM to 5 PM.
@@ -486,8 +568,8 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input area - iMessage style */}
-          {!summaryReady && !ticketSent && (
+          {/* Input area */}
+          {!showForm && !ticketSent && (
             <div className="shrink-0 border-t border-slate-200 bg-white px-4 pt-3 pb-8 sm:pb-5 sm:rounded-b-2xl">
               <div className="flex items-end gap-2">
                 <textarea
