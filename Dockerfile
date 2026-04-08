@@ -15,8 +15,6 @@ COPY . .
 RUN mkdir -p public
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 RUN npx prisma generate
-# Compile seed script to JS for production
-RUN npx tsx --compile prisma/seed.ts > prisma/seed.js 2>/dev/null || npx tsc prisma/seed.ts --outDir prisma/compiled --esModuleInterop --module commonjs --target es2020 2>/dev/null || true
 RUN npm run build
 
 # Production image
@@ -27,9 +25,6 @@ ENV PORT=3000
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
-# Install prisma CLI + tsx for migrations and seeding at runtime
-RUN npm install -g prisma tsx
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
