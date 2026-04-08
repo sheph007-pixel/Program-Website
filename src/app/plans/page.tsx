@@ -1,61 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink, X, Download } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
 import { useUserName } from "@/components/NameContext";
 
-type Plan = { name: string; summaryUrl: string };
+type Plan = { id: string; name: string; category: string; summaryUrl: string; pdfName: string | null };
 
 const categoryMeta: Record<string, { icon: typeof Shield; color: string; gradient: string; shadow: string; bg: string }> = {
   "Health Plans": { icon: Shield, color: "text-blue-600", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20", bg: "bg-blue-50" },
   "Dental Plans": { icon: Stethoscope, color: "text-indigo-600", gradient: "from-indigo-600 to-violet-500", shadow: "shadow-violet-500/20", bg: "bg-indigo-50" },
   "Vision Plans": { icon: Eye, color: "text-violet-600", gradient: "from-violet-600 to-purple-500", shadow: "shadow-purple-500/20", bg: "bg-violet-50" },
   "Supplemental": { icon: HeartPulse, color: "text-teal-600", gradient: "from-teal-600 to-emerald-500", shadow: "shadow-emerald-500/20", bg: "bg-teal-50" },
-};
-
-const staticPlans: Record<string, Plan[]> = {
-  "Health Plans": [
-    { name: "Deluxe Platinum", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDjbxGFQKCtTLE-pAQjj6HAAaS3JHitaKhwlw2QteYgfDs?e=FdajUc" },
-    { name: "Elite Health", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDiF-qR_lnSR46Cd9NCz5qgAculq2WeagWDxidEQ9i7DIc?e=aVy6jZ" },
-    { name: "Freedom Platinum", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQBfdf1DrXCGSKomJsf_91P7AbTkhqRxLH93Gk-qHTmLTrQ?e=h9kI87" },
-    { name: "Premier Health", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCyEt8YEtvDSb02wOrhvpO1AaVg44QV1kxL2z86NMdygto?e=XJrtsi" },
-    { name: "Choice Gold", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQC5MNDjfZKMQ7yWSHI_EB3SAefFq02DB42YyV0zTWepuRc?e=8wPAx0" },
-    { name: "Freedom Gold", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAv3Z7Q9Qs8T7B2EYZPfIymAcps0iDCrTg7G8BjCc27yGo?e=mUpNG0" },
-    { name: "Select Health", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQBnSZsY1kfVR43xJdohvpMlAWhQuWx6ox8OvrwNGpjh7vo?e=BkILWK" },
-    { name: "Basic Gold", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCGqetmNCvjSI5NMeT5iOmjAcewCSy2xov3oTOZQJu27to?e=QSjaJS" },
-    { name: "Preferred Silver", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAYRhZ0CCxdQKyrTe9YO3NKAdAkv6VhRNe5SGAe9zkxDTE?e=kVdW9x" },
-    { name: "Enhanced Silver", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAuc9wDHKnVRoXyPeQ4IY43AdvOEVhos94V5bt9mun5EZI?e=opToXJ" },
-    { name: "Freedom Silver", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDH6B4j6MiuRZMie658uV20AbeaRwekwp7Hgfj-3Mgkg-I?e=ubZxvM" },
-    { name: "Core Health", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAOp3ukpGTBToVCAEjQ3uVHAVf2g1j4ftsbsVoLwcGtzag?e=fxhCna" },
-    { name: "Classic Silver", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQBC2681O-G9QLN0l5ETbzDoAQIpbvHwbzkr3fTppEPAXDc?e=nCnyUV" },
-    { name: "Saver HSA", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQBHhZx5Gp8IQ4W-zYLmS1JzAUK2EA9tXOSwgoFz9uqQMhw?e=89V3r7" },
-    { name: "Freedom Bronze", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDMspItNgscRJ_H3njoL5w3AZ9LKu6lgJTpCQhnda_QX3s?e=jP32OB" },
-  ],
-  "Dental Plans": [
-    { name: "Advantage Dental (W Ortho)", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQC1zNTdLbCfSKJSl0nZut-jAZYEVN2E6i8ehEcKIM0tdrU?e=D0Dbhr" },
-    { name: "Complete Dental (W Ortho)", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQARyqwnbTxmT5p_V5yPCvuFAeeaj1qBW6bltnCw1DGaadY?e=etPWcd" },
-    { name: "Value Dental (W Ortho)", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAJhfPyTeISR6g630yMPL7rAfIh0KqKCBDdMKy8wXNt1RI?e=9DW6ON" },
-    { name: "Complete Dental", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDsmA3LxY0xSa5Ubz-9uLD_AZOiVrHXjk3aF0lw2s-AHPg?e=h3KHAD" },
-    { name: "Value Dental", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCqpwo6dBnASrxCgQEZbj6bAZVQHgQnGK27Qb0dIvwQcic?e=vz2T5A" },
-    { name: "Basic Dental", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCCBYcyLhXyTKz3ztcFG6nSAaeCZYIRmoscfv-ODP183nA?e=VAmfh0" },
-    { name: "Choice Dental", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDRZP1EmrZjTYo6OxTAP5YNAe6cInudHdmeAe4EsgYdWGM?e=bNOAAW" },
-  ],
-  "Vision Plans": [
-    { name: "Premium Vision", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCGHsTU0pS-QJebH4j_09OWAZ2zV-EPZw4G8dajTD1RAco?e=Lctihu" },
-    { name: "Standard Vision", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQDz2khRMs-8T6K52hyB6XyOAa_nb61a4xrpZDMRGjP4_K4?e=YIEVCe" },
-    { name: "Value Vision", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCIB4xpeM3hR7gJ-3b-FvRxAWidQM4y69kLD7txvrPpATA?e=ezJ4ic" },
-    { name: "Base Vision", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCrPHVJa5-_Qo4F9rgxl2M6ARVgvx_XsqusN1EzYWgPQbY?e=MRuc8G" },
-  ],
-  "Supplemental": [
-    { name: "Voluntary Life (Max $100k)", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAaYn_MmPbvT4jrucA0vOZ7AdkclPSeVNyLMvlEyfUExVw?e=NJda67" },
-    { name: "Individual Life ($100k+)", summaryUrl: "https://agents.ethoslife.com/invite/kennion" },
-    { name: "Accident Insurance", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQA85TDfb-1oSIVbOXC0C892AQi-zs96Z_Kh1tkRT7YaPzU?e=k7YkAb" },
-    { name: "Cancer Insurance", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQCd9_q-kRs0R56QhqOy5_qkAd2HyNsRbww7J-CLspiBMiI?e=jgPCIz" },
-    { name: "Critical Illness Insurance", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAMziJPxNoSSLs8EROh-3exARdY99FBFF90DdxZVbrwhcs?e=74myRz" },
-    { name: "Disability Insurance", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQBYlHMM431ITZzJzJtI_VT-AT0yAbDvayO6Rs0jvmDb35M?e=Uqcctu" },
-    { name: "Hospital + Surgery Insurance (GAP)", summaryUrl: "https://kennion-my.sharepoint.com/:b:/p/hunter/IQAE4gBK0LSiSK4wHpL-c7bsAQuWRTc_ENqSxeMD-pzuwlQ?e=55ZDLf" },
-  ],
 };
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
@@ -80,9 +36,60 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
 export default function PlansPage() {
   const { name } = useUserName();
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
+  const [plans, setPlans] = useState<Record<string, Plan[]>>({});
+  const [loading, setLoading] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
-  const activePlans = staticPlans[activeCategory] || [];
+  const fetchPlans = useCallback(async () => {
+    try {
+      const res = await fetch("/api/plans");
+      const data = await res.json();
+      if (data && Object.keys(data).length > 0) {
+        setPlans(data);
+      }
+    } catch {
+      // silent — page just shows empty categories
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPlans();
+  }, [fetchPlans]);
+
+  // Close modal on Escape
+  useEffect(() => {
+    if (!selectedPlan) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedPlan(null);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [selectedPlan]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedPlan) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [selectedPlan]);
+
+  const activePlans = plans[activeCategory] || [];
   const meta = categoryMeta[activeCategory];
+
+  const hasPdf = (plan: Plan) => plan.pdfName && plan.summaryUrl.startsWith("/api/");
+
+  const handlePlanClick = (plan: Plan) => {
+    if (hasPdf(plan)) {
+      setSelectedPlan(plan);
+    } else {
+      window.open(plan.summaryUrl, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <div className="page-container">
@@ -103,7 +110,7 @@ export default function PlansPage() {
           const catMeta = categoryMeta[cat];
           const CatIcon = catMeta.icon;
           const isActive = activeCategory === cat;
-          const count = (staticPlans[cat] || []).length;
+          const count = (plans[cat] || []).length;
           return (
             <button
               key={cat}
@@ -127,29 +134,39 @@ export default function PlansPage() {
       </div>
 
       {/* Plan Tiles Grid */}
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 animate-fade-in-up stagger-2">
-        {activePlans.map((plan, i) => (
-          <a
-            key={plan.name}
-            href={plan.summaryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card card-interactive group flex items-center gap-3 p-3.5 text-left transition-all"
-            style={{ animationDelay: `${i * 0.03}s` }}
-          >
-            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
-              <FileText size={16} className={meta.color} strokeWidth={1.8} />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
-                {plan.name}
-              </h3>
-              <p className="text-[11px] text-slate-400 mt-0.5">View summary</p>
-            </div>
-            <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
-          </a>
-        ))}
-      </div>
+      {loading ? (
+        <div className="text-center py-12 text-slate-400 text-sm">Loading plans...</div>
+      ) : activePlans.length === 0 ? (
+        <div className="text-center py-12 text-slate-400 text-sm">No plans available</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 animate-fade-in-up stagger-2">
+          {activePlans.map((plan, i) => (
+            <button
+              key={plan.id}
+              onClick={() => handlePlanClick(plan)}
+              className="card card-interactive group flex items-center gap-3 p-3.5 text-left transition-all w-full"
+              style={{ animationDelay: `${i * 0.03}s` }}
+            >
+              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
+                <FileText size={16} className={meta.color} strokeWidth={1.8} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
+                  {plan.name}
+                </h3>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {hasPdf(plan) ? "View summary" : "View details"}
+                </p>
+              </div>
+              {hasPdf(plan) ? (
+                <FileText size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
+              ) : (
+                <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Support Contacts for Category */}
       {categorySupport[activeCategory] && (
@@ -188,6 +205,52 @@ export default function PlansPage() {
             )}
           </div>
         </>
+      )}
+
+      {/* ===== PDF VIEWER MODAL ===== */}
+      {selectedPlan && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={(e) => { if (e.target === e.currentTarget) setSelectedPlan(null); }}
+        >
+          <div className="flex flex-col w-full h-full sm:w-[90vw] sm:max-w-4xl sm:h-[85vh] sm:rounded-2xl bg-white shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 px-4 py-3 sm:px-6 sm:py-4 bg-white">
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${categoryMeta[selectedPlan.category]?.bg || "bg-slate-50"}`}>
+                <FileText size={18} className={categoryMeta[selectedPlan.category]?.color || "text-slate-500"} strokeWidth={1.8} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[15px] sm:text-[16px] font-bold text-[var(--kennion-navy)] truncate">
+                  {selectedPlan.name}
+                </h3>
+                <p className="text-[11px] text-slate-400">{selectedPlan.category}</p>
+              </div>
+              <a
+                href={selectedPlan.summaryUrl}
+                download
+                className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-200"
+              >
+                <Download size={14} />
+                <span className="hidden sm:inline">Download</span>
+              </a>
+              <button
+                onClick={() => setSelectedPlan(null)}
+                className="flex items-center justify-center rounded-lg bg-slate-100 p-2 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
+              >
+                <X size={18} strokeWidth={2} />
+              </button>
+            </div>
+
+            {/* PDF Iframe */}
+            <div className="flex-1 bg-slate-100">
+              <iframe
+                src={selectedPlan.summaryUrl}
+                className="w-full h-full border-0"
+                title={`${selectedPlan.name} Summary`}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

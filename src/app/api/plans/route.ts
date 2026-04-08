@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, ensureDatabase } from "@/lib/db";
 
 export async function GET() {
   try {
+    await ensureDatabase();
     const plans = await prisma.plan.findMany({
       where: { isActive: true },
       orderBy: [{ category: "asc" }, { sortOrder: "asc" }],
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        sortOrder: true,
+        summaryUrl: true,
+        pdfName: true,
+        isActive: true,
+      },
     });
 
     // Group by category
@@ -17,7 +27,6 @@ export async function GET() {
 
     return NextResponse.json(grouped);
   } catch {
-    // Fallback: return empty if DB not connected
     return NextResponse.json({});
   }
 }
