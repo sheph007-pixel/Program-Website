@@ -7,12 +7,17 @@ function getClient() {
   return new OpenAI({ apiKey: process.env.openai || process.env.OPENAI_API_KEY || "" });
 }
 
-function notifyNewChat(userName: string | null, userCode: string | null) {
+async function notifyNewChat(userName: string | null, userCode: string | null) {
+  const apiKey = process.env.RESEND || process.env.RESEND_API_KEY || "";
+  if (!apiKey) {
+    console.error("notifyNewChat: No Resend API key found (RESEND / RESEND_API_KEY)");
+    return;
+  }
+  const resend = new Resend(apiKey);
+  const name = userName || "Anonymous";
+  const code = userCode || "N/A";
   try {
-    const resend = new Resend(process.env.RESEND || process.env.RESEND_API_KEY || "");
-    const name = userName || "Anonymous";
-    const code = userCode || "N/A";
-    resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Kennion Benefits <support@kennion.com>",
       to: ["hunter@kennion.com"],
       subject: `New Chat: ${name}`,
@@ -31,9 +36,14 @@ function notifyNewChat(userName: string | null, userCode: string | null) {
           </div>
         </div>
       `,
-    }).catch(() => {});
-  } catch {
-    // silent — don't let notification failure affect chat
+    });
+    if (error) {
+      console.error("notifyNewChat Resend error:", JSON.stringify(error));
+    } else {
+      console.log(`notifyNewChat: Alert sent for ${name}`);
+    }
+  } catch (e) {
+    console.error("notifyNewChat exception:", e);
   }
 }
 
