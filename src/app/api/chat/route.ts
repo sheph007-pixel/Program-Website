@@ -1,9 +1,40 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
+import { Resend } from "resend";
 import { prisma, ensureDatabase } from "@/lib/db";
 
 function getClient() {
   return new OpenAI({ apiKey: process.env.openai || process.env.OPENAI_API_KEY || "" });
+}
+
+function notifyNewChat(userName: string | null, userCode: string | null) {
+  try {
+    const resend = new Resend(process.env.RESEND || process.env.RESEND_API_KEY || "");
+    const name = userName || "Anonymous";
+    const code = userCode || "N/A";
+    resend.emails.send({
+      from: "Kennion Benefits <support@kennion.com>",
+      to: ["hunter@kennion.com"],
+      subject: `New Chat: ${name}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #0a1929, #132f4c); padding: 20px 24px; border-radius: 12px 12px 0 0;">
+            <h2 style="color: white; margin: 0; font-size: 16px;">New Chat Started</h2>
+          </div>
+          <div style="background: white; padding: 24px; border: 1px solid #e2e8f0; border-top: none;">
+            <p style="margin: 0 0 8px; color: #334155; font-size: 14px;"><strong>${name}</strong> just started a conversation.</p>
+            <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Code: ${code}</p>
+            <a href="https://www.kennionprogram.com/admin/conversations" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;">View Conversations</a>
+          </div>
+          <div style="background: #f1f5f9; padding: 12px 24px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; border-top: none;">
+            <p style="margin: 0; color: #94a3b8; font-size: 11px;">Kennion Benefits Program</p>
+          </div>
+        </div>
+      `,
+    }).catch(() => {});
+  } catch {
+    // silent — don't let notification failure affect chat
+  }
 }
 
 const SYSTEM_PROMPT = `You are a warm, friendly member of the Kennion team. You chat with employees and family members who are part of the Kennion Benefits Program. You are "Kennion Support" and you represent the team that manages their entire benefits program behind the scenes.
@@ -123,6 +154,8 @@ export async function POST(req: NextRequest) {
           data: { userName: userName || null, userCode: userCode || null },
         });
         sessionId = session.id;
+        // Notify admin of new conversation
+        notifyNewChat(userName, userCode);
       } catch {
         // DB might not be ready, continue without persistence
       }
