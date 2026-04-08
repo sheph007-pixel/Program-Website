@@ -81,7 +81,8 @@ export default function PlansPage() {
   const activePlans = plans[activeCategory] || [];
   const meta = categoryMeta[activeCategory];
 
-  const hasPdf = (plan: Plan) => plan.pdfName && plan.summaryUrl.startsWith("/api/");
+  const hasPdf = (plan: Plan) => !!plan.pdfName;
+  const pdfUrl = (plan: Plan) => `/api/plans/${plan.id}/pdf`;
 
   const handlePlanClick = (plan: Plan) => {
     if (hasPdf(plan)) {
@@ -226,7 +227,7 @@ export default function PlansPage() {
                 <p className="text-[11px] text-slate-400">{selectedPlan.category}</p>
               </div>
               <a
-                href={selectedPlan.summaryUrl}
+                href={pdfUrl(selectedPlan)}
                 download
                 className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-200"
               >
@@ -244,7 +245,7 @@ export default function PlansPage() {
             {/* PDF Iframe */}
             <div className="flex-1 bg-slate-100">
               <iframe
-                src={selectedPlan.summaryUrl}
+                src={pdfUrl(selectedPlan)}
                 className="w-full h-full border-0"
                 title={`${selectedPlan.name} Summary`}
               />
