@@ -27,8 +27,10 @@ export async function GET() {
       grouped[plan.category].push(plan);
     }
 
-    return NextResponse.json(grouped);
+    return NextResponse.json(grouped, {
+      headers: { "Cache-Control": "no-store, no-cache, must-revalidate" },
+    });
   } catch {
-    return NextResponse.json({});
+    return NextResponse.json({}, { status: 500 });
   }
 }

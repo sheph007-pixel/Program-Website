@@ -42,7 +42,7 @@ export default function PlansPage() {
 
   const fetchPlans = useCallback(async () => {
     try {
-      const res = await fetch("/api/plans");
+      const res = await fetch("/api/plans", { cache: "no-store" });
       const data = await res.json();
       if (data && Object.keys(data).length > 0) {
         setPlans(data);
