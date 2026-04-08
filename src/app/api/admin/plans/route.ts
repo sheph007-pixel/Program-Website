@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, ensureDatabase } from "@/lib/db";
 
 export async function GET() {
   try {
+    await ensureDatabase();
     const plans = await prisma.plan.findMany({
       orderBy: [{ category: "asc" }, { sortOrder: "asc" }],
       select: {

@@ -1,8 +1,10 @@
-import { prisma } from "@/lib/db";
-import { execSync } from "child_process";
+import { prisma, ensureDatabase } from "@/lib/db";
 
-/** Check DB status */
+/** Check DB status — also triggers table creation if needed */
 export async function GET() {
+  // Always try to create tables first
+  await ensureDatabase();
+
   const results: Record<string, string> = {};
 
   const tables = [
@@ -28,20 +30,4 @@ export async function GET() {
     database: process.env.DATABASE_URL ? "configured" : "MISSING DATABASE_URL",
     tables: results,
   });
-}
-
-/** Run prisma db push to create tables */
-export async function POST() {
-  try {
-    const output = execSync("npx prisma db push --accept-data-loss", {
-      encoding: "utf-8",
-      timeout: 30000,
-      env: { ...process.env },
-    });
-
-    return Response.json({ success: true, output });
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Migration failed";
-    return Response.json({ success: false, error: message }, { status: 500 });
-  }
 }

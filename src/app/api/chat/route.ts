@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
-import { prisma } from "@/lib/db";
+import { prisma, ensureDatabase } from "@/lib/db";
 
 function getClient() {
   return new OpenAI({ apiKey: process.env.openai || process.env.OPENAI_API_KEY || "" });
@@ -112,6 +112,7 @@ async function buildSystemPrompt(): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
+    await ensureDatabase();
     const { messages, sessionId: existingSessionId, userName, userCode } = await req.json();
 
     // Create or reuse session

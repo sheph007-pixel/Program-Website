@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, ensureDatabase } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    await ensureDatabase();
     const [sessions, totalCount] = await Promise.all([
       prisma.chatSession.findMany({
         where,
