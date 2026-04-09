@@ -18,7 +18,7 @@ async function notifyNewChat(userName: string | null, userCode: string | null) {
   const code = userCode || "N/A";
   try {
     const { error } = await resend.emails.send({
-      from: "Kennion Benefits <support@kennion.com>",
+      from: "Kennion Benefits <support@site.kennion.com>",
       to: ["hunter@kennion.com"],
       subject: `New Chat: ${name}`,
       html: `

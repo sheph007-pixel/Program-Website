@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const emailPayload: any = {
-      from: "Kennion Benefits <support@kennion.com>",
+      from: "Kennion Benefits <support@site.kennion.com>",
       to: ["support@kennion.com"],
       cc: ["hunter@kennion.com"],
       replyTo: email,
