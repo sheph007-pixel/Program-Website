@@ -190,10 +190,6 @@ const sections: Section[] = [
         question: `Is Kennion licensed?`,
         answer: `Both Kennion Benefit Advisors and Hunter Shepherd, President (National Producer Number 16406853), are licensed insurance professionals where appropriate and in good standing. The captives that underpin the Kennion Program are domiciled in Alabama and Vermont and regulated by those states. The plans and programs themselves meet all applicable state and federal requirements, and the program has been in continuous operation since 2013.`,
       },
-      {
-        question: `What state guaranty protections apply to our employees under this structure?`,
-        answer: `A self-funded plan backed by stop-loss insurance and a captive is not covered by a state insurance guaranty fund; that protection applies to fully insured carrier products. The protection on this plan comes from a different place: the captive's own surplus, annual independent audits, ongoing oversight by the state insurance departments where the captives are chartered (Alabama and Vermont), professional management by Strategic Risk Solutions, and a layered reinsurance program behind the captive with the ultimate reinsurer A-rated. This is the same protection structure used by most large American employers that fund their own health risk.`,
-      },
     ],
   },
   {
@@ -206,10 +202,6 @@ const sections: Section[] = [
       {
         question: `What are our options if we need to exit mid-year? Is there an early-termination penalty?`,
         answer: `Either party may terminate the stop-loss policy with thirty days' written notice. There is no separate early-termination penalty above that. Premium and association dues that have already accrued through the termination date remain payable. Claims incurred while you were covered continue to be paid under the policy that was in force at the time, during its four-year run-out period. The agreement is not auto-renewing; a new application is signed each year for the following year.`,
-      },
-      {
-        question: `Can our attorney review the agreement before we sign?`,
-        answer: `Yes. An employer's attorney is welcome to read every word of the participation agreement, the stop-loss policy, and the certificate before anything is signed. Most attorneys do.`,
       },
     ],
   },
@@ -357,7 +349,7 @@ export default function FaqPage() {
                   <span className="w-8 shrink-0 font-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400 transition-colors group-hover:text-[var(--kennion-blue)]">
                     {roman}
                   </span>
-                  <span className="flex-1 text-[14px] font-medium text-slate-700 transition-colors group-hover:text-[var(--kennion-navy)]">
+                  <span className="flex-1 text-[15px] font-medium text-slate-700 transition-colors group-hover:text-[var(--kennion-navy)] sm:text-[14px]">
                     {titleText}
                   </span>
                 </a>
@@ -431,7 +423,7 @@ export default function FaqPage() {
               id={`part-${section.sectionIndex + 1}`}
               className="scroll-mt-20"
             >
-              <h2 className="mb-3 px-1 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">
+              <h2 className="mb-3 px-1 text-[12px] font-bold uppercase tracking-[0.12em] text-slate-500 sm:text-[11px]">
                 {section.title}
               </h2>
               <div className="flex flex-col gap-2.5">
@@ -446,7 +438,7 @@ export default function FaqPage() {
                         className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition-colors enabled:hover:bg-slate-50 disabled:cursor-default"
                         aria-expanded={open}
                       >
-                        <span className="text-[14px] font-semibold leading-snug text-[var(--kennion-navy)]">
+                        <span className="text-[15px] font-semibold leading-snug text-[var(--kennion-navy)] sm:text-[14px]">
                           {item.question}
                         </span>
                         {!isSearching && (
@@ -468,7 +460,7 @@ export default function FaqPage() {
                       >
                         <div className="overflow-hidden">
                           <div className="border-t border-slate-100 px-4 py-4">
-                            <p className="whitespace-pre-line text-[13px] leading-relaxed text-slate-600">
+                            <p className="whitespace-pre-line text-[14.5px] leading-relaxed text-slate-600 sm:text-[13px]">
                               {renderInline(item.answer, id)}
                             </p>
                           </div>
