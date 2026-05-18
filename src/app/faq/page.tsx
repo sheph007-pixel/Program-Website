@@ -4,7 +4,6 @@ import { useMemo, useState, type ReactNode } from "react";
 import {
   HelpCircle,
   ChevronDown,
-  Building2,
   Search,
   X,
   Mail,
@@ -44,6 +43,18 @@ const sections: Section[] = [
       {
         question: `Is this real insurance, or are we taking on the risk ourselves?`,
         answer: `It is real insurance, structured as a self-funded plan with stop-loss coverage behind it. The employer funds expected claims at a level that includes a built-in margin. Above that level, the captive insurance company that backs the program carries the claims. Behind the captive sits a layered reinsurance program with an A-rated reinsurer at the top. The employer's exposure for the year is the monthly funded contribution. Once the plan year closes, the employer has no further liability for claims from that year.`,
+      },
+      {
+        question: `Isn't this more work than a familiar Blue Cross plan?`,
+        answer: `Honestly, there is some learning curve. A reference-based-pricing plan asks employees and providers to do a few things differently than a traditional Blue Cross, Aetna, Cigna, or UnitedHealthcare plan. A small minority of providers will need a phone call before the appointment to understand how the plan pays, and our concierge team handles that on the member's behalf. The tradeoff is cost and sustainability. Traditional carrier plans are familiar, but the premium trajectory for small and mid-sized employers has become untenable. The Kennion Program asks for a small adjustment in exchange for permanent cost relief.`,
+      },
+      {
+        question: `If reference-based pricing is so good, why isn't everyone doing it?`,
+        answer: `Reference-based pricing is now a major and growing segment of the small and mid-sized employer market, used by multiple national programs alongside ours. The traditional carrier-network model is what most small employers have been on for forty years, and switching is a deliberate choice that takes time. Familiarity is a powerful reason to stay put, even when the underlying economics are deteriorating. But the trend is one-way. As carrier premium increases compound year after year, more employers are moving to programs structured like this one.`,
+      },
+      {
+        question: `Do we have a choice? Could we stay with our current carrier plan?`,
+        answer: `Of course. Every employer has a choice between sticking with the traditional carrier-network model and moving to a self-funded, reference-based-pricing structure like the Kennion Program. We are not trying to be Blue Cross. We are the alternative for employers who have decided that traditional carrier plans no longer fit their economics. If a traditional plan still works for your group financially, that may be the right call. If it does not, this is the alternative built for that situation.`,
       },
     ],
   },
@@ -336,12 +347,45 @@ export default function FaqPage() {
         </p>
       </div>
 
-      <div className="mb-4">
-        <div className="badge bg-blue-50 text-blue-600">
-          <Building2 size={12} strokeWidth={2} />
-          For Employer Groups
-        </div>
-      </div>
+      {/* Table of contents */}
+      {!isSearching && (
+        <nav
+          aria-label="Sections"
+          className="card mb-5 p-3 animate-fade-in-up stagger-1"
+        >
+          <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+            {sections.map((section, sIdx) => {
+              const id = `part-${sIdx + 1}`;
+              const [partLabel, ...titleRest] = section.title.split(" · ");
+              const titleText = titleRest.join(" · ");
+              return (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById(id);
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth", block: "start" });
+                      if (typeof window !== "undefined") {
+                        window.history.replaceState(null, "", `#${id}`);
+                      }
+                    }
+                  }}
+                  className="group flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors hover:bg-slate-50"
+                >
+                  <span className="flex h-6 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500 group-hover:bg-blue-50 group-hover:text-[var(--kennion-blue)]">
+                    {partLabel}
+                  </span>
+                  <span className="truncate text-[13px] font-medium text-slate-600 group-hover:text-[var(--kennion-navy)]">
+                    {titleText}
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </nav>
+      )}
 
       {/* Search */}
       <div className="mb-6 animate-fade-in-up stagger-1">
@@ -402,7 +446,11 @@ export default function FaqPage() {
       ) : (
         <div className="flex flex-col gap-7">
           {filteredSections.map((section) => (
-            <section key={section.sectionIndex}>
+            <section
+              key={section.sectionIndex}
+              id={`part-${section.sectionIndex + 1}`}
+              className="scroll-mt-20"
+            >
               <h2 className="mb-3 px-1 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">
                 {section.title}
               </h2>
