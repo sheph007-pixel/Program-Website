@@ -25,7 +25,7 @@ const sections: Section[] = [
     title: "Part I · The Big Picture",
     items: [
       {
-        question: `Why does the Kennion Program exist? Why not just buy a standard plan from Blue Cross, Aetna, Cigna, or UnitedHealthcare?`,
+        question: `Why does the Kennion Program exist? Why not just buy a standard plan from Blue Cross, UnitedHealthcare, Cigna, or Aetna?`,
         answer: `The traditional carrier-network model has not been sustainable for small and mid-sized employers at the cost trajectory premiums have been on. The Kaiser Family Foundation now tracks the average family premium above $25,000, with annual increases consistently running in the high single digits. Larger employers have already responded: about two-thirds of American workers are now in self-funded plans, where the employer funds claims directly and buys insurance only against the worst years. What used to require a benefits department of its own has become the mainstream approach. The Kennion Program brings that same self-funded structure to small and mid-sized employers who were previously locked out of it.`,
       },
       {
@@ -46,7 +46,7 @@ const sections: Section[] = [
       },
       {
         question: `Isn't this more work than a familiar Blue Cross plan?`,
-        answer: `Honestly, there is some learning curve. A reference-based-pricing plan asks employees and providers to do a few things differently than a traditional Blue Cross, Aetna, Cigna, or UnitedHealthcare plan. A small minority of providers will need a phone call before the appointment to understand how the plan pays, and our concierge team handles that on the member's behalf. The tradeoff is cost and sustainability. Traditional carrier plans are familiar, but the premium trajectory for small and mid-sized employers has become untenable. The Kennion Program asks for a small adjustment in exchange for permanent cost relief.`,
+        answer: `Honestly, there is some learning curve. A reference-based-pricing plan asks employees and providers to do a few things differently than a traditional Blue Cross, UnitedHealthcare, Cigna, or Aetna plan. A small minority of providers will need a phone call before the appointment to understand how the plan pays, and our concierge team handles that on the member's behalf. The tradeoff is cost and sustainability. Traditional carrier plans are familiar, but the premium trajectory for small and mid-sized employers has become untenable. The Kennion Program asks for a small adjustment in exchange for permanent cost relief.`,
       },
       {
         question: `If reference-based pricing is so good, why isn't everyone doing it?`,
@@ -91,7 +91,7 @@ const sections: Section[] = [
     title: "Part III · Provider Access",
     items: [
       {
-        question: `Does the plan use a Blue Cross, Aetna, Cigna, or UnitedHealthcare network?`,
+        question: `Does the plan use a Blue Cross, UnitedHealthcare, Cigna, or Aetna network?`,
         answer: `No. The plan does not operate inside a carrier-branded provider network in any state. It uses reference-based pricing, which means it pays any provider a fair, consistent rate built on a public Medicare benchmark, the same way regardless of who the provider is.`,
       },
       {
@@ -258,7 +258,7 @@ const totalQuestionCount = sections.reduce((sum, s) => sum + s.items.length, 0);
 export default function FaqPage() {
   const [query, setQuery] = useState("");
   const [manuallyOpen, setManuallyOpen] = useState<Set<string>>(
-    () => new Set(["0-0"])
+    () => new Set()
   );
 
   const trimmedQuery = query.trim().toLowerCase();
