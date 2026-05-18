@@ -213,23 +213,6 @@ const sections: Section[] = [
       },
     ],
   },
-  {
-    title: "Part IX · Getting Started",
-    items: [
-      {
-        question: `How does an employer evaluate the program?`,
-        answer: `An employer uploads its employee census at kennionprogram.com to receive an instant proposal showing real rates and full plan details across every plan tier. Underwriting is required, and the proposal returns within minutes rather than weeks.`,
-      },
-      {
-        question: `What does the timeline from interest to effective date look like?`,
-        answer: `A typical timeline is two to four weeks from instant proposal to a January 1 effective date, assuming the standard renewal cycle. Off-cycle starts are possible for groups joining mid-year and are handled case by case.`,
-      },
-      {
-        question: `Who should I contact with follow-up questions?`,
-        answer: `Hunter Shepherd, President of Kennion Benefit Advisors, can be reached directly at 205-641-0469 or hunter@kennion.com. The program lives at kennionprogram.com.`,
-      },
-    ],
-  },
 ];
 
 const AUTOLINK_REGEX =
