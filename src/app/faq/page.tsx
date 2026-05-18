@@ -341,22 +341,19 @@ export default function FaqPage() {
           <HelpCircle size={26} className="text-white" strokeWidth={1.8} />
         </div>
         <h1 className="page-title">Employer FAQ</h1>
-        <p className="page-subtitle">
-          A reference for employers, advisors, and attorneys evaluating the
-          Kennion Program. The questions below are the ones we hear most often.
-        </p>
       </div>
 
       {/* Table of contents */}
       {!isSearching && (
         <nav
           aria-label="Sections"
-          className="card mb-5 p-3 animate-fade-in-up stagger-1"
+          className="card mb-6 p-1.5 animate-fade-in-up stagger-1"
         >
-          <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2">
             {sections.map((section, sIdx) => {
               const id = `part-${sIdx + 1}`;
               const [partLabel, ...titleRest] = section.title.split(" · ");
+              const roman = partLabel.replace(/^Part\s+/i, "");
               const titleText = titleRest.join(" · ");
               return (
                 <a
@@ -372,12 +369,12 @@ export default function FaqPage() {
                       }
                     }
                   }}
-                  className="group flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors hover:bg-slate-50"
+                  className="group flex items-center gap-4 rounded-xl px-4 py-3 transition-colors hover:bg-slate-50"
                 >
-                  <span className="flex h-6 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500 group-hover:bg-blue-50 group-hover:text-[var(--kennion-blue)]">
-                    {partLabel}
+                  <span className="w-8 shrink-0 font-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400 transition-colors group-hover:text-[var(--kennion-blue)]">
+                    {roman}
                   </span>
-                  <span className="truncate text-[13px] font-medium text-slate-600 group-hover:text-[var(--kennion-navy)]">
+                  <span className="flex-1 text-[14px] font-medium text-slate-700 transition-colors group-hover:text-[var(--kennion-navy)]">
                     {titleText}
                   </span>
                 </a>
