@@ -166,6 +166,7 @@ export default function ChatWidget() {
           messages: [{ role: "user", content: greeting }],
           userName: userName || undefined,
           userCode: userCode || undefined,
+          isGreeting: true,
         }),
       });
       if (!res.ok) throw new Error();

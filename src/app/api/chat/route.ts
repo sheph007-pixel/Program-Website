@@ -7,7 +7,20 @@ function getClient() {
   return new OpenAI({ apiKey: process.env.openai || process.env.OPENAI_API_KEY || "" });
 }
 
-async function notifyNewChat(userName: string | null, userCode: string | null) {
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function notifyNewChat(
+  userName: string | null,
+  userCode: string | null,
+  firstMessage: string
+) {
   const apiKey = process.env.RESEND || process.env.RESEND_API_KEY || "";
   if (!apiKey) {
     console.error("notifyNewChat: No Resend API key found (RESEND / RESEND_API_KEY)");
@@ -16,6 +29,10 @@ async function notifyNewChat(userName: string | null, userCode: string | null) {
   const resend = new Resend(apiKey);
   const name = userName || "Anonymous";
   const code = userCode || "N/A";
+  const trimmed = firstMessage.length > 500
+    ? `${firstMessage.slice(0, 500)}…`
+    : firstMessage;
+  const safeMessage = escapeHtml(trimmed).replace(/\n/g, "<br>");
   try {
     const { error } = await resend.emails.send({
       from: "Kennion Benefits <support@site.kennion.com>",
@@ -27,8 +44,9 @@ async function notifyNewChat(userName: string | null, userCode: string | null) {
             <h2 style="color: white; margin: 0; font-size: 16px;">New Chat Started</h2>
           </div>
           <div style="background: white; padding: 24px; border: 1px solid #e2e8f0; border-top: none;">
-            <p style="margin: 0 0 8px; color: #334155; font-size: 14px;"><strong>${name}</strong> just started a conversation.</p>
-            <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Code: ${code}</p>
+            <p style="margin: 0 0 8px; color: #334155; font-size: 14px;"><strong>${name}</strong> sent their first message.</p>
+            <p style="margin: 0 0 16px; color: #64748b; font-size: 13px;">Code: ${code}</p>
+            <div style="margin: 0 0 20px; padding: 12px 14px; background: #f8fafc; border-left: 3px solid #2563eb; border-radius: 6px; color: #1e293b; font-size: 14px; line-height: 1.5;">${safeMessage}</div>
             <a href="https://www.kennionprogram.com/admin/conversations" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;">View Conversations</a>
           </div>
           <div style="background: #f1f5f9; padding: 12px 24px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; border-top: none;">
@@ -154,7 +172,13 @@ async function buildSystemPrompt(): Promise<string> {
 export async function POST(req: NextRequest) {
   try {
     await ensureDatabase();
-    const { messages, sessionId: existingSessionId, userName, userCode } = await req.json();
+    const {
+      messages,
+      sessionId: existingSessionId,
+      userName,
+      userCode,
+      isGreeting,
+    } = await req.json();
 
     // Create or reuse session
     let sessionId = existingSessionId;
@@ -164,20 +188,26 @@ export async function POST(req: NextRequest) {
           data: { userName: userName || null, userCode: userCode || null },
         });
         sessionId = session.id;
-        // Notify admin of new conversation
-        notifyNewChat(userName, userCode);
       } catch {
         // DB might not be ready, continue without persistence
       }
     }
 
-    // Save the latest user message
+    // Save the latest user message — skip the synthetic greeting so it
+    // doesn't pollute the admin transcript or count as engagement.
     const lastMsg = messages[messages.length - 1];
-    if (sessionId && lastMsg?.role === "user") {
+    if (sessionId && lastMsg?.role === "user" && !isGreeting) {
       try {
         await prisma.chatMessage.create({
           data: { sessionId, role: "user", content: lastMsg.content },
         });
+        // Fire the new-chat alert only on the visitor's first real message.
+        const userMessageCount = await prisma.chatMessage.count({
+          where: { sessionId, role: "user" },
+        });
+        if (userMessageCount === 1) {
+          notifyNewChat(userName, userCode, lastMsg.content);
+        }
       } catch {
         // silent
       }
