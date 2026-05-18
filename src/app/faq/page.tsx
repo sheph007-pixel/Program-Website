@@ -135,7 +135,7 @@ const sections: Section[] = [
       },
       {
         question: `Where can employees look up a specific medication?`,
-        answer: `Employees can look up any specific drug at [medone-rx.com/members/drug-lookup/0114](https://medone-rx.com/members/drug-lookup/0114). The tool shows what tier the drug falls into and what it will cost before filling. The HealthJoy app also flags lower-cost alternatives at the pharmacy.`,
+        answer: `Employees can look up any specific drug at medone-rx.com/members/drug-lookup/0114. The tool shows what tier the drug falls into and what it will cost before filling. The HealthJoy app also flags lower-cost alternatives at the pharmacy.`,
       },
       {
         question: `What is the cost difference between formulary and non-formulary drugs?`,
@@ -207,7 +207,7 @@ const sections: Section[] = [
     items: [
       {
         question: `How does an employer evaluate the program?`,
-        answer: `An employer uploads its employee census at [kennionprogram.com](https://www.kennionprogram.com) to receive an instant proposal showing real rates and full plan details across every plan tier. Underwriting is required, and the proposal returns within minutes rather than weeks.`,
+        answer: `An employer uploads its employee census at kennionprogram.com to receive an instant proposal showing real rates and full plan details across every plan tier. Underwriting is required, and the proposal returns within minutes rather than weeks.`,
       },
       {
         question: `What does the timeline from interest to effective date look like?`,
@@ -215,46 +215,51 @@ const sections: Section[] = [
       },
       {
         question: `Who should I contact with follow-up questions?`,
-        answer: `Hunter Shepherd, President of Kennion Benefit Advisors, can be reached directly at **205-641-0469** or **hunter@kennion.com**. The program lives at [kennionprogram.com](https://www.kennionprogram.com).`,
+        answer: `Hunter Shepherd, President of Kennion Benefit Advisors, can be reached directly at 205-641-0469 or hunter@kennion.com. The program lives at kennionprogram.com.`,
       },
     ],
   },
 ];
 
-const INLINE_REGEX = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+const AUTOLINK_REGEX =
+  /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})|((?:https?:\/\/)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s)]*)?)/g;
+
+const linkClass =
+  "text-[var(--kennion-blue)] underline underline-offset-2 decoration-slate-300 transition-colors hover:decoration-[var(--kennion-blue)]";
 
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   let key = 0;
-  INLINE_REGEX.lastIndex = 0;
-  while ((match = INLINE_REGEX.exec(text)) !== null) {
+  AUTOLINK_REGEX.lastIndex = 0;
+  while ((match = AUTOLINK_REGEX.exec(text)) !== null) {
     if (match.index > lastIndex) {
       nodes.push(text.slice(lastIndex, match.index));
     }
-    if (match[1] !== undefined && match[2] !== undefined) {
-      const href = match[2];
-      const isExternal = /^https?:/i.test(href);
+    const email = match[1];
+    const url = match[2];
+    if (email) {
       nodes.push(
-        <a
-          key={`${keyPrefix}-l-${key++}`}
-          href={href}
-          target={isExternal ? "_blank" : undefined}
-          rel={isExternal ? "noopener noreferrer" : undefined}
-          className="font-semibold text-[var(--kennion-blue)] underline decoration-blue-200 underline-offset-2 transition-colors hover:text-blue-700 hover:decoration-blue-400"
-        >
-          {match[1]}
+        <a key={`${keyPrefix}-${key++}`} href={`mailto:${email}`} className={linkClass}>
+          {email}
         </a>
       );
-    } else if (match[3] !== undefined) {
+    } else if (url) {
+      const href = /^https?:\/\//i.test(url) ? url : `https://${url}`;
       nodes.push(
-        <strong key={`${keyPrefix}-b-${key++}`} className="font-semibold text-[var(--kennion-navy)]">
-          {match[3]}
-        </strong>
+        <a
+          key={`${keyPrefix}-${key++}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClass}
+        >
+          {url}
+        </a>
       );
     }
-    lastIndex = INLINE_REGEX.lastIndex;
+    lastIndex = AUTOLINK_REGEX.lastIndex;
   }
   if (lastIndex < text.length) {
     nodes.push(text.slice(lastIndex));
