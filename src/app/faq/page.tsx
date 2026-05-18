@@ -26,7 +26,7 @@ const sections: Section[] = [
     items: [
       {
         question: `Why does the Kennion Program exist? Why not just buy a standard plan from Blue Cross, Aetna, Cigna, or UnitedHealthcare?`,
-        answer: `The traditional carrier-network model has not been sustainable for small and mid-sized employers at the cost trajectory premiums have been on. The Kaiser Family Foundation put the average family premium above $25,000 in 2024, with roughly seven to eight percent annual increases. Larger employers have already responded: about two-thirds of American workers are now in self-funded plans, where the employer funds claims directly and buys insurance only against the worst years. What used to require a benefits department of its own has become the mainstream approach. The Kennion Program brings that same self-funded structure to small and mid-sized employers who were previously locked out of it.`,
+        answer: `The traditional carrier-network model has not been sustainable for small and mid-sized employers at the cost trajectory premiums have been on. The Kaiser Family Foundation now tracks the average family premium above $25,000, with annual increases consistently running in the high single digits. Larger employers have already responded: about two-thirds of American workers are now in self-funded plans, where the employer funds claims directly and buys insurance only against the worst years. What used to require a benefits department of its own has become the mainstream approach. The Kennion Program brings that same self-funded structure to small and mid-sized employers who were previously locked out of it.`,
       },
       {
         question: `Why have I never heard of the Kennion Program before?`,
@@ -50,7 +50,7 @@ const sections: Section[] = [
       },
       {
         question: `If reference-based pricing is so good, why isn't everyone doing it?`,
-        answer: `Reference-based pricing is now a major and growing segment of the small and mid-sized employer market, used by multiple national programs alongside ours. The traditional carrier-network model is what most small employers have been on for forty years, and switching is a deliberate choice that takes time. Familiarity is a powerful reason to stay put, even when the underlying economics are deteriorating. But the trend is one-way. As carrier premium increases compound year after year, more employers are moving to programs structured like this one.`,
+        answer: `Reference-based pricing is now a major and growing segment of the small and mid-sized employer market, used by multiple national programs alongside ours. The traditional carrier-network model is what most small employers have been on for decades, and switching is a deliberate choice that takes time. Familiarity is a powerful reason to stay put, even when the underlying economics are deteriorating. But the trend is one-way. As carrier premium increases compound year after year, more employers are moving to programs structured like this one.`,
       },
       {
         question: `Do we have a choice? Could we stay with our current carrier plan?`,
@@ -83,7 +83,7 @@ const sections: Section[] = [
       },
       {
         question: `Are the captives real insurance companies? Where are they domiciled and regulated?`,
-        answer: `Yes. The program operates two captives, domiciled in Alabama and Vermont, which are two of the most established captive insurance domiciles in the United States. Both are managed by Strategic Risk Solutions (the largest independent captive manager in the world), audited annually by an independent firm, and in good standing with their state insurance departments. Kennion received the Strategic Risk Solutions Captivator Award at the firm's 2025 client symposium.`,
+        answer: `Yes. The program operates two captives, domiciled in Alabama and Vermont, which are two of the most established captive insurance domiciles in the United States. Both are managed by Strategic Risk Solutions (the largest independent captive manager in the world), audited annually by an independent firm, and in good standing with their state insurance departments. Kennion is a recipient of the Strategic Risk Solutions Captivator Award.`,
       },
     ],
   },
@@ -133,7 +133,7 @@ const sections: Section[] = [
       },
       {
         question: `What if a provider sends a balance bill?`,
-        answer: `Balance billing can happen with reference-based pricing, but it is small. Industry data, and our own experience over more than a decade, puts it at well under one percent of claims. The employee should not pay a disputed balance without guidance from us. The employee sends the bill to Kennion or HealthJoy, and our team works directly with the provider to resolve it. Since the program's inception in 2013, 100 percent of balance-billing issues that have arisen have been resolved by our team.`,
+        answer: `Balance billing can happen with reference-based pricing, but it is small. Industry data, and our own experience since the program's inception in 2013, puts it at well under one percent of claims. The employee should not pay a disputed balance without guidance from us. The employee sends the bill to Kennion or HealthJoy, and our team works directly with the provider to resolve it. Since 2013, 100 percent of balance-billing issues that have arisen have been resolved by our team.`,
       },
     ],
   },
@@ -159,7 +159,7 @@ const sections: Section[] = [
     items: [
       {
         question: `What do renewals typically look like?`,
-        answer: `Renewals on the health plan have come in well below the broader fully insured market trend, which Kaiser and PwC have put at roughly seven to eight percent annually. The most recent renewal cycle (January 1, 2026) came in flat, with no rate increase on the health plan. The two renewals before that (January 1, 2025 and January 1, 2024) both came in below quoted trend. The captive structure is what smooths out the spikes that would otherwise hit a traditional renewal in a heavy claims year.`,
+        answer: `Renewals on the health plan have consistently come in well below the broader fully insured market trend, which Kaiser and PwC have placed in the high single digits annually. Recent renewal cycles have come in flat or below quoted carrier trend, and across the program's track record since 2013 renewals have averaged meaningfully below the small-group market. The captive structure is what smooths out the spikes that would otherwise hit a traditional renewal in a heavy claims year.`,
       },
       {
         question: `What happens if our group has a bad claims year?`,
@@ -180,7 +180,7 @@ const sections: Section[] = [
     items: [
       {
         question: `How long has Kennion been operating?`,
-        answer: `Kennion Benefit Advisors traces back more than fifty years. The firm's founder, Hal Shepherd, began practicing in employee benefits in 1969, and several related benefits and insurance firms operated under his leadership over the following decades before being brought together into what is today Kennion Benefit Advisors. The captive program itself dates to 2013, giving it more than a decade of continuous operating history under the same architecture. Across that period the program has served hundreds of employer groups and thousands of covered employees.`,
+        answer: `Kennion Benefit Advisors traces back to 1969, when the firm's founder, Hal Shepherd, began practicing in employee benefits. Several related benefits and insurance firms operated under his leadership over the following decades before being brought together into what is today Kennion Benefit Advisors. The captive program itself dates to 2013 and has run under the same architecture ever since. Across that history the program has served hundreds of employer groups and thousands of covered employees.`,
       },
       {
         question: `Who are the program's partners?`,
