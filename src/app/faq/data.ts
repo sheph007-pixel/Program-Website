@@ -1,0 +1,196 @@
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type FaqSection = {
+  title: string;
+  items: FaqItem[];
+};
+
+export const sections: FaqSection[] = [
+  {
+    title: "Part I · The Big Picture",
+    items: [
+      {
+        question: `Why does the Kennion Program exist? Why not just buy a standard plan from Blue Cross, UnitedHealthcare, Cigna, or Aetna?`,
+        answer: `The traditional carrier-network model has not been sustainable for small and mid-sized employers at the cost trajectory premiums have been on. The Kaiser Family Foundation now tracks the average family premium above $25,000, with annual increases consistently running in the high single digits. Larger employers have already responded: about two-thirds of American workers are now in self-funded plans, where the employer funds claims directly and buys insurance only against the worst years. What used to require a benefits department of its own has become the mainstream approach. The Kennion Program brings that same self-funded structure to small and mid-sized employers who were previously locked out of it.`,
+      },
+      {
+        question: `Why have I never heard of the Kennion Program before?`,
+        answer: `Because it is a private program. It is not sold through other brokers, not quoted on the open market, and not available through any insurance professional outside of Kennion. Employer access runs only through us, by design. The program operates inside a closed captive arrangement we have managed since 2013, and we are deliberate about which employers we bring into it. That is part of what keeps the underwriting disciplined and the long-term performance steady.`,
+      },
+      {
+        question: `My broker or consultant has never heard of this. Should I be concerned?`,
+        answer: `No. A local broker or consultant has access to the same traditional carrier products everyone else sees, and most can also show you other reference-based pricing programs available in the open market. They do not have access to this one specifically because it is not distributed that way. Different programs come through different channels. The legitimate questions for an employer are whether the program performs and whether the structure behind it is sound. Both are addressed below.`,
+      },
+      {
+        question: `Is reference-based pricing legitimate, or is it some kind of workaround?`,
+        answer: `It is legitimate and mainstream. Reference-based pricing has become a major and growing segment of the small and mid-sized employer market, with multiple national programs operating on the same approach. Rather than relying on a carrier's negotiated network discounts, which vary widely and require staying inside the network, reference-based pricing pays every provider a fair rate built on a public Medicare benchmark. The rate applies the same way to any provider, anywhere in the country.`,
+      },
+      {
+        question: `Is this real insurance, or are we taking on the risk ourselves?`,
+        answer: `It is real insurance, structured as a self-funded plan with stop-loss coverage behind it. The employer funds expected claims at a level that includes a built-in margin. Above that level, the captive insurance company that backs the program carries the claims. Behind the captive sits a layered reinsurance program with an A-rated reinsurer at the top. The employer's exposure for the year is the monthly funded contribution. Once the plan year closes, the employer has no further liability for claims from that year.`,
+      },
+      {
+        question: `Isn't this more work than a familiar Blue Cross plan?`,
+        answer: `Honestly, there is some learning curve. A reference-based-pricing plan asks employees and providers to do a few things differently than a traditional Blue Cross, UnitedHealthcare, Cigna, or Aetna plan. A small minority of providers will need a phone call before the appointment to understand how the plan pays, and our concierge team handles that on the member's behalf. The tradeoff is cost and sustainability. Traditional carrier plans are familiar, but the premium trajectory for small and mid-sized employers has become untenable. The Kennion Program asks for a small adjustment in exchange for permanent cost relief.`,
+      },
+      {
+        question: `If reference-based pricing is so good, why isn't everyone doing it?`,
+        answer: `Reference-based pricing is now a major and growing segment of the small and mid-sized employer market, used by multiple national programs alongside ours. The traditional carrier-network model is what most small employers have been on for decades, and switching is a deliberate choice that takes time. Familiarity is a powerful reason to stay put, even when the underlying economics are deteriorating. But the trend is one-way. As carrier premium increases compound year after year, more employers are moving to programs structured like this one.`,
+      },
+      {
+        question: `Do we have a choice? Could we stay with our current carrier plan?`,
+        answer: `Of course. Every employer has a choice between sticking with the traditional carrier-network model and moving to a self-funded, reference-based-pricing structure like the Kennion Program. We are not trying to be Blue Cross. We are the alternative for employers who have decided that traditional carrier plans no longer fit their economics. If a traditional plan still works for your group financially, that may be the right call. If it does not, this is the alternative built for that situation.`,
+      },
+    ],
+  },
+  {
+    title: "Part II · How the Program Is Structured",
+    items: [
+      {
+        question: `How is the plan structured underneath?`,
+        answer: `It is a level-funded health plan backed by a captive insurance company. The employer pays one fixed amount each month. Inside that single payment sit three things: the money set aside to pay expected claims, the cost of running the plan, and the stop-loss coverage that protects the year if claims run high. Above the funded layer, the captive carries the year's claims, with a layered reinsurance program behind the captive.`,
+      },
+      {
+        question: `Who is the stop-loss carrier, and what is the A.M. Best rating?`,
+        answer: `Stop-loss is issued through a captive insurance company that is part of the Kennion Program. The captive itself is not currently A.M. Best rated. That is common for private captive arrangements like this. Behind the captive sits a layered reinsurance program, with the ultimate reinsurer in the program A-rated.`,
+      },
+      {
+        question: `What are the per-individual and aggregate attachment points?`,
+        answer: `The level-funded structure handles this differently than a traditional self-funded plan. Each group is funded for the expected claims of the year plus a margin built in above that, paid in equal monthly amounts. Above that funded level, the captive absorbs the claims for the rest of the year. There is no separate per-individual deductible or aggregate cap an employer could breach mid-year. The monthly funded contribution is the employer's full exposure. Once the plan year closes, the employer has no further liability for claims or expenses from that year.`,
+      },
+      {
+        question: `Is stop-loss included in the monthly premium, or billed separately?`,
+        answer: `Included. The single monthly amount covers expected claims, plan administration, and the stop-loss premium. No separate stop-loss invoice, and no year-end true-up.`,
+      },
+      {
+        question: `What is the claims run-out period at year end?`,
+        answer: `Four years. The policy carries a Terminal Funding provision that provides four years of run-out coverage for claims incurred during the policy year, so any late-arriving claim is still paid under that year's coverage even if it shows up long after renewal.`,
+      },
+      {
+        question: `Are the captives real insurance companies? Where are they domiciled and regulated?`,
+        answer: `Yes. The program operates two captives, domiciled in Alabama and Vermont, which are two of the most established captive insurance domiciles in the United States. Both are managed by Strategic Risk Solutions (the largest independent captive manager in the world), audited annually by an independent firm, and in good standing with their state insurance departments. Kennion is a recipient of the Strategic Risk Solutions Captivator Award.`,
+      },
+    ],
+  },
+  {
+    title: "Part III · Provider Access",
+    items: [
+      {
+        question: `Does the plan use a Blue Cross, UnitedHealthcare, Cigna, or Aetna network?`,
+        answer: `No. The plan does not operate inside a carrier-branded provider network in any state. It uses reference-based pricing, which means it pays any provider a fair, consistent rate built on a public Medicare benchmark, the same way regardless of who the provider is.`,
+      },
+      {
+        question: `What about "Cobalt"? Isn't that a provider network?`,
+        answer: `Cobalt Benefits Group, LLC is a Vermont-headquartered third-party administrator that processes claims for self-funded plans. It is not a provider network. The Kennion Program's plan administrator, EBPA, is part of Cobalt Benefits Group, which is how that name appears in our materials. It is a claims-administration role, not a network.`,
+      },
+      {
+        question: `Can employees see any provider they want?`,
+        answer: `Yes. Any licensed physician, specialist, hospital, or facility in any state can be used. There is no network excluding any provider, and no in-network or out-of-network distinction inside the plan. The plan pays each provider the same reasonable Medicare-based rate, and the employee pays only the deductible, copay, and coinsurance set by the plan they chose.`,
+      },
+      {
+        question: `Can you provide a provider-level spreadsheet showing who is and isn't in-network?`,
+        answer: `No, because there is no in-network or out-of-network distinction inside the plan. There is nothing to fence off and therefore no in/out list to produce. Any licensed provider, anywhere, can be used.`,
+      },
+      {
+        question: `What will ID cards and claims look like to a provider?`,
+        answer: `ID cards carry the plan administrator's branding (EBPA) and the relevant payer information rather than "Kennion." Eligibility verification and claims submission run through that administrator in the same way a provider would handle any other self-funded plan.`,
+      },
+    ],
+  },
+  {
+    title: "Part IV · Day-to-Day Member Experience",
+    items: [
+      {
+        question: `How does the concierge work?`,
+        answer: `Every member has a concierge available through the HealthJoy app or a phone call. A real person helps find a provider, schedule the appointment, or work through a confusing bill. If a provider has not seen the plan before, our team will reach out to the provider's billing office to explain how the plan pays before the appointment.`,
+      },
+      {
+        question: `Who handles payment when an employee sees a provider?`,
+        answer: `The plan pays providers directly. The employee is only responsible for their normal share of the cost: the deductible, copay, and coinsurance specified by the plan they chose. The employee does not negotiate with the provider.`,
+      },
+      {
+        question: `What is the Paytient card?`,
+        answer: `Paytient is a member benefit. Every employee carries a Paytient card to cover out-of-pocket medical, dental, vision, prescription, or even veterinary costs up front, and to repay Paytient over time at no interest. For routine office visits, an employee who pays with the Paytient card (or any other card) can submit the receipt to the plan for 100% reimbursement, which effectively makes a doctor visit free to the employee.`,
+      },
+      {
+        question: `What is MedeCash Apta Pay?`,
+        answer: `For elective procedures where a hospital or provider asks for payment up front before scheduling, the plan can pre-pay the procedure through the program's MedeCash Apta Pay arrangement, so a difficult billing office never blocks care from happening.`,
+      },
+      {
+        question: `What if a provider sends a balance bill?`,
+        answer: `Balance billing can happen with reference-based pricing, but it is small. Industry data, and our own experience since the program's inception in 2013, puts it at well under one percent of claims. The employee should not pay a disputed balance without guidance from us. The employee sends the bill to Kennion or HealthJoy, and our team works directly with the provider to resolve it. Since 2013, 100 percent of balance-billing issues that have arisen have been resolved by our team.`,
+      },
+    ],
+  },
+  {
+    title: "Part V · Prescriptions",
+    items: [
+      {
+        question: `How is prescription coverage handled?`,
+        answer: `MedOne handles prescriptions on a pass-through basis. MedOne bills the plan exactly what it pays the pharmacy and passes every manufacturer rebate and discount back to the plan, earning only a flat, disclosed administrative fee. There is no spread.`,
+      },
+      {
+        question: `Where can employees look up a specific medication?`,
+        answer: `Employees can look up any specific drug at medone-rx.com/members/drug-lookup/0114. The tool shows what tier the drug falls into and what it will cost before filling. The HealthJoy app also flags lower-cost alternatives at the pharmacy.`,
+      },
+      {
+        question: `What is the cost difference between formulary and non-formulary drugs?`,
+        answer: `Drugs on the MedOne formulary are covered by the plan at one of three tiers, with typical employee cost roughly: generic, $0 to $15; preferred brand, $30 to $75; non-preferred brand, $60 to $100. Drugs not on the formulary are not covered by the plan. An employee in that situation would either work with their prescriber to find a covered alternative (the HealthJoy app helps identify these) or fill the prescription themselves at retail or through a discount program like GoodRx. This is consistent with how most major employer health plans handle formulary versus non-formulary drugs.`,
+      },
+    ],
+  },
+  {
+    title: "Part VI · Renewals and Rate Stability",
+    items: [
+      {
+        question: `What do renewals typically look like?`,
+        answer: `Renewals on the health plan have consistently come in well below the broader fully insured market trend, which Kaiser and PwC have placed in the high single digits annually. Recent renewal cycles have come in flat or below quoted carrier trend, and across the program's track record since 2013 renewals have averaged meaningfully below the small-group market. The captive structure is what smooths out the spikes that would otherwise hit a traditional renewal in a heavy claims year.`,
+      },
+      {
+        question: `What happens if our group has a bad claims year?`,
+        answer: `That is what the captive and the layered reinsurance program behind it are for. Above the group's funded layer, the captive absorbs the year's claims. The captive itself has reinsurance behind it, with an A-rated reinsurer at the top of the program. A bad year does not translate into a step-change at renewal the way it would on a traditional carrier plan.`,
+      },
+      {
+        question: `What if our group has a strong claims year? Does the savings come back to us?`,
+        answer: `Yes. When a group's claims come in lower than expected, that good experience is not lost to a carrier. It builds a credit that goes toward holding down the group's future rate increases, so a group that runs its plan well sees the benefit of doing so. Under a traditional fully insured plan, money left unspent at year-end simply belongs to the carrier.`,
+      },
+      {
+        question: `How much flexibility do we have at renewal?`,
+        answer: `Full flexibility. The program operates on a calendar year, and at each January 1 renewal an employer can change which plans are offered, how much it contributes, and how employees choose. It is not a take-it-or-leave-it package.`,
+      },
+    ],
+  },
+  {
+    title: "Part VII · The Company Behind It",
+    items: [
+      {
+        question: `How long has Kennion been operating?`,
+        answer: `Kennion Benefit Advisors traces back to 1969, when the firm's founder, Hal Shepherd, began practicing in employee benefits. Several related benefits and insurance firms operated under his leadership over the following decades before being brought together into what is today Kennion Benefit Advisors. The captive program itself dates to 2013 and has run under the same architecture ever since. Across that history the program has served hundreds of employer groups and thousands of covered employees.`,
+      },
+      {
+        question: `Who are the program's partners?`,
+        answer: `Every layer is run by a firm with national scale. Captives are managed by Strategic Risk Solutions, the largest independent captive manager in the world, engaged with Kennion since the program's inception in 2013. Day-to-day plan administration runs through EBPA, which is part of Cobalt Benefits Group, a Vermont-headquartered third-party administrator that serves more than 200,000 members nationally and has been part of the Kennion Program since 2013 as well. Prescriptions run through MedOne. Life and supplemental coverage is fully insured through Guardian, a company that has been in business for more than 150 years. Vision runs through VSP, the largest vision carrier in the country.`,
+      },
+      {
+        question: `Is Kennion licensed?`,
+        answer: `Both Kennion Benefit Advisors and Hunter Shepherd, President (National Producer Number 16406853), are licensed insurance professionals where appropriate and in good standing. The captives that underpin the Kennion Program are domiciled in Alabama and Vermont and regulated by those states. The plans and programs themselves meet all applicable state and federal requirements, and the program has been in continuous operation since 2013.`,
+      },
+    ],
+  },
+  {
+    title: "Part VIII · The Agreement",
+    items: [
+      {
+        question: `What is the contract term?`,
+        answer: `One year, running January 1 through December 31, with the option to renew. Everything that governs the plan is in writing. The participation agreement, the stop-loss policy, and its certificate lay out how the plan is funded, how claims are paid, what is covered, and how a group renews or leaves.`,
+      },
+      {
+        question: `What are our options if we need to exit mid-year? Is there an early-termination penalty?`,
+        answer: `Either party may terminate the stop-loss policy with thirty days' written notice. There is no separate early-termination penalty above that. Premium and association dues that have already accrued through the termination date remain payable. Claims incurred while you were covered continue to be paid under the policy that was in force at the time, during its four-year run-out period. The agreement is not auto-renewing; a new application is signed each year for the following year.`,
+      },
+    ],
+  },
+];
