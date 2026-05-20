@@ -53,7 +53,7 @@ const actionButtons = [
   },
   {
     label: "Get Your Paytient Card",
-    desc: "Pay for care with 0% interest, then get reimbursed",
+    desc: "Your guarantee for in-network care when a provider doesn't recognize your plan",
     icon: CreditCard,
     href: "/visa",
     external: false,
