@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink, X, Download } from "lucide-react";
+import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink, X, Download, Wallet, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import PhoneContact from "@/components/PhoneContact";
 import { useUserName } from "@/components/NameContext";
 
@@ -104,6 +105,25 @@ export default function PlansPage() {
           call the Benefits Enrollment Line, or check the HealthJoy app.
         </p>
       </div>
+
+      {/* Self-Pay Benefit callout - every plan includes this */}
+      <Link
+        href="/self-pay"
+        className="card card-interactive group mb-5 flex items-center gap-3 p-3.5 animate-fade-in-up"
+      >
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-md shadow-orange-500/20 transition-transform duration-300 group-hover:scale-105">
+          <Wallet size={18} className="text-white" strokeWidth={1.8} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
+            Every plan includes a Self-Pay Benefit
+          </h3>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            Pay at any provider, get 100% reimbursed
+          </p>
+        </div>
+        <ArrowRight size={16} className="shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-500" />
+      </Link>
 
       {/* Category Tabs */}
       <div className="mb-6 flex gap-2 overflow-x-auto pb-1 animate-fade-in-up stagger-1">
