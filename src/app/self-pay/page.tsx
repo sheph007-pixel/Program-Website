@@ -44,7 +44,7 @@ const coveredServices = [
 const actionButtons = [
   {
     label: "Submit a Self-Pay Reimbursement",
-    desc: "EBPA claim form — send us your receipt for 100% reimbursement",
+    desc: "EBPA claim form. Send us your receipt for 100% reimbursement.",
     icon: FileSignature,
     href: "https://forms.cobaltbenefitsgroup.com/260694657475068",
     external: true,
@@ -77,7 +77,7 @@ export default function SelfPayPage() {
         <p className="page-subtitle">
           Some providers aren't familiar with your plan, won't accept it, or
           only take cash. Pay at the visit and we'll reimburse 100% of what you
-          paid — no copay, no coinsurance, no deductible.
+          paid. No copay, no coinsurance, no deductible.
         </p>
       </div>
 
