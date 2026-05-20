@@ -44,9 +44,9 @@ const coveredServices = [
 const actionButtons = [
   {
     label: "Submit a Self-Pay Reimbursement",
-    desc: "Send us your receipt and we'll process your 100% reimbursement",
+    desc: "EBPA claim form — send us your receipt for 100% reimbursement",
     icon: FileSignature,
-    href: "#",
+    href: "https://forms.cobaltbenefitsgroup.com/260694657475068",
     external: true,
     color: "from-amber-500 to-orange-500",
     shadow: "shadow-orange-500/20",
