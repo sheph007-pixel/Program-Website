@@ -75,9 +75,8 @@ export default function SelfPayPage() {
           {name ? `${name}, Pay & Get Reimbursed` : "Self-Pay Benefit"}
         </h1>
         <p className="page-subtitle">
-          Go to any provider. If they don't take the plan, just pay at the visit
-          and we'll reimburse 100% of what you paid. No copay, no coinsurance,
-          no deductible.
+          See any provider you choose. Pay at the visit, and the plan reimburses
+          100% of what you paid — no copay, no coinsurance, no deductible.
         </p>
       </div>
 
