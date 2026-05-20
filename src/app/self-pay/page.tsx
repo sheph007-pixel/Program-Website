@@ -3,7 +3,6 @@
 import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useUserName } from "@/components/NameContext";
-import PhoneContact from "@/components/PhoneContact";
 
 const steps = [
   {
@@ -198,18 +197,6 @@ export default function SelfPayPage() {
             </Link>
           );
         })}
-      </div>
-
-      {/* Support contact */}
-      <div className="divider" />
-      <div className="animate-fade-in-up">
-        <PhoneContact
-          number="(877) 500-3212"
-          label="HealthJoy Concierge"
-          sublabel="Questions about self-pay or reimbursement"
-          gradient="from-purple-600 to-fuchsia-500"
-          shadow="shadow-purple-500/20"
-        />
       </div>
     </div>
   );
