@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 import {
   ArrowLeft,
   User,
@@ -38,13 +39,20 @@ export default function ConversationDetailPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`/api/admin/sessions/${params.id}`)
+  const fetchSession = useCallback(() => {
+    fetch(`/api/admin/sessions/${params.id}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setSession(d.session))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [params.id]);
+
+  useEffect(() => {
+    fetchSession();
+  }, [fetchSession]);
+
+  // Refresh the transcript/notes when the page is reopened/refocused.
+  useRefreshOnVisible(fetchSession);
 
   const updateStatus = async (status: string) => {
     await fetch(`/api/admin/sessions/${params.id}`, {

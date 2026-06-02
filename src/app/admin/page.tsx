@@ -1,20 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { MessageSquare, AlertCircle, Send, Brain } from "lucide-react";
+import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 
 type Stats = { total: number; newCount: number; ticketsSent: number; activeRules: number };
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
 
-  useEffect(() => {
-    fetch("/api/admin/stats")
+  const fetchStats = useCallback(() => {
+    fetch("/api/admin/stats", { cache: "no-store" })
       .then((r) => r.json())
       .then(setStats)
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
+
+  // Refresh metrics when the dashboard is reopened/refocused.
+  useRefreshOnVisible(fetchStats);
 
   const cards = [
     { label: "Total Conversations", value: stats?.total ?? "-", icon: MessageSquare, color: "from-blue-600 to-blue-500", href: "/admin/conversations" },

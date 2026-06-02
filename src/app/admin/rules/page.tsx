@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Brain, Plus, Trash2, Power, PowerOff } from "lucide-react";
+import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 
 type Rule = {
   id: string;
@@ -20,7 +21,7 @@ export default function AIRulesPage() {
 
   const fetchRules = async () => {
     try {
-      const res = await fetch("/api/admin/rules");
+      const res = await fetch("/api/admin/rules", { cache: "no-store" });
       const data = await res.json();
       setRules(data.rules || []);
     } catch {
@@ -33,6 +34,10 @@ export default function AIRulesPage() {
   useEffect(() => {
     fetchRules();
   }, []);
+
+  // Refresh rules when the page is reopened/refocused.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useRefreshOnVisible(() => fetchRules());
 
   const addRule = async () => {
     if (!newContent.trim()) return;

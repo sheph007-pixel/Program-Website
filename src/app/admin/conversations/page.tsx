@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { MessageSquare, Send, Clock, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 
 type Session = {
   id: string;
@@ -46,7 +47,7 @@ function ConversationsContent() {
     try {
       const params = new URLSearchParams({ status, page: String(page) });
       if (search) params.set("search", search);
-      const res = await fetch(`/api/admin/sessions?${params}`);
+      const res = await fetch(`/api/admin/sessions?${params}`, { cache: "no-store" });
       const data = await res.json();
       setSessions(data.sessions || []);
       setTotalPages(data.totalPages || 0);
@@ -61,6 +62,10 @@ function ConversationsContent() {
     fetchSessions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, page]);
+
+  // Refresh the conversation list when the page is reopened/refocused.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useRefreshOnVisible(() => fetchSessions());
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
