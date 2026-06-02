@@ -44,7 +44,6 @@ const moreMenuItems = [
   { href: "/visa", label: "Paytient Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
   { href: "/self-pay", label: "Self-Pay", icon: Wallet },
-  { href: "#help", label: "Get Help", icon: MessageCircle, isChat: true },
 ];
 
 export default function Sidebar() {
@@ -100,24 +99,7 @@ export default function Sidebar() {
           <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10">
             {moreMenuItems.map((item) => {
               const Icon = item.icon;
-              const isChatItem = (item as { isChat?: boolean }).isChat;
-              const isActive = !isChatItem && pathname === item.href;
-
-              if (isChatItem) {
-                return (
-                  <button
-                    key={item.href}
-                    onClick={() => {
-                      setMoreOpen(false);
-                      window.dispatchEvent(new CustomEvent("open-kennion-chat"));
-                    }}
-                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-emerald-600 hover:bg-emerald-50 transition-colors"
-                  >
-                    <Icon size={18} strokeWidth={1.8} />
-                    <span className="text-[14px] font-medium">{item.label}</span>
-                  </button>
-                );
-              }
+              const isActive = pathname === item.href;
 
               return (
                 <Link
@@ -274,14 +256,14 @@ export default function Sidebar() {
               </Link>
             );
           })}
-          {/* Get Help button */}
+          {/* Get Help button - desktop only (chat is hidden on mobile) */}
           <button
             onClick={() => {
               setMobileOpen(false);
               window.dispatchEvent(new CustomEvent("open-kennion-chat"));
             }}
             title={collapsed ? "Get Help" : undefined}
-            className={`group relative flex items-center rounded-xl transition-all duration-200 w-full ${
+            className={`group relative hidden md:flex items-center rounded-xl transition-all duration-200 w-full ${
               collapsed
                 ? "justify-center px-0 py-2.5 mx-auto w-10 h-10"
                 : "gap-3 px-3 py-2.5"

@@ -5,6 +5,7 @@ import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink, X, Downlo
 import Link from "next/link";
 import PhoneContact from "@/components/PhoneContact";
 import { useUserName } from "@/components/NameContext";
+import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 
 type Plan = { id: string; name: string; category: string; summaryUrl: string; pdfName: string | null };
 
@@ -58,6 +59,10 @@ export default function PlansPage() {
   useEffect(() => {
     fetchPlans();
   }, [fetchPlans]);
+
+  // Re-pull the latest plans whenever the page is brought back to the
+  // foreground (e.g. reopening on mobile) so updates show without a refresh.
+  useRefreshOnVisible(fetchPlans);
 
   // Close modal on Escape
   useEffect(() => {

@@ -12,6 +12,7 @@ import {
   Trash2,
   Link,
 } from "lucide-react";
+import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 
 type Plan = {
   id: string;
@@ -60,7 +61,7 @@ export default function DocumentsPage() {
 
   const fetchPlans = useCallback(async () => {
     try {
-      const res = await fetch("/api/admin/plans");
+      const res = await fetch("/api/admin/plans", { cache: "no-store" });
       const data = await res.json();
       const fetched = data.plans || [];
       if (fetched.length === 0) {
@@ -82,6 +83,14 @@ export default function DocumentsPage() {
   useEffect(() => {
     fetchPlans();
   }, [fetchPlans]);
+
+  // Refresh the document list when the page is reopened/refocused, unless an
+  // upload is mid-flight (don't disrupt in-progress work).
+  useRefreshOnVisible(() => {
+    if (!uploadProgress?.active && !uploadingPlanId && !removingPlanId) {
+      fetchPlans();
+    }
+  });
 
   // Bulk upload — upload all files, auto-match to plans
   const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
