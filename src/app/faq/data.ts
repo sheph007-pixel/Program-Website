@@ -121,7 +121,7 @@ export const sections: FaqSection[] = [
       },
       {
         question: `What if a provider sends a balance bill?`,
-        answer: `Balance billing can happen with reference-based pricing, but it is small. Industry data, and our own experience since the program's inception in 2013, puts it at well under one percent of claims. The employee should not pay a disputed balance without guidance from us. The employee sends the bill to Kennion or HealthJoy, and our team works directly with the provider to resolve it. Since 2013, 100 percent of balance-billing issues that have arisen have been resolved by our team.`,
+        answer: `Balance billing is rare with reference-based pricing — industry data and our experience since 2013 put it at well under one percent of claims. When it does happen, the employee has full backing: they forward the bill to Kennion or HealthJoy and our team takes it from there, engaging the provider directly and resolving the dispute on the employee's behalf. The employee should not pay a disputed balance without guidance from us. Since 2013, 100 percent of balance-billing issues that have arisen have been resolved by our team.`,
       },
     ],
   },
@@ -190,6 +190,19 @@ export const sections: FaqSection[] = [
       {
         question: `What are our options if we need to exit mid-year? Is there an early-termination penalty?`,
         answer: `Either party may terminate the stop-loss policy with thirty days' written notice. There is no separate early-termination penalty above that. Premium and association dues that have already accrued through the termination date remain payable. Claims incurred while you were covered continue to be paid under the policy that was in force at the time, during its four-year run-out period. The agreement is not auto-renewing; a new application is signed each year for the following year.`,
+      },
+    ],
+  },
+  {
+    title: "Part IX · Implementation",
+    items: [
+      {
+        question: `How are the plan options presented in our proposal?`,
+        answer: `Your proposal shows real, underwritten rates by tier — EE Only, EE + Child, EE + Spouse, EE + Family — for every available plan, calculated against the actual census you provided. A Compare plan details view opens a side-by-side grid with the full benefit breakdown: deductibles, out-of-pocket maximums, copays, coinsurance, HSA compatibility, and the cost split between employer and employee. Medical, dental, vision, and supplemental are tabbed separately so you can review each coverage line independently. Most groups review two or three plan combinations side by side before selecting the structure that fits their employee mix and cost goals.`,
+      },
+      {
+        question: `Can we implement mid-year, or do we need to wait for our current plan to expire?`,
+        answer: `Mid-year implementation is straightforward. The standard timeline from an accepted proposal to an effective date is two to four weeks. Most groups choose a January 1 start to align with the calendar-year renewal cycle, but off-cycle starts are routine and can be timed to match any current carrier expiration date with no gap in coverage. A group whose current plan expires mid-year — including a July 1 expiration — can transition directly into the Kennion Program on that date.`,
       },
     ],
   },
