@@ -59,7 +59,7 @@ export const sections: FaqSection[] = [
       },
       {
         question: `What changed that makes this model work for small and mid-sized employers now?`,
-        answer: `For decades, reference-based pricing was a Fortune 500 idea. The structure made sense but small and mid-sized employers did not have the staff or infrastructure to run it. What changed is that the supporting tools have caught up. A modern third-party administrator like EBPA handles claims at scale. A concierge layer like HealthJoy fields every member question and absorbs provider-side friction. Paytient turns out-of-pocket exposure into a zero-interest, fully reimbursed event. MedeCash Apta Pay solves the facility pre-pay problem. The Kennion Program ties them together so a small or mid-sized employer can run the same kind of structure that the Fortune 500 has been running for years.`,
+        answer: `For decades, reference-based pricing was a Fortune 500 idea. The structure made sense but small and mid-sized employers did not have the staff or infrastructure to run it. What changed is that the supporting tools have caught up. A modern third-party administrator like EBPA handles claims at scale. A concierge layer like HealthJoy fields every member question and absorbs provider-side friction. Paytient turns out-of-pocket exposure into a zero-interest, fully reimbursed event. Apta Cash solves the facility pre-pay problem. The Kennion Program ties them together so a small or mid-sized employer can run the same kind of structure that the Fortune 500 has been running for years.`,
       },
       {
         question: `Are larger employers and major carriers moving in this direction too?`,
@@ -126,7 +126,7 @@ export const sections: FaqSection[] = [
     items: [
       {
         question: `What does it actually look like when an employee goes to see a doctor?`,
-        answer: `The day-to-day experience is straightforward. The employee calls any licensed provider they want, books the appointment, and presents their EBPA ID card the same way they would on any other plan. The provider's office files the claim with the administrator and the employee pays only the deductible, copay, and coinsurance the plan calls for. The vast majority of provider offices handle the plan this way without any extra step.\n\nIf an office has not seen the plan before and wants to ask questions first, our concierge team calls the billing office on the member's behalf before the appointment and walks them through how the plan pays. That resolves most questions in minutes.\n\nFor the rare case where a provider would rather be paid up front, every member carries a Paytient card that covers the visit at the time of service at zero interest. The member submits the receipt and the plan reimburses 100%, which makes that office visit free. For larger procedures where a hospital or facility asks for payment in advance, the plan pre-pays through MedeCash Apta Pay so the member is never the one blocked at the door.`,
+        answer: `The day-to-day experience is straightforward. The employee calls any licensed provider they want, books the appointment, and presents their EBPA ID card the same way they would on any other plan. The provider's office files the claim with the administrator and the employee pays only the deductible, copay, and coinsurance the plan calls for. The vast majority of provider offices handle the plan this way without any extra step.\n\nIf an office has not seen the plan before and wants to ask questions first, our concierge team calls the billing office on the member's behalf before the appointment and walks them through how the plan pays. That resolves most questions in minutes.\n\nFor the rare case where a provider would rather be paid up front, every member carries a Paytient card that covers the visit at the time of service at zero interest. The member submits the receipt and the plan reimburses 100%, which makes that office visit free. For larger procedures where a hospital or facility asks for payment in advance, the plan pre-pays through Apta Cash so the member is never the one blocked at the door.`,
       },
       {
         question: `How does the concierge work?`,
@@ -141,8 +141,8 @@ export const sections: FaqSection[] = [
         answer: `Paytient is a member benefit. Every employee carries a Paytient card to cover out-of-pocket medical, dental, vision, prescription, or even veterinary costs up front, and to repay Paytient over time at no interest. For routine office visits, an employee who pays with the Paytient card (or any other card) can submit the receipt to the plan for 100% reimbursement, which effectively makes a doctor visit free to the employee.`,
       },
       {
-        question: `What is MedeCash Apta Pay?`,
-        answer: `For elective procedures where a hospital or provider asks for payment up front before scheduling, the plan can pre-pay the procedure through the program's MedeCash Apta Pay arrangement, so a difficult billing office never blocks care from happening.`,
+        question: `What is Apta Cash?`,
+        answer: `For elective procedures where a hospital or provider asks for payment up front before scheduling, the plan can pre-pay the procedure through the program's Apta Cash arrangement, so a difficult billing office never blocks care from happening.`,
       },
       {
         question: `What if a provider sends a balance bill?`,
