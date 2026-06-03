@@ -61,6 +61,10 @@ export const sections: FaqSection[] = [
         question: `What changed that makes this model work for small and mid-sized employers now?`,
         answer: `For decades, reference-based pricing was a Fortune 500 idea. The structure made sense but small and mid-sized employers did not have the staff or infrastructure to run it. What changed is that the supporting tools have caught up. A modern third-party administrator like EBPA handles claims at scale. A concierge layer like HealthJoy fields every member question and absorbs provider-side friction. Paytient turns out-of-pocket exposure into a zero-interest, fully reimbursed event. MedeCash Apta Pay solves the facility pre-pay problem. The Kennion Program ties them together so a small or mid-sized employer can run the same kind of structure that the Fortune 500 has been running for years.`,
       },
+      {
+        question: `Are larger employers and major carriers moving in this direction too?`,
+        answer: `Yes, and the movement has been accelerating for years. About two-thirds of American workers are now in self-funded plans (Kaiser Family Foundation Employer Health Benefits Survey), and self-funded designs are the default approach for any employer large enough to support one. The largest national carriers have all built or acquired third-party administration arms because the traditional fully insured network plan has stopped growing as a product category outside the very largest groups. Independent TPAs run reference-based and self-funded plans covering hundreds of thousands of members nationwide. Large name-brand employers moved their own workforces onto the same structural model years ago. The Kennion Program brings that architecture to small and mid-sized employers, packaged with the concierge and member-support layer that makes it work without requiring an internal benefits department.`,
+      },
     ],
   },
   {
@@ -224,6 +228,10 @@ export const sections: FaqSection[] = [
       {
         question: `Can we implement mid-year, or do we need to wait for our current plan to expire?`,
         answer: `Mid-year implementation is straightforward. The standard timeline from an accepted proposal to an effective date is two to four weeks. Most groups choose a January 1 start to align with the calendar-year renewal cycle, but off-cycle starts are routine and can be timed to match any current carrier expiration date with no gap in coverage. A group whose current plan expires mid-year (including a July 1 expiration) can transition directly into the Kennion Program on that date.`,
+      },
+      {
+        question: `How do we communicate the plan to employees during enrollment so they feel comfortable?`,
+        answer: `Almost every employee question about a new plan happens before any actual care, not at the point of service. The anxiety is verbal: "what is EBPA, why don't I see Blue Cross, how does this work?" It lives in hallway conversations during open enrollment, not in the doctor's waiting room. Kennion's approach with new groups addresses that directly.\n\nPre-enrollment meetings introduce the plan structure, the ID card, the concierge, the Paytient card, and the self-pay reimbursement option in plain language. Member materials show the card, name the support number, and walk through what happens when an employee sees a doctor. The concierge team is available to employees before the effective date, so anyone who wants to ask "what about my current doctor" gets a real-person answer in advance. Every employee carries a simple message into any office: this is major medical coverage administered by EBPA, here is the ID card, here is the support number. The administrator handles provider questions the same way any other self-funded plan does.\n\nThe first sixty days of any new plan year are when most "is this going to work" anxiety resolves itself. Once employees use the plan once or twice and see that visits get covered, providers file claims, and the support team picks up the phone, the brand-recognition question fades. Existing Kennion groups consistently describe that arc.`,
       },
     ],
   },
