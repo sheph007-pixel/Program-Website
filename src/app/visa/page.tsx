@@ -62,7 +62,7 @@ export default function VisaPage() {
         {highlights.map((h) => (
           <div key={h.label} className="card flex flex-col items-center p-4 text-center">
             <span className="text-[14px] font-bold text-[var(--kennion-navy)]">{h.label}</span>
-            <span className="mt-0.5 text-[11px] text-slate-400">{h.sub}</span>
+            <span className="mt-0.5 text-[12px] text-slate-400 sm:text-[11px]">{h.sub}</span>
           </div>
         ))}
       </div>
@@ -84,7 +84,7 @@ export default function VisaPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)]">{btn.label}</h3>
-                <p className="text-[12px] text-slate-400">{btn.desc}</p>
+                <p className="text-[13px] text-slate-400 sm:text-[12px]">{btn.desc}</p>
               </div>
               <ArrowUpRight size={16} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
             </a>

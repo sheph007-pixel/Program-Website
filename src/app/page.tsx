@@ -118,7 +118,7 @@ export default function HomePage() {
                     {step.label}
                   </h3>
                   {step.sub && (
-                    <p className="text-[11px] text-slate-400 mt-0.5">{step.sub}</p>
+                    <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">{step.sub}</p>
                   )}
                 </div>
                 <ArrowRight size={16} className="shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-500" />

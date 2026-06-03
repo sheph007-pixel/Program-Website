@@ -43,7 +43,7 @@ export default function AdditionalLinksPage() {
           </div>
           <div>
             <h3 className="text-[15px] font-semibold text-[var(--kennion-navy)]">Ask For Help</h3>
-            <p className="mt-1 text-[12px] text-slate-400">Call 844-839-6740</p>
+            <p className="mt-1 text-[13px] text-slate-400 sm:text-[12px]">Call 844-839-6740</p>
           </div>
         </a>
 
@@ -58,7 +58,7 @@ export default function AdditionalLinksPage() {
           </div>
           <div>
             <h3 className="text-[15px] font-semibold text-[var(--kennion-navy)]">Quick Links</h3>
-            <p className="mt-1 text-[12px] text-slate-400">Member resources &amp; portals</p>
+            <p className="mt-1 text-[13px] text-slate-400 sm:text-[12px]">Member resources &amp; portals</p>
           </div>
         </a>
       </div>

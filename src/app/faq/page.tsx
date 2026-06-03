@@ -180,7 +180,7 @@ export default function FaqPage() {
               if (e.key === "Escape") setQuery("");
             }}
             placeholder="Search FAQs…"
-            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-11 text-[14px] text-[var(--kennion-navy)] shadow-sm outline-none transition-all placeholder:text-slate-400 focus:border-blue-300 focus:shadow-md focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-11 text-[16px] text-[var(--kennion-navy)] shadow-sm outline-none transition-all placeholder:text-slate-400 focus:border-blue-300 focus:shadow-md focus:ring-2 focus:ring-blue-100 sm:text-[14px]"
             aria-label="Search FAQs"
           />
           {query && (
@@ -243,7 +243,7 @@ export default function FaqPage() {
                         className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition-colors enabled:hover:bg-slate-50 disabled:cursor-default"
                         aria-expanded={open}
                       >
-                        <span className="text-[15px] font-semibold leading-snug text-[var(--kennion-navy)] sm:text-[14px]">
+                        <span className="text-[16px] font-semibold leading-snug text-[var(--kennion-navy)] sm:text-[14px]">
                           {item.question}
                         </span>
                         {!isSearching && (
@@ -265,7 +265,7 @@ export default function FaqPage() {
                       >
                         <div className="overflow-hidden">
                           <div className="border-t border-slate-100 px-4 py-4">
-                            <p className="whitespace-pre-line text-[14.5px] leading-relaxed text-slate-600 sm:text-[13px]">
+                            <p className="whitespace-pre-line text-[15.5px] leading-relaxed text-slate-600 sm:text-[13px]">
                               {renderInline(item.answer, id)}
                             </p>
                           </div>

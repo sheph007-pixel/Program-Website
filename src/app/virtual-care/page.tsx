@@ -94,7 +94,7 @@ export default function VirtualCarePage() {
               <h3 className="text-[14px] font-bold text-[var(--kennion-navy)] mb-1">
                 {b.label}
               </h3>
-              <p className="text-[12px] text-slate-400 leading-relaxed">
+              <p className="text-[13px] text-slate-400 leading-relaxed sm:text-[12px]">
                 {b.desc}
               </p>
               <div className={`mt-3 rounded-full px-3 py-1 text-[11px] font-bold ${b.bg} ${b.textColor}`}>
@@ -128,7 +128,7 @@ export default function VirtualCarePage() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)]">{btn.label}</h3>
-                <p className="text-[12px] text-slate-400">{btn.desc}</p>
+                <p className="text-[13px] text-slate-400 sm:text-[12px]">{btn.desc}</p>
               </div>
               <ArrowUpRight size={16} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
             </a>

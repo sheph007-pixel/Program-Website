@@ -120,10 +120,10 @@ export default function PlansPage() {
           <Wallet size={18} className="text-white" strokeWidth={1.8} />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
+          <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)] leading-tight sm:text-[13px]">
             Every plan includes a Self-Pay Benefit
           </h3>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">
             Pay at any provider, get 100% reimbursed
           </p>
         </div>
@@ -177,10 +177,10 @@ export default function PlansPage() {
                 <FileText size={16} className={meta.color} strokeWidth={1.8} />
               </div>
               <div className="flex-1">
-                <h3 className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
+                <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)] leading-tight sm:text-[13px]">
                   {plan.name}
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">
                   {hasPdf(plan) ? "View summary" : "View details"}
                 </p>
               </div>

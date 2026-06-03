@@ -10,6 +10,7 @@ import Sidebar from "./Sidebar";
 export default function LayoutShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isFaq = pathname === "/faq";
 
   if (isAdmin) {
     return <>{children}</>;
@@ -25,7 +26,7 @@ export default function LayoutShell({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
-      <ChatWidget />
+      {!isFaq && <ChatWidget />}
     </NameProvider>
   );
 }
