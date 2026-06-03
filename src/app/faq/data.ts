@@ -104,6 +104,10 @@ export const sections: FaqSection[] = [
     title: "Part IV · Day-to-Day Member Experience",
     items: [
       {
+        question: `What does it actually look like when an employee goes to see a doctor?`,
+        answer: `The day-to-day experience is straightforward. The employee calls any licensed provider they want, books the appointment, and presents their EBPA ID card the same way they would on any other plan. The provider's office files the claim with the administrator and the employee pays only the deductible, copay, and coinsurance the plan calls for. The vast majority of provider offices handle the plan this way without any extra step.\n\nIf an office has not seen the plan before and wants to ask questions first, our concierge team calls the billing office on the member's behalf before the appointment and walks them through how the plan pays. That resolves most questions in minutes.\n\nFor the rare case where a provider would rather be paid up front, every member carries a Paytient card that covers the visit at the time of service at zero interest. The member submits the receipt and the plan reimburses 100%, which makes that office visit free. For larger procedures where a hospital or facility asks for payment in advance, the plan pre-pays through MedeCash Apta Pay so the member is never the one blocked at the door.\n\nThe honest tradeoff is brand recognition. There is no Blue Cross logo on the card. What members get in exchange is freedom to see any licensed doctor in any state, transparent pricing, no network restrictions, and concierge support that absorbs friction so the member does not have to.`,
+      },
+      {
         question: `How does the concierge work?`,
         answer: `Every member has a concierge available through the HealthJoy app or a phone call. A real person helps find a provider, schedule the appointment, or work through a confusing bill. If a provider has not seen the plan before, our team will reach out to the provider's billing office to explain how the plan pays before the appointment.`,
       },
