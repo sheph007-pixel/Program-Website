@@ -10,9 +10,10 @@ import Sidebar from "./Sidebar";
 export default function LayoutShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isStandaloneDoc = pathname.startsWith("/education");
   const isFaq = pathname === "/faq";
 
-  if (isAdmin) {
+  if (isAdmin || isStandaloneDoc) {
     return <>{children}</>;
   }
 
