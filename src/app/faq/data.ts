@@ -47,7 +47,24 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part II · How the Program Is Structured",
+    title: "Part II · Why Networks Stopped Working",
+    items: [
+      {
+        question: `Networks have been the standard for decades. Why doesn't the model work anymore?`,
+        answer: `Networks were introduced in the 1970s and sold as the answer to rising healthcare costs. The promise was simple: carriers would negotiate discounts with providers, employers and members would stay inside the network, and everyone would save. For a while it worked. The math fell apart as healthcare consolidation accelerated. Hospital systems merged, gained pricing power, and started negotiating up rather than down. Carriers passed those increases through, and the "network discount" became a discount off a sticker price nobody actually pays. Today, networks have not just failed to contain costs. They have become the single largest driver of the cost growth they were supposed to solve. Reference-based pricing flips the equation: the plan pays every provider a fair, transparent rate built on a public Medicare benchmark, so the carrier's network is no longer the gatekeeper and the carrier's pricing leverage no longer determines what the employer pays.`,
+      },
+      {
+        question: `What about employee brand recognition? Most employees want a plan name they have heard of.`,
+        answer: `This is the most common concern, and it is a fair one. Employees are used to seeing Blue Cross or UnitedHealthcare on the ID card because that is what they have always seen. The brand does not actually do anything for them at the point of care. A provider does not give better care because the card has a recognized logo, and a claim is not paid any differently. What the brand provides is the feeling of certainty, and the Kennion Program replaces that feeling with real infrastructure. A concierge team handles every provider question. A Paytient card every employee carries turns any office visit into a 100% reimbursed event. Direct facility pre-pay handles the rare case where a hospital wants money up front. None of those tools exist on a traditional carrier plan. The honest tradeoff is a familiar logo for a stronger support system, and employers who make the switch consistently report that the support system is what their employees actually wanted in the first place.`,
+      },
+      {
+        question: `What changed that makes this model work for small and mid-sized employers now?`,
+        answer: `For decades, reference-based pricing was a Fortune 500 idea. The structure made sense but small and mid-sized employers did not have the staff or infrastructure to run it. What changed is that the supporting tools have caught up. A modern third-party administrator like EBPA handles claims at scale. A concierge layer like HealthJoy fields every member question and absorbs provider-side friction. Paytient turns out-of-pocket exposure into a zero-interest, fully reimbursed event. MedeCash Apta Pay solves the facility pre-pay problem. The Kennion Program ties them together so a small or mid-sized employer can run the same kind of structure that the Fortune 500 has been running for years.`,
+      },
+    ],
+  },
+  {
+    title: "Part III · How the Program Is Structured",
     items: [
       {
         question: `How is the plan structured underneath?`,
@@ -76,7 +93,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part III · Provider Access",
+    title: "Part IV · Provider Access",
     items: [
       {
         question: `Does the plan use a Blue Cross, UnitedHealthcare, Cigna, or Aetna network?`,
@@ -101,7 +118,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part IV · Day-to-Day Member Experience",
+    title: "Part V · Day-to-Day Member Experience",
     items: [
       {
         question: `What does it actually look like when an employee goes to see a doctor?`,
@@ -130,7 +147,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part V · Prescriptions",
+    title: "Part VI · Prescriptions",
     items: [
       {
         question: `How is prescription coverage handled?`,
@@ -147,7 +164,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part VI · Renewals and Rate Stability",
+    title: "Part VII · Renewals and Rate Stability",
     items: [
       {
         question: `What do renewals typically look like?`,
@@ -168,7 +185,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part VII · The Company Behind It",
+    title: "Part VIII · The Company Behind It",
     items: [
       {
         question: `How long has Kennion been operating?`,
@@ -185,7 +202,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part VIII · The Agreement",
+    title: "Part IX · The Agreement",
     items: [
       {
         question: `What is the contract term?`,
@@ -198,7 +215,7 @@ export const sections: FaqSection[] = [
     ],
   },
   {
-    title: "Part IX · Implementation",
+    title: "Part X · Implementation",
     items: [
       {
         question: `How are the plan options presented in our proposal?`,
