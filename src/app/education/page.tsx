@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, FileText, Users, GitCompareArrows, CalendarCheck2, Sparkles, Smartphone, Coins } from "lucide-react";
+import { ArrowRight, BookOpen, FileText, Users, GitCompareArrows, CalendarCheck2, Smartphone, Coins } from "lucide-react";
 
 type Guide = {
   slug: string;
@@ -16,14 +16,6 @@ type Guide = {
 //   2. Append one entry below.
 const guides: Guide[] = [
   {
-    slug: "program-overview",
-    title: "The Kennion Program",
-    description:
-      "An employer-facing overview of the program: coverage lines, what makes it different (one bill, free 24/7 virtual care, Paytient card, flat program fee), the three-step proposal process, and the best-in-class partner roster behind every plan.",
-    audience: "Employers and Advisors",
-    icon: Sparkles,
-  },
-  {
     slug: "using-your-plan",
     title: "Using Your Kennion Plan",
     description:
@@ -32,18 +24,10 @@ const guides: Guide[] = [
     icon: Users,
   },
   {
-    slug: "vs-traditional-plan",
-    title: "How Your Plan Compares",
-    description:
-      "A side-by-side look at the Kennion Program versus a traditional Blue Cross, UnitedHealthcare, Cigna, or Aetna plan. Useful when an HR person needs to walk leadership through the structural differences in one page.",
-    audience: "Employers and Advisors",
-    icon: GitCompareArrows,
-  },
-  {
     slug: "benefits-toolkit",
     title: "Your Benefits Toolkit",
     description:
-      "The HealthJoy app and Paytient Visa Card explained for members. Three-step setup, real-world stats, signup links, and the ten questions members ask most often about how the tools work.",
+      "The HealthJoy app and Paytient Visa Card explained for members. Three-step setup, real-world stats, signup links, and the questions members ask most often about how the tools work.",
     audience: "Members and Employees",
     icon: Smartphone,
   },
@@ -62,6 +46,14 @@ const guides: Guide[] = [
       "A short, printable checklist for new members. Three weeks of small steps to set up the HealthJoy app, the Paytient card, and the support number so the plan is ready when you need it.",
     audience: "New Members",
     icon: CalendarCheck2,
+  },
+  {
+    slug: "vs-traditional-plan",
+    title: "How Your Plan Compares",
+    description:
+      "A side-by-side look at how your plan works versus a traditional Blue Cross, UnitedHealthcare, Cigna, or Aetna plan. Useful for understanding why your card looks different and what that means for you.",
+    audience: "Members and HR",
+    icon: GitCompareArrows,
   },
 ];
 
