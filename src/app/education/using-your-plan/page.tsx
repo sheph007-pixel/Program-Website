@@ -81,9 +81,9 @@ export default function EmployeeGuide() {
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-slate-700">
             You can see any licensed doctor, specialist, hospital, or facility in
-            any state. You present your EBPA ID card. The provider's office files
-            the claim. You pay only your deductible, copay, and coinsurance. The
-            vast majority of visits work this way without any extra step.
+            any state. You present your plan ID card. The administrator files the
+            claim. You pay only your deductible, copay, and coinsurance. The vast
+            majority of visits work this way without any extra step.
           </p>
         </section>
 
@@ -103,8 +103,8 @@ export default function EmployeeGuide() {
                 body: "Just like you always have. No referral required, no provider lookup tool to fight with.",
               },
               {
-                title: "Bring your EBPA ID card",
-                body: "Hand it to reception at check-in the same way you would on any other plan. The provider's billing office files the claim with EBPA.",
+                title: "Bring your plan ID card",
+                body: "Hand it to reception at check-in the same way you would on any other plan. The provider's billing office files the claim with the administrator shown on your card (EBPA or HealthEZ depending on your group).",
               },
               {
                 title: "Pay only what the plan calls for",

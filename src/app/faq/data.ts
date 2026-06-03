@@ -59,7 +59,7 @@ export const sections: FaqSection[] = [
       },
       {
         question: `What changed that makes this model work for small and mid-sized employers now?`,
-        answer: `For decades, reference-based pricing was a Fortune 500 idea. The structure made sense but small and mid-sized employers did not have the staff or infrastructure to run it. What changed is that the supporting tools have caught up. A modern third-party administrator like EBPA handles claims at scale. A concierge layer like HealthJoy fields every member question and absorbs provider-side friction. Paytient turns out-of-pocket exposure into a zero-interest, fully reimbursed event. Apta Cash solves the facility pre-pay problem. The Kennion Program ties them together so a small or mid-sized employer can run the same kind of structure that the Fortune 500 has been running for years.`,
+        answer: `For decades, reference-based pricing was a Fortune 500 idea. The structure made sense but small and mid-sized employers did not have the staff or infrastructure to run it. What changed is that the supporting tools have caught up. Modern third-party administrators like EBPA and HealthEZ handle claims at scale. A concierge layer like HealthJoy fields every member question and absorbs provider-side friction. Paytient turns out-of-pocket exposure into a zero-interest, fully reimbursed event. Apta Cash solves the facility pre-pay problem. MedOne handles prescriptions on a pass-through basis. The Kennion Program ties them together so a small or mid-sized employer can run the same kind of structure that the Fortune 500 has been running for years.`,
       },
       {
         question: `Are larger employers and major carriers moving in this direction too?`,
@@ -104,8 +104,8 @@ export const sections: FaqSection[] = [
         answer: `No. The plan does not operate inside a carrier-branded provider network in any state. It uses reference-based pricing, which means it pays any provider a fair, consistent rate built on a public Medicare benchmark, the same way regardless of who the provider is.`,
       },
       {
-        question: `What about "Cobalt"? Isn't that a provider network?`,
-        answer: `Cobalt Benefits Group, LLC is a Vermont-headquartered third-party administrator that processes claims for self-funded plans. It is not a provider network. The Kennion Program's plan administrator, EBPA, is part of Cobalt Benefits Group, which is how that name appears in our materials. It is a claims-administration role, not a network.`,
+        question: `Who actually administers the plan? Is that a network?`,
+        answer: `The Kennion Program is administered by one of two third-party administrators, depending on the group: EBPA (part of Cobalt Benefits Group, headquartered in Vermont) at cobaltbenefitsgroup.com, or HealthEZ at healthez.com. Both are established TPAs that process self-funded plans for hundreds of thousands of members combined. Neither is a provider network. Their role is claims administration, eligibility verification, and ID-card services. Prescriptions for every group run through MedOne (medone-rx.com) on a pass-through basis. Same program model and member experience regardless of which TPA your group is on.`,
       },
       {
         question: `Can employees see any provider they want?`,
@@ -117,7 +117,7 @@ export const sections: FaqSection[] = [
       },
       {
         question: `What will ID cards and claims look like to a provider?`,
-        answer: `ID cards carry the plan administrator's branding (EBPA) and the relevant payer information rather than "Kennion." Eligibility verification and claims submission run through that administrator in the same way a provider would handle any other self-funded plan.`,
+        answer: `ID cards carry the plan administrator's branding (EBPA or HealthEZ, depending on the group) and the relevant payer information rather than "Kennion." Eligibility verification and claims submission run through that administrator in the same way a provider would handle any other self-funded plan.`,
       },
     ],
   },
@@ -126,7 +126,7 @@ export const sections: FaqSection[] = [
     items: [
       {
         question: `What does it actually look like when an employee goes to see a doctor?`,
-        answer: `The day-to-day experience is straightforward. The employee calls any licensed provider they want, books the appointment, and presents their EBPA ID card the same way they would on any other plan. The provider's office files the claim with the administrator and the employee pays only the deductible, copay, and coinsurance the plan calls for. The vast majority of provider offices handle the plan this way without any extra step.\n\nIf an office has not seen the plan before and wants to ask questions first, our concierge team calls the billing office on the member's behalf before the appointment and walks them through how the plan pays. That resolves most questions in minutes.\n\nFor the rare case where a provider would rather be paid up front, every member carries a Paytient card that covers the visit at the time of service at zero interest. The member submits the receipt and the plan reimburses 100%, which makes that office visit free. For larger procedures where a hospital or facility asks for payment in advance, the plan pre-pays through Apta Cash so the member is never the one blocked at the door.`,
+        answer: `The day-to-day experience is straightforward. The employee calls any licensed provider they want, books the appointment, and presents their plan ID card the same way they would on any other plan. The plan administrator (EBPA or HealthEZ, depending on the group) handles the claim, and the employee pays only the deductible, copay, and coinsurance the plan calls for. The vast majority of provider offices handle the plan this way without any extra step.\n\nIf an office has not seen the plan before and wants to ask questions first, our concierge team calls the billing office on the member's behalf before the appointment and walks them through how the plan pays. That resolves most questions in minutes.\n\nFor the rare case where a provider would rather be paid up front, every member carries a Paytient card that covers the visit at the time of service at zero interest. The member submits the receipt and the plan reimburses 100%, which makes that office visit free. For larger procedures where a hospital or facility asks for payment in advance, the plan pre-pays through Apta Cash so the member is never the one blocked at the door.`,
       },
       {
         question: `How does the concierge work?`,
@@ -197,7 +197,7 @@ export const sections: FaqSection[] = [
       },
       {
         question: `Who are the program's partners?`,
-        answer: `Every layer is run by a firm with national scale. Captives are managed by Strategic Risk Solutions, the largest independent captive manager in the world, engaged with Kennion since the program's inception in 2013. Day-to-day plan administration runs through EBPA, which is part of Cobalt Benefits Group, a Vermont-headquartered third-party administrator that serves more than 200,000 members nationally and has been part of the Kennion Program since 2013 as well. Prescriptions run through MedOne. Life and supplemental coverage is fully insured through Guardian, a company that has been in business for more than 150 years. Vision runs through VSP, the largest vision carrier in the country.`,
+        answer: `Every layer is run by a firm with national scale. Captives are managed by Strategic Risk Solutions, the largest independent captive manager in the world, engaged with Kennion since the program's inception in 2013. Day-to-day plan administration runs through one of two third-party administrators depending on the group: EBPA (part of Cobalt Benefits Group, a Vermont-headquartered TPA serving more than 200,000 members nationally, at cobaltbenefitsgroup.com) or HealthEZ (a national TPA at healthez.com). Prescriptions for every group run through MedOne (medone-rx.com) on a pass-through basis. Life and supplemental coverage is fully insured through Guardian, a company that has been in business for more than 150 years. Vision runs through VSP, the largest vision carrier in the country.`,
       },
       {
         question: `Is Kennion licensed?`,
@@ -231,7 +231,7 @@ export const sections: FaqSection[] = [
       },
       {
         question: `How do we communicate the plan to employees during enrollment so they feel comfortable?`,
-        answer: `The first questions employees ask come at enrollment, not at the doctor's office: "what is EBPA, how does this work, what about my current doctor?" Kennion's onboarding approach is built to answer those questions directly before the plan ever goes live.\n\nPre-enrollment meetings introduce the plan structure, the ID card, the concierge, the Paytient card, and the self-pay reimbursement option in plain language. Member materials show the card, name the support number, and walk through what happens when an employee sees a doctor. The concierge team is available to employees before the effective date, so anyone who wants to ask about a specific provider gets a real-person answer in advance. Every employee carries a simple message into any office: this is major medical coverage administered by EBPA, here is the ID card, here is the support number. The administrator handles provider questions the same way any other self-funded plan does.\n\nOnce employees use the plan once or twice and see that visits get covered, providers file claims, and the support team picks up the phone, the day-to-day experience speaks for itself. Existing Kennion groups consistently describe that arc.`,
+        answer: `The first questions employees ask come at enrollment, not at the doctor's office: "who is this plan administrator, how does this work, what about my current doctor?" Kennion's onboarding approach is built to answer those questions directly before the plan ever goes live.\n\nPre-enrollment meetings introduce the plan structure, the ID card, the concierge, the Paytient card, and the self-pay reimbursement option in plain language. Member materials show the card, name the support number, and walk through what happens when an employee sees a doctor. The concierge team is available to employees before the effective date, so anyone who wants to ask about a specific provider gets a real-person answer in advance. Every employee carries a simple message into any office: this is major medical coverage, the card shows the administrator and the support number, and the administrator handles provider questions the same way any other self-funded plan does.\n\nOnce employees use the plan once or twice and see that visits get covered, providers file claims, and the support team picks up the phone, the day-to-day experience speaks for itself. Existing Kennion groups consistently describe that arc.`,
       },
     ],
   },

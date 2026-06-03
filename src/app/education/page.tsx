@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, FileText, Users } from "lucide-react";
+import { ArrowRight, BookOpen, FileText, Users, GitCompareArrows, CalendarCheck2 } from "lucide-react";
 
 type Guide = {
   slug: string;
@@ -22,6 +22,22 @@ const guides: Guide[] = [
       "A simple, printable guide for members and employees. Walks through what happens at the doctor, the four safety nets behind every visit, and one thing worth knowing about why there is no Blue Cross logo on the card.",
     audience: "Members and Employees",
     icon: Users,
+  },
+  {
+    slug: "vs-traditional-plan",
+    title: "How Your Plan Compares",
+    description:
+      "A side-by-side look at the Kennion Program versus a traditional Blue Cross, UnitedHealthcare, Cigna, or Aetna plan. Useful when an HR person needs to walk leadership through the structural differences in one page.",
+    audience: "Employers and Advisors",
+    icon: GitCompareArrows,
+  },
+  {
+    slug: "first-30-days",
+    title: "Your First 30 Days",
+    description:
+      "A short, printable checklist for new members. Three weeks of small steps to set up the HealthJoy app, the Paytient card, and the support number so the plan is ready when you need it.",
+    audience: "New Members",
+    icon: CalendarCheck2,
   },
 ];
 
