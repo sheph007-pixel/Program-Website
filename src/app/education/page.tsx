@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, FileText, Users, GitCompareArrows, CalendarCheck2 } from "lucide-react";
+import { ArrowRight, BookOpen, FileText, Users, GitCompareArrows, CalendarCheck2, Sparkles, Smartphone, Coins } from "lucide-react";
 
 type Guide = {
   slug: string;
@@ -15,6 +15,14 @@ type Guide = {
 //   1. Create src/app/education/<new-slug>/page.tsx
 //   2. Append one entry below.
 const guides: Guide[] = [
+  {
+    slug: "program-overview",
+    title: "The Kennion Program",
+    description:
+      "An employer-facing overview of the program: coverage lines, what makes it different (one bill, free 24/7 virtual care, Paytient card, flat program fee), the three-step proposal process, and the best-in-class partner roster behind every plan.",
+    audience: "Employers and Advisors",
+    icon: Sparkles,
+  },
   {
     slug: "using-your-plan",
     title: "Using Your Kennion Plan",
@@ -30,6 +38,22 @@ const guides: Guide[] = [
       "A side-by-side look at the Kennion Program versus a traditional Blue Cross, UnitedHealthcare, Cigna, or Aetna plan. Useful when an HR person needs to walk leadership through the structural differences in one page.",
     audience: "Employers and Advisors",
     icon: GitCompareArrows,
+  },
+  {
+    slug: "benefits-toolkit",
+    title: "Your Benefits Toolkit",
+    description:
+      "The HealthJoy app and Paytient Visa Card explained for members. Three-step setup, real-world stats, signup links, and the ten questions members ask most often about how the tools work.",
+    audience: "Members and Employees",
+    icon: Smartphone,
+  },
+  {
+    slug: "apta-cash",
+    title: "Apta Cash for Major Procedures",
+    description:
+      "What to do when a doctor recommends surgery or an expensive diagnostic test. Apta Cash negotiates cash prices and waives plan deductibles and coinsurance. Includes the seven-step process and the direct phone number.",
+    audience: "Members",
+    icon: Coins,
   },
   {
     slug: "first-30-days",
