@@ -1,6 +1,6 @@
 "use client";
 
-import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle } from "lucide-react";
+import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 import { useUserName } from "@/components/NameContext";
 
@@ -42,13 +42,22 @@ const coveredServices = [
 
 const actionButtons = [
   {
-    label: "Submit a Self-Pay Reimbursement",
-    desc: "EBPA claim form. Send us your receipt for 100% reimbursement.",
+    label: "Submit via EBPA",
+    desc: "EBPA claim form. Send your receipt for 100% reimbursement.",
     icon: FileSignature,
     href: "https://forms.cobaltbenefitsgroup.com/260694657475068",
     external: true,
     color: "from-amber-500 to-orange-500",
     shadow: "shadow-orange-500/20",
+  },
+  {
+    label: "Submit via HealthEZ",
+    desc: "Log in to the HealthEZ member portal to submit your receipt.",
+    icon: ClipboardCheck,
+    href: "https://clientsts.myhealthez.com/Account/Login",
+    external: true,
+    color: "from-blue-600 to-cyan-500",
+    shadow: "shadow-blue-500/20",
   },
   {
     label: "Get Your Paytient Card",
@@ -155,6 +164,11 @@ export default function SelfPayPage() {
           <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
           Get Started
         </div>
+        <p className="text-[12px] text-slate-400 mb-3">
+          Submit your receipt through your plan&apos;s claims administrator —
+          EBPA or HealthEZ. Not sure which one? Check your member ID card or ask
+          us through Get Help.
+        </p>
       </div>
       <div className="flex flex-col gap-3 animate-fade-in-up stagger-3">
         {actionButtons.map((btn) => {
