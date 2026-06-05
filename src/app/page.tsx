@@ -34,7 +34,7 @@ const steps = [
   },
   {
     num: 3,
-    label: "Get The App",
+    label: "Get the App",
     sub: "Your personalized benefits hub",
     icon: Smartphone,
     href: "/app-download",

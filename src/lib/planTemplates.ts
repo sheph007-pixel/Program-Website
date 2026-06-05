@@ -142,7 +142,7 @@ export const FREE_VIRTUAL_CARE = {
   heading: "Free Virtual Care — included on every plan",
   note: "$0 visits through the HealthJoy app, powered by Teladoc",
   href: "/virtual-care",
-  cta: "See how it works",
+  cta: "See How It Works",
   services: ["Virtual Primary Care", "General Urgent Care", "Mental Health"],
 };
 

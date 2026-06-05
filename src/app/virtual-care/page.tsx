@@ -36,7 +36,7 @@ const benefits = [
 
 const actionButtons = [
   {
-    label: "Talk To A Doctor Now For Free",
+    label: "Talk to a Doctor Now for Free",
     desc: "Open the HealthJoy app and connect instantly",
     icon: Smartphone,
     href: "https://onelink.to/k5x5jc",

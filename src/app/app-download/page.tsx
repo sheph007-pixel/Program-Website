@@ -6,7 +6,7 @@ import { useUserName } from "@/components/NameContext";
 
 const buttons = [
   {
-    label: "Download The App",
+    label: "Download the App",
     icon: Download,
     href: "https://healthjoy.com/download/",
     color: "from-blue-600 to-blue-500",

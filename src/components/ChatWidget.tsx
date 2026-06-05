@@ -478,7 +478,7 @@ export default function ChatWidget() {
                       onClick={() => setSummaryReady(false)}
                       className="mt-2 text-[12px] text-slate-400 hover:text-slate-500"
                     >
-                      Keep chatting
+                      Keep Chatting
                     </button>
                   </div>
                 )}
@@ -520,14 +520,14 @@ export default function ChatWidget() {
                     onClick={openForm}
                     className="text-[12px] sm:text-[11px] font-medium text-blue-500 transition-colors hover:text-blue-600"
                   >
-                    Need personal help? Submit a ticket
+                    Need Personal Help? Submit a Ticket
                   </button>
                   {messages.length > 2 && (
                     <button
                       onClick={resetChat}
                       className="text-[12px] sm:text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-500"
                     >
-                      Start over
+                      Start Over
                     </button>
                   )}
                 </div>

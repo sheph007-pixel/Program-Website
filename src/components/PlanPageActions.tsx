@@ -12,7 +12,7 @@ export default function PlanPageActions() {
         className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-[13px] font-medium text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-700"
       >
         <ArrowLeft size={15} strokeWidth={2} />
-        All plans
+        All Plans
       </Link>
 
       <div className="flex-1" />
