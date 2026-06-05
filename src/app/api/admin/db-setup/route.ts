@@ -1,6 +1,6 @@
 import { prisma, ensureDatabase } from "@/lib/db";
 
-/** Check DB status — also triggers table creation if needed */
+/** Check DB status - also triggers table creation if needed */
 export async function GET() {
   // Always try to create tables first
   await ensureDatabase();

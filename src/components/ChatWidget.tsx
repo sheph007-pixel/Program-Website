@@ -17,6 +17,8 @@ import { useUserName } from "./NameContext";
 
 /** Render markdown links [text](url) as clickable <a> tags */
 function renderMessageContent(content: string, isUser: boolean) {
+  // Never display an em/en dash anywhere on the site, including chat replies.
+  content = content.replace(/[\u2014\u2013]/g, "-");
   const parts = content.split(/(\[[^\]]+\]\([^)]+\))/g);
   return parts.map((part, i) => {
     const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);

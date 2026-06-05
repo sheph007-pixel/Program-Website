@@ -165,7 +165,7 @@ export default function SelfPayPage() {
           Get Started
         </div>
         <p className="text-[12px] text-slate-400 mb-3">
-          Submit your receipt through your plan&apos;s claims administrator —
+          Submit your receipt through your plan&apos;s claims administrator,
           EBPA or HealthEZ. Not sure which one? Check your member ID card or ask
           us through Get Help.
         </p>

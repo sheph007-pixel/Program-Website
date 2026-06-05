@@ -141,7 +141,7 @@ export default function PlanContentEditor() {
       else {
         if (template) setValues((prev) => ({ ...prev, ...(data.values ?? {}) }));
         else setContent(data.content);
-        setMsg("Pre-filled from PDF — review each value and save");
+        setMsg("Pre-filled from PDF - review each value and save");
       }
     } catch {
       setMsg("Extraction failed");

@@ -196,7 +196,7 @@ export default function DocumentsPage() {
     }
   };
 
-  // Bulk upload — upload all files, auto-match to plans
+  // Bulk upload - upload all files, auto-match to plans
   const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -236,7 +236,7 @@ export default function DocumentsPage() {
     }
   };
 
-  // Single plan upload — attach PDF to a specific plan
+  // Single plan upload - attach PDF to a specific plan
   const handleSingleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const planId = targetPlanIdRef.current;
@@ -484,7 +484,7 @@ export default function DocumentsPage() {
                   )}
                   <span className="truncate text-slate-600">{r.name}</span>
                   <span className="shrink-0 text-[11px] text-slate-400">
-                    {r.ok ? r.reason || "draft ready" : `${r.status}${r.reason ? ` — ${r.reason}` : ""}`}
+                    {r.ok ? r.reason || "draft ready" : `${r.status}${r.reason ? ` - ${r.reason}` : ""}`}
                   </span>
                 </div>
               ))}
@@ -560,7 +560,7 @@ export default function DocumentsPage() {
                   )}
                   <span className="truncate text-slate-600">{r.name}</span>
                   <span className="shrink-0 text-[11px] text-slate-400">
-                    {r.ok ? r.reason || "published" : `${r.status}${r.reason ? ` — ${r.reason}` : ""}`}
+                    {r.ok ? r.reason || "published" : `${r.status}${r.reason ? ` - ${r.reason}` : ""}`}
                   </span>
                 </div>
               ))}

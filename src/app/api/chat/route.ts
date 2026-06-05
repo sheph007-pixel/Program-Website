@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Save the latest user message — skip the synthetic greeting so it
+    // Save the latest user message - skip the synthetic greeting so it
     // doesn't pollute the admin transcript or count as engagement.
     const lastMsg = messages[messages.length - 1];
     if (sessionId && lastMsg?.role === "user" && !isGreeting) {
@@ -243,7 +243,7 @@ export async function POST(req: NextRequest) {
           }
         }
 
-        // Save assistant response to DB — but never the synthetic greeting, so
+        // Save assistant response to DB - but never the synthetic greeting, so
         // a session that someone only opened (never typed in) stays empty and
         // doesn't show up as a conversation.
         if (sessionId && fullResponse && !isGreeting) {

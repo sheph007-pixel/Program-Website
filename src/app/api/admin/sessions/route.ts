@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const page = parseInt(url.searchParams.get("page") || "1");
   const perPage = 20;
 
-  // Only surface real, two-way conversations — a session must have at least one
+  // Only surface real, two-way conversations - a session must have at least one
   // message the visitor actually typed (not just someone opening the widget).
   const where: Record<string, unknown> = {
     messages: { some: { role: "user" } },

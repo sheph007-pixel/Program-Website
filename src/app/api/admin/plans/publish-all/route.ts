@@ -32,7 +32,7 @@ export async function POST() {
           name: plan.name,
           ok: false,
           status: "skipped",
-          reason: "no content — needs a draft / manual entry",
+          reason: "no content - needs a draft / manual entry",
         });
         continue;
       }

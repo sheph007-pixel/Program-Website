@@ -23,7 +23,7 @@ export async function GET() {
 
     // A web page is only published when it has renderable content (enforced at
     // write time by the content PUT + publish-all), so status alone is a safe,
-    // cheap signal here — no need to load the heavy contentJson.
+    // cheap signal here - no need to load the heavy contentJson.
     const shaped = plans.map((p) => ({
       id: p.id,
       name: p.name,

@@ -53,7 +53,7 @@ export default function PlansPage() {
         setPlans(data);
       }
     } catch {
-      // silent — page just shows empty categories
+      // silent - page just shows empty categories
     } finally {
       setLoading(false);
     }

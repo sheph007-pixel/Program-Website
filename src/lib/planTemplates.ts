@@ -4,7 +4,7 @@ import { stripFootnotes } from "./planContent";
 /**
  * Standardized, consumer-facing plan templates per category. Every plan in a
  * category renders the SAME fields in the SAME order/grid, so Health plans all
- * look alike, Dental all alike, Vision all alike — the way major carriers
+ * look alike, Dental all alike, Vision all alike - the way major carriers
  * present plan summaries. Each plan only stores a flat { fieldId: value } map;
  * structure comes from the template.
  */
@@ -27,10 +27,10 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
         id: "cost-sharing",
         heading: "Cost Sharing",
         fields: [
-          { id: "deductible_individual", label: "Deductible — Individual", highlight: true },
-          { id: "deductible_family", label: "Deductible — Family" },
-          { id: "oop_individual", label: "Out-of-Pocket Max — Individual", highlight: true },
-          { id: "oop_family", label: "Out-of-Pocket Max — Family" },
+          { id: "deductible_individual", label: "Deductible (Individual)", highlight: true },
+          { id: "deductible_family", label: "Deductible (Family)" },
+          { id: "oop_individual", label: "Out-of-Pocket Max (Individual)", highlight: true },
+          { id: "oop_family", label: "Out-of-Pocket Max (Family)" },
         ],
       },
       {
@@ -72,8 +72,8 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
         heading: "Maximums & Deductible",
         fields: [
           { id: "annual_max", label: "Annual Maximum (per person)", highlight: true },
-          { id: "deductible_individual", label: "Deductible — Individual", highlight: true },
-          { id: "deductible_family", label: "Deductible — Family" },
+          { id: "deductible_individual", label: "Deductible (Individual)", highlight: true },
+          { id: "deductible_family", label: "Deductible (Family)" },
         ],
       },
       {
@@ -139,7 +139,7 @@ export function getTemplate(category: string): CategoryTemplate | null {
  * than an editable per-plan field.
  */
 export const FREE_VIRTUAL_CARE = {
-  heading: "Free Virtual Care — included on every plan",
+  heading: "Free Virtual Care, included on every plan",
   note: "$0 visits through the HealthJoy app, powered by Teladoc",
   href: "/virtual-care",
   cta: "See How It Works",
@@ -268,7 +268,7 @@ function flattenRows(content: PlanContent): PlanContentRow[] {
 /**
  * Best-effort: map a plan's existing extracted content onto the standard
  * template fields, so the structured editor opens pre-filled. Imperfect by
- * design — the admin verifies/corrects before publishing.
+ * design - the admin verifies/corrects before publishing.
  */
 export function prefillValues(category: string, content: PlanContent): PlanValues {
   const matchers = MATCHERS[category];

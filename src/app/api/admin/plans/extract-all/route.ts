@@ -49,7 +49,7 @@ export async function POST() {
           name: plan.name,
           ok: true,
           status: "draft",
-          reason: filled === 0 ? "no fields matched — needs manual entry" : `${filled} fields filled`,
+          reason: filled === 0 ? "no fields matched - needs manual entry" : `${filled} fields filled`,
         });
       } catch (e) {
         results.push({

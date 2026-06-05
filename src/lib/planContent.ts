@@ -47,7 +47,7 @@ function cleanRows(input: unknown): PlanContentRow[] {
 
 /**
  * Coerce arbitrary input (DB JSON or an editor payload) into a well-formed
- * PlanContent. Never throws — bad/missing fields become empty defaults.
+ * PlanContent. Never throws - bad/missing fields become empty defaults.
  */
 export function normalizePlanContent(input: unknown): PlanContent {
   const data = (input ?? {}) as Record<string, unknown>;
@@ -87,12 +87,13 @@ export function hasRenderableContent(content: PlanContent | null | undefined): b
 
 // Marker for the legacy auto-generated draft disclaimer we no longer show.
 const DRAFT_DISCLAIMER_MARKER = "auto-generated from the plan PDF";
-// The BYTE program is discontinued — strip any reference to it from plan content.
+// The BYTE program is discontinued - strip any reference to it from plan content.
 const BYTE_RE = /\bbyte\b/i;
 
 /** Strip footnote markers and fine-print references (*, †, ‡, ¹, "(1)", "[1]"). */
 export function stripFootnotes(input: string): string {
   return input
+    .replace(/[\u2014\u2013]/g, "-") // never show an em/en dash; use a hyphen
     .replace(/[*†‡§¶◊]/g, "")
     .replace(/[¹²³⁰-₟]/g, "") // superscripts / subscripts
     .replace(/\s*\((?:\d{1,2}|[a-z])\)\s*$/i, "") // trailing (1) / (a)

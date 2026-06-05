@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Generate a draft from the plan's PDF and RETURN it for the editor to load.
- * This does NOT persist — the admin reviews the draft and clicks Save. That
+ * This does NOT persist - the admin reviews the draft and clicks Save. That
  * keeps a currently-published page live (and its content intact) until the
  * admin deliberately saves, matching the editor's "until you save" prompt.
  */

@@ -82,7 +82,7 @@ export default async function PlanDetailPage({
 
       {isPreview && !isPublished(plan.contentStatus) && (
         <div className="no-print mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[12px] font-medium text-amber-800">
-          Preview — this page is a {plan.contentStatus} and is not visible to members yet.
+          Preview: this page is a {plan.contentStatus} and is not visible to members yet.
         </div>
       )}
 
@@ -101,7 +101,7 @@ export default async function PlanDetailPage({
         </div>
       </div>
 
-      {/* Free Virtual Care — included on every medical plan */}
+      {/* Free Virtual Care - included on every medical plan */}
       {plan.category === "Health Plans" && (
         <div className="mb-6 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5">
           <div className="mb-3 flex items-start justify-between gap-3">
@@ -129,7 +129,7 @@ export default async function PlanDetailPage({
         </div>
       )}
 
-      {/* Key facts — 2×2 when there are 4 highlights, otherwise 3-wide */}
+      {/* Key facts - 2×2 when there are 4 highlights, otherwise 3-wide */}
       {content.keyFacts.length > 0 && (
         <div className={`mb-6 grid grid-cols-2 gap-2.5 ${content.keyFacts.length === 4 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
           {content.keyFacts.map((fact, i) => (
@@ -188,7 +188,7 @@ export default async function PlanDetailPage({
         </p>
       )}
 
-      {/* Fixed branded footer with QR — repeats on every printed/PDF page */}
+      {/* Fixed branded footer with QR - repeats on every printed/PDF page */}
       <div className="print-footer">
         <div className="text-[10px] leading-tight text-slate-500">
           <div className="text-[11px] font-extrabold tracking-wide text-[var(--kennion-navy)]">

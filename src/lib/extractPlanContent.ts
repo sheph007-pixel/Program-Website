@@ -49,16 +49,16 @@ function splitLabelValue(line: string): PlanContentRow | null {
   const vm = line.match(VALUE_TOKEN);
   if (vm && vm.index !== undefined) {
     if (vm.index > 0) {
-      // "Label .... $value" — value (and any qualifier like "after deductible")
+      // "Label .... $value" - value (and any qualifier like "after deductible")
       const label = line.slice(0, vm.index).replace(/[.\s]+$/, "").trim();
       const value = line.slice(vm.index).trim();
       if (label.length >= 2 && label.length <= 80 && value.length <= 60) {
         return { label: titleCase(label), value };
       }
     } else {
-      // Value-first: "$25 Copay" / "$0 Preventive care" — label is the remainder
+      // Value-first: "$25 Copay" / "$0 Preventive care" - label is the remainder
       const value = vm[0];
-      const label = line.slice(vm[0].length).replace(/^[\s.:–-]+/, "").trim();
+      const label = line.slice(vm[0].length).replace(/^[\s.:\u2013-]+/, "").trim();
       if (label.length >= 2 && label.length <= 80) {
         return { label: titleCase(label), value };
       }

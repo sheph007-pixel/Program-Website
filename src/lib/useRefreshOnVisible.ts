@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Re-runs `callback` whenever the page becomes visible again — i.e. when the
+ * Re-runs `callback` whenever the page becomes visible again - i.e. when the
  * user switches back to the tab, reopens the browser, or restores the page
  * from the mobile back/forward (bfcache) cache.
  *
@@ -23,7 +23,7 @@ export function useRefreshOnVisible(callback: () => void) {
     };
 
     // pageshow fires on initial load and on bfcache restore (persisted=true).
-    // Only refresh on the restore case — the initial fetch is handled on mount.
+    // Only refresh on the restore case - the initial fetch is handled on mount.
     const onPageShow = (e: PageTransitionEvent) => {
       if (e.persisted) run();
     };

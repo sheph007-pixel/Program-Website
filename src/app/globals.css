@@ -269,13 +269,13 @@ html {
   display: none;
 }
 
-/* Repeating branded footer with QR — hidden on screen, fixed on each printed page. */
+/* Repeating branded footer with QR - hidden on screen, fixed on each printed page. */
 .print-footer {
   display: none;
 }
 
 /* Print: strip app chrome, render plan content cleanly on paper.
-   Only hide the persistent sidebar and anything explicitly marked .no-print —
+   Only hide the persistent sidebar and anything explicitly marked .no-print -
    NOT semantic <header>/<footer>/<nav> in page content (e.g. /education
    articles render their title in <header> and sources in <footer>). */
 @media print {
