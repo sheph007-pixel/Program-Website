@@ -1,4 +1,7 @@
-import { PDFParse } from "pdf-parse";
+// Import the implementation directly (not the package index) to avoid pdf-parse's
+// module-load behavior of reading a bundled test PDF. v1 is pure JS (no native
+// deps), so it traces cleanly into the Next standalone / Alpine Docker build.
+import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import type { PlanContent, PlanContentRow, PlanContentSection } from "./planContent";
 
 const DRAFT_DISCLAIMER =
@@ -8,16 +11,11 @@ const MAX_KEY_FACTS = 12;
 const MAX_SECTIONS = 14;
 const MAX_ROWS_PER_SECTION = 30;
 
-/** Extract raw text from PDF bytes using pdf-parse v2 (Node-only). */
+/** Extract raw text from PDF bytes using pdf-parse (Node-only, pure JS). */
 export async function extractPdfText(data: Buffer | Uint8Array): Promise<string> {
-  const parser = new PDFParse({ data });
-  try {
-    const result = await parser.getText();
-    return result.text || "";
-  } finally {
-    // Free pdfjs resources
-    await parser.destroy?.();
-  }
+  const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  const result = await pdfParse(buffer);
+  return result.text || "";
 }
 
 function titleCase(s: string): string {
