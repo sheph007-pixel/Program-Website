@@ -2,9 +2,11 @@ import { prisma } from "@/lib/db";
 
 export async function GET() {
   try {
+    // Count only real two-way conversations (a visitor actually typed something).
+    const realConvo = { messages: { some: { role: "user" as const } } };
     const [total, newCount, ticketsSent, activeRules] = await Promise.all([
-      prisma.chatSession.count(),
-      prisma.chatSession.count({ where: { status: "new" } }),
+      prisma.chatSession.count({ where: realConvo }),
+      prisma.chatSession.count({ where: { ...realConvo, status: "new" } }),
       prisma.chatSession.count({ where: { ticketSent: true } }),
       prisma.aIMemoryRule.count({ where: { isActive: true } }),
     ]);

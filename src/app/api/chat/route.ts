@@ -243,8 +243,10 @@ export async function POST(req: NextRequest) {
           }
         }
 
-        // Save assistant response to DB
-        if (sessionId && fullResponse) {
+        // Save assistant response to DB — but never the synthetic greeting, so
+        // a session that someone only opened (never typed in) stays empty and
+        // doesn't show up as a conversation.
+        if (sessionId && fullResponse && !isGreeting) {
           const cleanResponse = fullResponse.replace(/\n?SUMMARY_READY\n?/g, "").trim();
           prisma.chatMessage
             .create({
