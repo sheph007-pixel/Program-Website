@@ -31,7 +31,6 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
           { id: "deductible_family", label: "Deductible — Family" },
           { id: "oop_individual", label: "Out-of-Pocket Max — Individual", highlight: true },
           { id: "oop_family", label: "Out-of-Pocket Max — Family" },
-          { id: "coinsurance", label: "Coinsurance", highlight: true },
         ],
       },
       {
@@ -40,10 +39,10 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
         fields: [
           { id: "primary_care", label: "Primary Care Visit", highlight: true },
           { id: "specialist", label: "Specialist Visit", highlight: true },
-          { id: "telehealth", label: "Telehealth / Virtual Visit" },
+          { id: "telehealth", label: "Telehealth / Virtual Visit", highlight: true },
           { id: "preventive", label: "Preventive Care" },
           { id: "urgent_care", label: "Urgent Care" },
-          { id: "emergency_room", label: "Emergency Room", highlight: true },
+          { id: "emergency_room", label: "Emergency Room" },
         ],
       },
       {
