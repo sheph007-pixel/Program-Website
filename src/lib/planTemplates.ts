@@ -39,7 +39,6 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
         fields: [
           { id: "primary_care", label: "Primary Care Visit", highlight: true },
           { id: "specialist", label: "Specialist Visit", highlight: true },
-          { id: "telehealth", label: "Telehealth / Virtual Visit", highlight: true },
           { id: "preventive", label: "Preventive Care" },
           { id: "urgent_care", label: "Urgent Care" },
           { id: "emergency_room", label: "Emergency Room" },
@@ -133,6 +132,19 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
 export function getTemplate(category: string): CategoryTemplate | null {
   return PLAN_TEMPLATES[category] ?? null;
 }
+
+/**
+ * Free virtual care included on EVERY medical plan (program-wide benefit via the
+ * HealthJoy app, powered by Teladoc). Same on all plans, so it's hardcoded rather
+ * than an editable per-plan field.
+ */
+export const FREE_VIRTUAL_CARE = {
+  heading: "Free Virtual Care — included on every plan",
+  note: "$0 visits through the HealthJoy app, powered by Teladoc",
+  href: "/virtual-care",
+  cta: "See how it works",
+  services: ["Virtual Primary Care", "General Urgent Care", "Mental Health"],
+};
 
 export function templateFields(template: CategoryTemplate): TemplateField[] {
   return template.sections.flatMap((s) => s.fields);

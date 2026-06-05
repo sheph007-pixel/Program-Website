@@ -3,7 +3,8 @@ import QRCode from "qrcode";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { getCategoryMeta } from "@/lib/categoryMeta";
 import { normalizePlanContent, scrubPlanContent, isPublished, hasRenderableContent } from "@/lib/planContent";
-import { getTemplate, resolveValues, renderFromTemplate } from "@/lib/planTemplates";
+import Link from "next/link";
+import { getTemplate, resolveValues, renderFromTemplate, FREE_VIRTUAL_CARE } from "@/lib/planTemplates";
 import PlanPageActions from "@/components/PlanPageActions";
 
 export const dynamic = "force-dynamic";
@@ -99,6 +100,34 @@ export default async function PlanDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Free Virtual Care — included on every medical plan */}
+      {plan.category === "Health Plans" && (
+        <div className="mb-6 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5">
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-[15px] font-bold text-[var(--kennion-navy)]">
+                {FREE_VIRTUAL_CARE.heading}
+              </h2>
+              <p className="text-[12px] text-slate-500">{FREE_VIRTUAL_CARE.note}</p>
+            </div>
+            <Link
+              href={FREE_VIRTUAL_CARE.href}
+              className="no-print shrink-0 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-3.5 py-2 text-[12px] font-semibold text-white shadow-sm transition-all hover:shadow-md"
+            >
+              {FREE_VIRTUAL_CARE.cta} →
+            </Link>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            {FREE_VIRTUAL_CARE.services.map((s) => (
+              <div key={s} className="rounded-xl border border-emerald-100 bg-white p-3 text-center">
+                <div className="text-[12px] font-semibold leading-tight text-[var(--kennion-navy)]">{s}</div>
+                <div className="mt-1 text-[15px] font-extrabold text-emerald-600">Free</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Key facts */}
       {content.keyFacts.length > 0 && (
