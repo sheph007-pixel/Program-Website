@@ -53,6 +53,7 @@ export default function DocumentsPage() {
   const [removingPlanId, setRemovingPlanId] = useState<string | null>(null);
   const [extractAll, setExtractAll] = useState<ExtractAllState | null>(null);
   const [publishAll, setPublishAll] = useState<ExtractAllState | null>(null);
+  const [applySbc, setApplySbc] = useState<ExtractAllState | null>(null);
   const bulkInputRef = useRef<HTMLInputElement>(null);
   const singleInputRef = useRef<HTMLInputElement>(null);
   const targetPlanIdRef = useRef<string | null>(null);
@@ -105,11 +106,33 @@ export default function DocumentsPage() {
       !uploadingPlanId &&
       !removingPlanId &&
       !extractAll?.active &&
-      !publishAll?.active
+      !publishAll?.active &&
+      !applySbc?.active
     ) {
       fetchPlans();
     }
   });
+
+  // Apply official SBC values to matching Health plans
+  const handleApplySbc = async () => {
+    if (!confirm("Apply the official SBC benefit values to the matching Health plans? This fills/overwrites the standard fields with the values from the SBC documents.")) return;
+    setError(null);
+    setApplySbc({ active: true, results: [] });
+    try {
+      const res = await fetch("/api/admin/plans/apply-sbc", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error || `Apply failed (${res.status})`);
+        setApplySbc(null);
+        return;
+      }
+      setApplySbc({ active: false, generated: data.updated, total: data.total, results: data.results || [] });
+      fetchPlans();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Apply failed");
+      setApplySbc(null);
+    }
+  };
 
   // Publish every plan that has web-page content (skips empty ones)
   const handlePublishAll = async () => {
@@ -327,6 +350,15 @@ export default function DocumentsPage() {
             {extractAll?.active ? "Generating..." : "Generate all drafts"}
           </button>
           <button
+            onClick={handleApplySbc}
+            disabled={applySbc?.active}
+            className="flex items-center gap-2 rounded-xl bg-blue-50 px-4 py-2.5 text-[13px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
+            title="Fill Health plan fields from the official SBC documents"
+          >
+            {applySbc?.active ? <Loader2 size={16} className="animate-spin" /> : <FileText size={16} />}
+            {applySbc?.active ? "Applying..." : "Apply SBC data"}
+          </button>
+          <button
             onClick={handlePublishAll}
             disabled={publishAll?.active}
             className="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:shadow-lg disabled:opacity-50"
@@ -454,6 +486,39 @@ export default function DocumentsPage() {
                   <span className="shrink-0 text-[11px] text-slate-400">
                     {r.ok ? r.reason || "draft ready" : `${r.status}${r.reason ? ` — ${r.reason}` : ""}`}
                   </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Apply-SBC progress/results */}
+      {applySbc && (
+        <div className="mb-6 rounded-xl border border-blue-200 bg-white p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)]">
+              {applySbc.active ? "Applying SBC values..." : "SBC Values Applied"}
+            </h3>
+            {!applySbc.active && (
+              <button onClick={() => setApplySbc(null)} className="text-slate-400 hover:text-slate-600"><X size={14} /></button>
+            )}
+          </div>
+          {applySbc.active && (
+            <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full animate-pulse rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" style={{ width: "100%" }} />
+            </div>
+          )}
+          {!applySbc.active && (
+            <div className="space-y-1.5">
+              <p className="mb-2 text-[12px] text-slate-500">
+                {applySbc.generated} of {applySbc.total} plans updated from SBC documents. Review and publish each from its Edit page.
+              </p>
+              {applySbc.results.filter((r) => r.ok).map((r) => (
+                <div key={r.id} className="flex items-center gap-2 text-[13px]">
+                  <CheckCircle size={14} className="shrink-0 text-blue-500" />
+                  <span className="truncate text-slate-600">{r.name}</span>
+                  <span className="shrink-0 text-[11px] text-slate-400">{r.reason}</span>
                 </div>
               ))}
             </div>
