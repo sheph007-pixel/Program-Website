@@ -129,9 +129,9 @@ export default async function PlanDetailPage({
         </div>
       )}
 
-      {/* Key facts */}
+      {/* Key facts — 2×2 when there are 4 highlights, otherwise 3-wide */}
       {content.keyFacts.length > 0 && (
-        <div className="mb-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+        <div className={`mb-6 grid grid-cols-2 gap-2.5 ${content.keyFacts.length === 4 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
           {content.keyFacts.map((fact, i) => (
             <div key={i} className="card p-4">
               <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
