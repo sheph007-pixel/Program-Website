@@ -64,11 +64,6 @@ export const PLAN_TEMPLATES: Record<string, CategoryTemplate> = {
           { id: "outpatient", label: "Outpatient Surgery" },
         ],
       },
-      {
-        id: "network",
-        heading: "Plan Network",
-        fields: [{ id: "network", label: "Network" }],
-      },
     ],
   },
 
