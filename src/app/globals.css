@@ -263,3 +263,53 @@ html {
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
+
+/* Print: strip app chrome, render plan content cleanly on paper */
+@media print {
+  nav,
+  header,
+  footer,
+  aside,
+  .no-print {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* The main content is offset by the sidebar margin in the app shell; reset for print */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .page-container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    break-inside: avoid;
+    transform: none !important;
+  }
+
+  /* Avoid breaking a section heading away from its rows */
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Don't append raw URLs after links when printing */
+  a[href]::after {
+    content: "" !important;
+  }
+}

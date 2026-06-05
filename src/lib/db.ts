@@ -70,12 +70,19 @@ const SQL_STATEMENTS = [
     "externalUrl" TEXT NOT NULL DEFAULT '',
     "pdfData" BYTEA,
     "pdfName" TEXT,
+    "contentJson" JSONB,
+    "contentStatus" TEXT NOT NULL DEFAULT 'none',
+    "contentUpdatedAt" TIMESTAMP(3),
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Plan_pkey" PRIMARY KEY ("id")
   )`,
   `CREATE INDEX IF NOT EXISTS "Plan_category_sortOrder_idx" ON "Plan"("category", "sortOrder")`,
+  // Backfill columns on existing Plan tables (CREATE TABLE IF NOT EXISTS won't add them)
+  `ALTER TABLE "Plan" ADD COLUMN IF NOT EXISTS "contentJson" JSONB`,
+  `ALTER TABLE "Plan" ADD COLUMN IF NOT EXISTS "contentStatus" TEXT NOT NULL DEFAULT 'none'`,
+  `ALTER TABLE "Plan" ADD COLUMN IF NOT EXISTS "contentUpdatedAt" TIMESTAMP(3)`,
 
   `CREATE TABLE IF NOT EXISTS "ChatSession" (
     "id" TEXT NOT NULL,

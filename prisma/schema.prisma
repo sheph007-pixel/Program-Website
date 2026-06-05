@@ -54,17 +54,20 @@ model Resource {
 }
 
 model Plan {
-  id          String   @id @default(cuid())
-  name        String
-  category    String
-  sortOrder   Int      @default(0)
-  summaryUrl  String
-  externalUrl String   @default("")
-  pdfData     Bytes?
-  pdfName     String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String    @id @default(cuid())
+  name             String
+  category         String
+  sortOrder        Int       @default(0)
+  summaryUrl       String
+  externalUrl      String    @default("")
+  pdfData          Bytes?
+  pdfName          String?
+  contentJson      Json?
+  contentStatus    String    @default("none")
+  contentUpdatedAt DateTime?
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@index([category, sortOrder])
 }

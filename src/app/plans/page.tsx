@@ -1,19 +1,21 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Shield, Stethoscope, Eye, HeartPulse, FileText, ExternalLink, X, Download, Wallet, ArrowRight } from "lucide-react";
+import { FileText, ExternalLink, X, Download, Wallet, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PhoneContact from "@/components/PhoneContact";
 import { useUserName } from "@/components/NameContext";
 import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
+import { categoryMeta } from "@/lib/categoryMeta";
 
-type Plan = { id: string; name: string; category: string; summaryUrl: string; pdfName: string | null };
-
-const categoryMeta: Record<string, { icon: typeof Shield; color: string; gradient: string; shadow: string; bg: string }> = {
-  "Health Plans": { icon: Shield, color: "text-blue-600", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20", bg: "bg-blue-50" },
-  "Dental Plans": { icon: Stethoscope, color: "text-indigo-600", gradient: "from-indigo-600 to-violet-500", shadow: "shadow-violet-500/20", bg: "bg-indigo-50" },
-  "Vision Plans": { icon: Eye, color: "text-violet-600", gradient: "from-violet-600 to-purple-500", shadow: "shadow-purple-500/20", bg: "bg-violet-50" },
-  "Supplemental": { icon: HeartPulse, color: "text-teal-600", gradient: "from-teal-600 to-emerald-500", shadow: "shadow-emerald-500/20", bg: "bg-teal-50" },
+type Plan = {
+  id: string;
+  name: string;
+  category: string;
+  summaryUrl: string;
+  pdfName: string | null;
+  contentStatus?: string;
 };
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
@@ -37,6 +39,7 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
 
 export default function PlansPage() {
   const { name } = useUserName();
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
   const [plans, setPlans] = useState<Record<string, Plan[]>>({});
   const [loading, setLoading] = useState(true);
@@ -88,10 +91,13 @@ export default function PlansPage() {
   const meta = categoryMeta[activeCategory];
 
   const hasPdf = (plan: Plan) => !!plan.pdfName;
+  const hasWebPage = (plan: Plan) => plan.contentStatus === "published";
   const pdfUrl = (plan: Plan) => `/api/plans/${plan.id}/pdf`;
 
   const handlePlanClick = (plan: Plan) => {
-    if (hasPdf(plan)) {
+    if (hasWebPage(plan)) {
+      router.push(`/plans/${plan.id}`);
+    } else if (hasPdf(plan)) {
       setSelectedPlan(plan);
     } else {
       window.open(plan.summaryUrl, "_blank", "noopener,noreferrer");
@@ -181,10 +187,12 @@ export default function PlansPage() {
                   {plan.name}
                 </h3>
                 <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">
-                  {hasPdf(plan) ? "View summary" : "View details"}
+                  {hasWebPage(plan) ? "View details" : hasPdf(plan) ? "View summary" : "View details"}
                 </p>
               </div>
-              {hasPdf(plan) ? (
+              {hasWebPage(plan) ? (
+                <ArrowRight size={14} className="shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-blue-500" />
+              ) : hasPdf(plan) ? (
                 <FileText size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
               ) : (
                 <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />

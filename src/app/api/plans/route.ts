@@ -16,6 +16,7 @@ export async function GET() {
         sortOrder: true,
         summaryUrl: true,
         pdfName: true,
+        contentStatus: true,
         isActive: true,
       },
     });

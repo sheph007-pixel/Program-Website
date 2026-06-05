@@ -13,6 +13,7 @@ export async function GET() {
         summaryUrl: true,
         externalUrl: true,
         pdfName: true,
+        contentStatus: true,
         isActive: true,
         sortOrder: true,
       },

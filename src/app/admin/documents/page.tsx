@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
+import NextLink from "next/link";
 import {
   FileText,
   Upload,
@@ -11,6 +12,8 @@ import {
   Loader2,
   Trash2,
   Link,
+  Sparkles,
+  Pencil,
 } from "lucide-react";
 import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 
@@ -20,7 +23,15 @@ type Plan = {
   category: string;
   summaryUrl: string;
   pdfName: string | null;
+  contentStatus?: string;
   isActive: boolean;
+};
+
+type ExtractAllState = {
+  active: boolean;
+  generated?: number;
+  total?: number;
+  results: { id: string; name: string; ok: boolean; status: string; reason?: string }[];
 };
 
 type UploadProgress = {
@@ -40,6 +51,7 @@ export default function DocumentsPage() {
   const [error, setError] = useState<string | null>(null);
   const [uploadingPlanId, setUploadingPlanId] = useState<string | null>(null);
   const [removingPlanId, setRemovingPlanId] = useState<string | null>(null);
+  const [extractAll, setExtractAll] = useState<ExtractAllState | null>(null);
   const bulkInputRef = useRef<HTMLInputElement>(null);
   const singleInputRef = useRef<HTMLInputElement>(null);
   const targetPlanIdRef = useRef<string | null>(null);
@@ -87,10 +99,41 @@ export default function DocumentsPage() {
   // Refresh the document list when the page is reopened/refocused, unless an
   // upload is mid-flight (don't disrupt in-progress work).
   useRefreshOnVisible(() => {
-    if (!uploadProgress?.active && !uploadingPlanId && !removingPlanId) {
+    if (!uploadProgress?.active && !uploadingPlanId && !removingPlanId && !extractAll?.active) {
       fetchPlans();
     }
   });
+
+  // Generate draft web-page content from PDFs for all plans at once
+  const handleGenerateAllDrafts = async () => {
+    if (
+      !confirm(
+        "Generate draft web pages from PDFs for all plans? Published plans are skipped. Existing drafts will be overwritten."
+      )
+    )
+      return;
+    setError(null);
+    setExtractAll({ active: true, results: [] });
+    try {
+      const res = await fetch("/api/admin/plans/extract-all", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error || `Generation failed (${res.status})`);
+        setExtractAll(null);
+        return;
+      }
+      setExtractAll({
+        active: false,
+        generated: data.generated,
+        total: data.total,
+        results: data.results || [],
+      });
+      fetchPlans();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Generation failed");
+      setExtractAll(null);
+    }
+  };
 
   // Bulk upload — upload all files, auto-match to plans
   const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,6 +280,15 @@ export default function DocumentsPage() {
             className="hidden"
           />
           <button
+            onClick={handleGenerateAllDrafts}
+            disabled={extractAll?.active}
+            className="flex items-center gap-2 rounded-xl bg-violet-50 px-4 py-2.5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
+            title="Auto-generate draft web pages from PDFs for all plans"
+          >
+            {extractAll?.active ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+            {extractAll?.active ? "Generating..." : "Generate all drafts"}
+          </button>
+          <button
             onClick={() => bulkInputRef.current?.click()}
             disabled={!!uploadProgress?.active}
             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg disabled:opacity-50"
@@ -319,6 +371,49 @@ export default function DocumentsPage() {
         </div>
       )}
 
+      {/* Generate-all drafts progress/results */}
+      {extractAll && (
+        <div className="mb-6 rounded-xl border border-violet-200 bg-white p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)]">
+              {extractAll.active ? "Generating drafts from PDFs..." : "Draft Generation Complete"}
+            </h3>
+            {!extractAll.active && (
+              <button onClick={() => setExtractAll(null)} className="text-slate-400 hover:text-slate-600">
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {extractAll.active && (
+            <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full animate-pulse rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-400" style={{ width: "100%" }} />
+            </div>
+          )}
+
+          {!extractAll.active && (
+            <div className="space-y-1.5">
+              <p className="mb-2 text-[12px] text-slate-500">
+                {extractAll.generated} of {extractAll.total} plans got a draft. Review and publish each from its Edit page.
+              </p>
+              {extractAll.results.map((r) => (
+                <div key={r.id} className="flex items-center gap-2 text-[13px]">
+                  {r.ok ? (
+                    <CheckCircle size={14} className={`shrink-0 ${r.reason ? "text-amber-500" : "text-emerald-500"}`} />
+                  ) : (
+                    <AlertCircle size={14} className="shrink-0 text-slate-300" />
+                  )}
+                  <span className="truncate text-slate-600">{r.name}</span>
+                  <span className="shrink-0 text-[11px] text-slate-400">
+                    {r.ok ? r.reason || "draft ready" : `${r.status}${r.reason ? ` — ${r.reason}` : ""}`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Plan grid by category */}
       <div className="space-y-8">
         {grouped.map(({ category, plans: catPlans }) => {
@@ -340,6 +435,7 @@ export default function DocumentsPage() {
                   const isUploading = uploadingPlanId === plan.id;
                   const isRemoving = removingPlanId === plan.id;
                   const hasLink = !hasPdf && plan.summaryUrl && plan.summaryUrl.startsWith("http");
+                  const contentStatus = plan.contentStatus || "none";
 
                   return (
                     <div
@@ -399,10 +495,30 @@ export default function DocumentsPage() {
                           ) : (
                             <p className="text-[11px] text-slate-400 mt-0.5">No source</p>
                           )}
+                          <span
+                            className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium capitalize ${
+                              contentStatus === "published"
+                                ? "bg-emerald-50 text-emerald-700"
+                                : contentStatus === "draft"
+                                ? "bg-amber-50 text-amber-700"
+                                : "bg-slate-100 text-slate-500"
+                            }`}
+                          >
+                            Web page: {contentStatus}
+                          </span>
                         </div>
                       </div>
 
                       {/* Actions */}
+                      <div className="mb-2">
+                        <NextLink
+                          href={`/admin/plans/${plan.id}/content`}
+                          className="flex items-center justify-center gap-1.5 rounded-lg bg-violet-50 py-2 text-[12px] font-medium text-violet-700 transition-colors hover:bg-violet-100"
+                        >
+                          <Pencil size={13} />
+                          Edit page
+                        </NextLink>
+                      </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => triggerSingleUpload(plan.id)}
