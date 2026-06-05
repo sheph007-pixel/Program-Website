@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { normalizePlanContent, hasRenderableContent } from "@/lib/planContent";
+import { getTemplate } from "@/lib/planTemplates";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +15,17 @@ export async function POST() {
     await ensureDatabase();
     const plans = await prisma.plan.findMany({
       orderBy: [{ category: "asc" }, { sortOrder: "asc" }],
-      select: { id: true, name: true, contentJson: true, contentStatus: true },
+      select: { id: true, name: true, category: true, contentJson: true, contentStatus: true },
     });
 
     const results: { id: string; name: string; ok: boolean; status: string; reason?: string }[] = [];
 
     for (const plan of plans) {
-      const renderable = hasRenderableContent(normalizePlanContent(plan.contentJson));
+      // Templated categories always render the standard grid, so they're always
+      // publishable; freeform (Supplemental) needs actual content.
+      const renderable = getTemplate(plan.category)
+        ? true
+        : hasRenderableContent(normalizePlanContent(plan.contentJson));
       if (!renderable) {
         results.push({
           id: plan.id,

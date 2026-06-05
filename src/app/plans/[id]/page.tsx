@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { getCategoryMeta } from "@/lib/categoryMeta";
 import { normalizePlanContent, scrubPlanContent, isPublished, hasRenderableContent } from "@/lib/planContent";
+import { getTemplate, resolveValues, renderFromTemplate } from "@/lib/planTemplates";
 import PlanPageActions from "@/components/PlanPageActions";
 
 export const dynamic = "force-dynamic";
@@ -38,8 +39,18 @@ export default async function PlanDetailPage({
   if (!plan || !plan.isActive) notFound();
   if (!isPublished(plan.contentStatus) && !isPreview) notFound();
 
-  const content = scrubPlanContent(normalizePlanContent(plan.contentJson));
-  if (!hasRenderableContent(content) && !isPreview) notFound();
+  // Templated categories (Health/Dental/Vision) render a uniform standard grid;
+  // Supplemental keeps the cleaned freeform content.
+  const template = getTemplate(plan.category);
+  const freeform = scrubPlanContent(normalizePlanContent(plan.contentJson));
+  let content;
+  if (template) {
+    const values = resolveValues(plan.category, plan.contentJson, freeform);
+    content = renderFromTemplate(plan.category, values);
+  } else {
+    content = freeform;
+    if (!hasRenderableContent(content) && !isPreview) notFound();
+  }
 
   const meta = getCategoryMeta(plan.category);
   const Icon = meta.icon;

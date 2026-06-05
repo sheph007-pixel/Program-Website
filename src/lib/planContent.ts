@@ -90,8 +90,23 @@ const DRAFT_DISCLAIMER_MARKER = "auto-generated from the plan PDF";
 // The BYTE program is discontinued — strip any reference to it from plan content.
 const BYTE_RE = /\bbyte\b/i;
 
+/** Strip footnote markers and fine-print references (*, †, ‡, ¹, "(1)", "[1]"). */
+export function stripFootnotes(input: string): string {
+  return input
+    .replace(/[*†‡§¶◊]/g, "")
+    .replace(/[¹²³⁰-₟]/g, "") // superscripts / subscripts
+    .replace(/\s*\((?:\d{1,2}|[a-z])\)\s*$/i, "") // trailing (1) / (a)
+    .replace(/\s*\[\d{1,2}\]\s*$/, "") // trailing [1]
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function scrubRow(r: PlanContentRow): PlanContentRow {
+  return { label: stripFootnotes(r.label), value: stripFootnotes(r.value) };
+}
+
 function dropByteRows(rows: PlanContentRow[]): PlanContentRow[] {
-  return rows.filter((r) => !BYTE_RE.test(r.label) && !BYTE_RE.test(r.value));
+  return rows.filter((r) => !BYTE_RE.test(r.label) && !BYTE_RE.test(r.value)).map(scrubRow);
 }
 
 /**
@@ -117,7 +132,7 @@ export function scrubPlanContent(content: PlanContent): PlanContent {
           .trim();
       }
       return {
-        heading: s.heading,
+        heading: stripFootnotes(s.heading),
         ...(body ? { body } : {}),
         ...(rows && rows.length ? { rows } : {}),
       } as PlanContentSection;

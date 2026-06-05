@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { extractPlanContent } from "@/lib/extractPlanContent";
+import { getTemplate, prefillValues } from "@/lib/planTemplates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     await ensureDatabase();
     const plan = await prisma.plan.findUnique({
       where: { id },
-      select: { name: true, pdfData: true, contentStatus: true },
+      select: { name: true, category: true, pdfData: true, contentStatus: true },
     });
 
     if (!plan) {
@@ -29,9 +30,12 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     }
 
     const content = await extractPlanContent(Buffer.from(plan.pdfData), plan.name);
+    // For templated categories, map the extraction onto the standard fields.
+    const template = getTemplate(plan.category);
+    const values = template ? prefillValues(plan.category, content) : null;
 
     // Return without persisting; the editor holds it until the admin saves.
-    return NextResponse.json({ ok: true, content, contentStatus: plan.contentStatus });
+    return NextResponse.json({ ok: true, content, values, contentStatus: plan.contentStatus });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Extraction failed";
     return NextResponse.json({ error: message }, { status: 500 });

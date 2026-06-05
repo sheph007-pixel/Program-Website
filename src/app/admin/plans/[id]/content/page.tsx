@@ -13,17 +13,14 @@ import {
   Eye,
   Loader2,
   Sparkles,
-  FileText,
+  Star,
 } from "lucide-react";
 import type { PlanContent, PlanContentRow, PlanContentSection } from "@/lib/planContent";
 import { EMPTY_PLAN_CONTENT } from "@/lib/planContent";
+import type { CategoryTemplate, PlanValues } from "@/lib/planTemplates";
+import { MISSING_VALUE } from "@/lib/planTemplates";
 
-type Meta = {
-  name: string;
-  category: string;
-  pdfName: string | null;
-  contentStatus: string;
-};
+type Meta = { name: string; category: string; pdfName: string | null };
 
 function move<T>(arr: T[], from: number, to: number): T[] {
   if (to < 0 || to >= arr.length) return arr;
@@ -33,14 +30,8 @@ function move<T>(arr: T[], from: number, to: number): T[] {
   return copy;
 }
 
-/** Editor for a label/value row list (used by Key Facts and each section). */
-function RowsEditor({
-  rows,
-  onChange,
-}: {
-  rows: PlanContentRow[];
-  onChange: (rows: PlanContentRow[]) => void;
-}) {
+/** Editor for a label/value row list (freeform / Supplemental). */
+function RowsEditor({ rows, onChange }: { rows: PlanContentRow[]; onChange: (rows: PlanContentRow[]) => void }) {
   const update = (i: number, patch: Partial<PlanContentRow>) =>
     onChange(rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
@@ -61,34 +52,13 @@ function RowsEditor({
             className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] outline-none focus:border-blue-400"
           />
           <div className="flex shrink-0 items-center">
-            <button
-              onClick={() => onChange(move(rows, i, i - 1))}
-              className="rounded p-1 text-slate-300 hover:text-slate-600"
-              title="Move up"
-            >
-              <ChevronUp size={15} />
-            </button>
-            <button
-              onClick={() => onChange(move(rows, i, i + 1))}
-              className="rounded p-1 text-slate-300 hover:text-slate-600"
-              title="Move down"
-            >
-              <ChevronDown size={15} />
-            </button>
-            <button
-              onClick={() => onChange(rows.filter((_, idx) => idx !== i))}
-              className="rounded p-1 text-slate-300 hover:text-red-500"
-              title="Remove row"
-            >
-              <Trash2 size={14} />
-            </button>
+            <button onClick={() => onChange(move(rows, i, i - 1))} className="rounded p-1 text-slate-300 hover:text-slate-600"><ChevronUp size={15} /></button>
+            <button onClick={() => onChange(move(rows, i, i + 1))} className="rounded p-1 text-slate-300 hover:text-slate-600"><ChevronDown size={15} /></button>
+            <button onClick={() => onChange(rows.filter((_, idx) => idx !== i))} className="rounded p-1 text-slate-300 hover:text-red-500"><Trash2 size={14} /></button>
           </div>
         </div>
       ))}
-      <button
-        onClick={() => onChange([...rows, { label: "", value: "" }])}
-        className="flex items-center gap-1.5 text-[12px] font-medium text-blue-600 hover:text-blue-700"
-      >
+      <button onClick={() => onChange([...rows, { label: "", value: "" }])} className="flex items-center gap-1.5 text-[12px] font-medium text-blue-600 hover:text-blue-700">
         <Plus size={13} /> Add row
       </button>
     </div>
@@ -100,8 +70,10 @@ export default function PlanContentEditor() {
   const id = params.id as string;
 
   const [meta, setMeta] = useState<Meta | null>(null);
-  const [content, setContent] = useState<PlanContent>(EMPTY_PLAN_CONTENT);
   const [status, setStatus] = useState<string>("none");
+  const [template, setTemplate] = useState<CategoryTemplate | null>(null);
+  const [values, setValues] = useState<PlanValues>({});
+  const [content, setContent] = useState<PlanContent>(EMPTY_PLAN_CONTENT);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [extracting, setExtracting] = useState(false);
@@ -115,14 +87,11 @@ export default function PlanContentEditor() {
       if (data.error) {
         setMsg(data.error);
       } else {
-        setMeta({
-          name: data.name,
-          category: data.category,
-          pdfName: data.pdfName,
-          contentStatus: data.contentStatus,
-        });
-        setContent(data.content);
+        setMeta({ name: data.name, category: data.category, pdfName: data.pdfName });
         setStatus(data.contentStatus);
+        setTemplate(data.template ?? null);
+        setValues(data.values ?? {});
+        setContent(data.content ?? EMPTY_PLAN_CONTENT);
       }
     } catch {
       setMsg("Failed to load plan content");
@@ -139,18 +108,19 @@ export default function PlanContentEditor() {
     setSaving(true);
     setMsg(null);
     const targetStatus = nextStatus ?? (status === "none" ? "draft" : status);
+    const body = template
+      ? { values, contentStatus: targetStatus }
+      : { content, contentStatus: targetStatus };
     try {
       const res = await fetch(`/api/admin/plans/${id}/content`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content, contentStatus: targetStatus }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
-      if (data.error) {
-        setMsg(data.error);
-      } else {
+      if (data.error) setMsg(data.error);
+      else {
         setStatus(data.contentStatus);
-        setContent(data.content);
         setMsg("Saved");
       }
     } catch {
@@ -161,18 +131,17 @@ export default function PlanContentEditor() {
   };
 
   const generateDraft = async () => {
-    if (!confirm("Generate a draft from the PDF? This replaces the current content below (until you save).")) return;
+    if (!confirm("Pre-fill from the PDF? This fills the fields below from the plan PDF (until you save).")) return;
     setExtracting(true);
     setMsg(null);
     try {
       const res = await fetch(`/api/admin/plans/${id}/extract`, { method: "POST" });
       const data = await res.json();
-      if (data.error) {
-        setMsg(data.error);
-      } else {
-        setContent(data.content);
-        setStatus(data.contentStatus);
-        setMsg("Draft generated from PDF — review and save");
+      if (data.error) setMsg(data.error);
+      else {
+        if (template) setValues((prev) => ({ ...prev, ...(data.values ?? {}) }));
+        else setContent(data.content);
+        setMsg("Pre-filled from PDF — review each value and save");
       }
     } catch {
       setMsg("Extraction failed");
@@ -182,24 +151,13 @@ export default function PlanContentEditor() {
   };
 
   const updateSection = (i: number, patch: Partial<PlanContentSection>) =>
-    setContent((c) => ({
-      ...c,
-      sections: c.sections.map((s, idx) => (idx === i ? { ...s, ...patch } : s)),
-    }));
+    setContent((c) => ({ ...c, sections: c.sections.map((s, idx) => (idx === i ? { ...s, ...patch } : s)) }));
 
-  if (loading) {
-    return <div className="py-12 text-center text-sm text-slate-400">Loading...</div>;
-  }
-  if (!meta) {
-    return <div className="py-12 text-center text-sm text-slate-400">{msg || "Plan not found"}</div>;
-  }
+  if (loading) return <div className="py-12 text-center text-sm text-slate-400">Loading...</div>;
+  if (!meta) return <div className="py-12 text-center text-sm text-slate-400">{msg || "Plan not found"}</div>;
 
   const statusColor =
-    status === "published"
-      ? "bg-emerald-50 text-emerald-600"
-      : status === "draft"
-      ? "bg-amber-50 text-amber-600"
-      : "bg-slate-100 text-slate-500";
+    status === "published" ? "bg-emerald-50 text-emerald-600" : status === "draft" ? "bg-amber-50 text-amber-600" : "bg-slate-100 text-slate-500";
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -215,11 +173,7 @@ export default function PlanContentEditor() {
             <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${statusColor}`}>{status}</span>
           </div>
         </div>
-        <Link
-          href={`/plans/${id}?preview=1`}
-          target="_blank"
-          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
-        >
+        <Link href={`/plans/${id}?preview=1`} target="_blank" className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-slate-50">
           <Eye size={14} /> Preview
         </Link>
       </div>
@@ -233,126 +187,110 @@ export default function PlanContentEditor() {
           className="flex items-center gap-1.5 rounded-lg bg-violet-50 px-3 py-2 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
         >
           {extracting ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
-          Generate draft from PDF
+          Pre-fill from PDF
         </button>
-        {!meta.pdfName && (
-          <span className="flex items-center gap-1 text-[11px] text-slate-400">
-            <FileText size={12} /> No PDF on file
-          </span>
-        )}
 
         <div className="flex-1" />
-
         {msg && <span className="text-[12px] text-slate-500">{msg}</span>}
 
-        <button
-          onClick={() => save()}
-          disabled={saving}
-          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-        >
+        <button onClick={() => save()} disabled={saving} className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50">
           {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
           Save draft
         </button>
         {status === "published" ? (
-          <button
-            onClick={() => save("draft")}
-            disabled={saving}
-            className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-2 text-[13px] font-semibold text-amber-700 hover:bg-amber-100 disabled:opacity-50"
-          >
+          <button onClick={() => save("draft")} disabled={saving} className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-2 text-[13px] font-semibold text-amber-700 hover:bg-amber-100 disabled:opacity-50">
             Unpublish
           </button>
         ) : (
-          <button
-            onClick={() => save("published")}
-            disabled={saving}
-            className="rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm hover:shadow-md disabled:opacity-50"
-          >
+          <button onClick={() => save("published")} disabled={saving} className="rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm hover:shadow-md disabled:opacity-50">
             Publish
           </button>
         )}
       </div>
 
-      {/* Title */}
-      <div className="card mb-4 p-4">
-        <label className="mb-1.5 block text-[12px] font-semibold text-slate-600">Display title</label>
-        <input
-          value={content.title ?? ""}
-          onChange={(e) => setContent((c) => ({ ...c, title: e.target.value }))}
-          placeholder={meta.name}
-          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-blue-400"
-        />
-        <p className="mt-1 text-[11px] text-slate-400">Leave blank to use the plan name.</p>
-      </div>
-
-      {/* Key facts */}
-      <div className="card mb-4 p-4">
-        <h2 className="mb-3 text-[13px] font-bold text-[var(--kennion-navy)]">Key Facts (at a glance)</h2>
-        <RowsEditor rows={content.keyFacts} onChange={(keyFacts) => setContent((c) => ({ ...c, keyFacts }))} />
-      </div>
-
-      {/* Sections */}
-      <div className="space-y-4">
-        {content.sections.map((section, i) => (
-          <div key={i} className="card p-4">
-            <div className="mb-3 flex items-center gap-2">
-              <input
-                value={section.heading}
-                onChange={(e) => updateSection(i, { heading: e.target.value })}
-                placeholder="Section heading"
-                className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] font-semibold outline-none focus:border-blue-400"
-              />
-              <button
-                onClick={() => setContent((c) => ({ ...c, sections: move(c.sections, i, i - 1) }))}
-                className="rounded p-1 text-slate-300 hover:text-slate-600"
-                title="Move up"
-              >
-                <ChevronUp size={16} />
-              </button>
-              <button
-                onClick={() => setContent((c) => ({ ...c, sections: move(c.sections, i, i + 1) }))}
-                className="rounded p-1 text-slate-300 hover:text-slate-600"
-                title="Move down"
-              >
-                <ChevronDown size={16} />
-              </button>
-              <button
-                onClick={() => setContent((c) => ({ ...c, sections: c.sections.filter((_, idx) => idx !== i) }))}
-                className="rounded p-1 text-slate-300 hover:text-red-500"
-                title="Remove section"
-              >
-                <Trash2 size={15} />
-              </button>
-            </div>
-            <textarea
-              value={section.body ?? ""}
-              onChange={(e) => updateSection(i, { body: e.target.value })}
-              placeholder="Optional paragraph text..."
-              rows={2}
-              className="mb-3 w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] outline-none focus:border-blue-400"
-            />
-            <RowsEditor rows={section.rows ?? []} onChange={(rows) => updateSection(i, { rows })} />
+      {/* ===== Templated structured form (Health / Dental / Vision) ===== */}
+      {template ? (
+        <>
+          <p className="mb-4 text-[12px] text-slate-500">
+            Standard {meta.category.replace(" Plans", "")} fields. Empty fields show
+            &ldquo;{MISSING_VALUE}&rdquo; on the page. <Star size={11} className="inline text-amber-400" /> = shown in the top highlights grid.
+          </p>
+          <div className="space-y-4">
+            {template.sections.map((section) => (
+              <div key={section.id} className="card p-4">
+                <h2 className="mb-3 text-[13px] font-bold text-[var(--kennion-navy)]">{section.heading}</h2>
+                <div className="space-y-2">
+                  {section.fields.map((f) => (
+                    <div key={f.id} className="flex items-center gap-3">
+                      <label className="flex w-1/2 shrink-0 items-center gap-1 text-[13px] text-slate-600">
+                        {f.highlight && <Star size={11} className="shrink-0 text-amber-400" />}
+                        {f.label}
+                      </label>
+                      <input
+                        value={values[f.id] ?? ""}
+                        onChange={(e) => setValues((v) => ({ ...v, [f.id]: e.target.value }))}
+                        placeholder={MISSING_VALUE}
+                        className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] outline-none focus:border-blue-400"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      ) : (
+        /* ===== Freeform editor (Supplemental) ===== */
+        <>
+          <div className="card mb-4 p-4">
+            <label className="mb-1.5 block text-[12px] font-semibold text-slate-600">Display title</label>
+            <input
+              value={content.title ?? ""}
+              onChange={(e) => setContent((c) => ({ ...c, title: e.target.value }))}
+              placeholder={meta.name}
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] outline-none focus:border-blue-400"
+            />
+          </div>
 
-      <button
-        onClick={() => setContent((c) => ({ ...c, sections: [...c.sections, { heading: "", rows: [] }] }))}
-        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-slate-300 py-3 text-[13px] font-medium text-slate-500 hover:border-blue-400 hover:text-blue-600"
-      >
-        <Plus size={15} /> Add section
-      </button>
+          <div className="card mb-4 p-4">
+            <h2 className="mb-3 text-[13px] font-bold text-[var(--kennion-navy)]">Key Facts (at a glance)</h2>
+            <RowsEditor rows={content.keyFacts} onChange={(keyFacts) => setContent((c) => ({ ...c, keyFacts }))} />
+          </div>
 
-      {/* Disclaimer */}
-      <div className="card mt-4 p-4">
-        <label className="mb-1.5 block text-[12px] font-semibold text-slate-600">Disclaimer</label>
-        <textarea
-          value={content.disclaimer ?? ""}
-          onChange={(e) => setContent((c) => ({ ...c, disclaimer: e.target.value }))}
-          placeholder="Optional fine print shown at the bottom of the page..."
-          rows={2}
-          className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12px] outline-none focus:border-blue-400"
-        />
-      </div>
+          <div className="space-y-4">
+            {content.sections.map((section, i) => (
+              <div key={i} className="card p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <input
+                    value={section.heading}
+                    onChange={(e) => updateSection(i, { heading: e.target.value })}
+                    placeholder="Section heading"
+                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[14px] font-semibold outline-none focus:border-blue-400"
+                  />
+                  <button onClick={() => setContent((c) => ({ ...c, sections: move(c.sections, i, i - 1) }))} className="rounded p-1 text-slate-300 hover:text-slate-600"><ChevronUp size={16} /></button>
+                  <button onClick={() => setContent((c) => ({ ...c, sections: move(c.sections, i, i + 1) }))} className="rounded p-1 text-slate-300 hover:text-slate-600"><ChevronDown size={16} /></button>
+                  <button onClick={() => setContent((c) => ({ ...c, sections: c.sections.filter((_, idx) => idx !== i) }))} className="rounded p-1 text-slate-300 hover:text-red-500"><Trash2 size={15} /></button>
+                </div>
+                <textarea
+                  value={section.body ?? ""}
+                  onChange={(e) => updateSection(i, { body: e.target.value })}
+                  placeholder="Optional paragraph text..."
+                  rows={2}
+                  className="mb-3 w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] outline-none focus:border-blue-400"
+                />
+                <RowsEditor rows={section.rows ?? []} onChange={(rows) => updateSection(i, { rows })} />
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setContent((c) => ({ ...c, sections: [...c.sections, { heading: "", rows: [] }] }))}
+            className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-slate-300 py-3 text-[13px] font-medium text-slate-500 hover:border-blue-400 hover:text-blue-600"
+          >
+            <Plus size={15} /> Add section
+          </button>
+        </>
+      )}
     </div>
   );
 }

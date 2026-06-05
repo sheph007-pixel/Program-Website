@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { extractPlanContent } from "@/lib/extractPlanContent";
+import { getTemplate, prefillValues } from "@/lib/planTemplates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export async function POST() {
     await ensureDatabase();
     const plans = await prisma.plan.findMany({
       orderBy: [{ category: "asc" }, { sortOrder: "asc" }],
-      select: { id: true, name: true, pdfData: true, contentStatus: true },
+      select: { id: true, name: true, category: true, pdfData: true, contentStatus: true },
     });
 
     const results: { id: string; name: string; ok: boolean; status: string; reason?: string }[] = [];
@@ -31,17 +32,24 @@ export async function POST() {
       }
       try {
         const content = await extractPlanContent(Buffer.from(plan.pdfData), plan.name);
+        const template = getTemplate(plan.category);
+        // Templated categories store a { values } map mapped onto standard fields;
+        // Supplemental stores the cleaned freeform content.
+        const values = template ? prefillValues(plan.category, content) : null;
+        const contentJson = template ? { values } : content;
         await prisma.plan.update({
           where: { id: plan.id },
-          data: { contentJson: content, contentStatus: "draft", contentUpdatedAt: new Date() },
+          data: { contentJson, contentStatus: "draft", contentUpdatedAt: new Date() },
         });
-        const facts = content.keyFacts.length + content.sections.length;
+        const filled = template
+          ? Object.keys(values ?? {}).length
+          : content.keyFacts.length + content.sections.length;
         results.push({
           id: plan.id,
           name: plan.name,
           ok: true,
           status: "draft",
-          reason: facts === 0 ? "empty draft — needs manual entry" : undefined,
+          reason: filled === 0 ? "no fields matched — needs manual entry" : `${filled} fields filled`,
         });
       } catch (e) {
         results.push({
