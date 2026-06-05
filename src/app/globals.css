@@ -264,6 +264,11 @@ html {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
+/* Shown only on the printed / Save-as-PDF version, hidden on screen. */
+.print-only {
+  display: none;
+}
+
 /* Print: strip app chrome, render plan content cleanly on paper.
    Only hide the persistent sidebar and anything explicitly marked .no-print —
    NOT semantic <header>/<footer>/<nav> in page content (e.g. /education
@@ -272,6 +277,10 @@ html {
   aside,
   .no-print {
     display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
   }
 
   html,

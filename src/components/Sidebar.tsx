@@ -72,7 +72,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile top bar - clean, just logo and avatar */}
-      <div className="fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between bg-[var(--kennion-navy)] px-4 md:hidden">
+      <div className="no-print fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between bg-[var(--kennion-navy)] px-4 md:hidden">
         <img
           src="/kennion-logo-white.svg"
           alt="Kennion"
@@ -128,7 +128,7 @@ export default function Sidebar() {
       )}
 
       {/* Mobile bottom tab bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
+      <div className="no-print fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg md:hidden safe-area-bottom">
         <div className="flex items-stretch justify-around px-2">
           {mobileTabItems.map((item) => {
             const isActive = !(item as { isMore?: boolean }).isMore && pathname === item.href;

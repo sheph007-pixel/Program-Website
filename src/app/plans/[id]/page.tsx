@@ -44,7 +44,17 @@ export default async function PlanDetailPage({
 
   return (
     <div className="page-container">
-      <PlanPageActions planId={id} hasPdf={!!plan.pdfName} />
+      <PlanPageActions />
+
+      {/* Print-only branded header */}
+      <div className="print-only mb-5 border-b border-slate-200 pb-3">
+        <div className="flex items-center justify-between">
+          <div className="text-[13px] font-extrabold tracking-wide text-[var(--kennion-navy)]">
+            KENNION <span className="font-medium text-slate-400">Benefits Program</span>
+          </div>
+          <div className="text-[11px] text-slate-400">kennionprogram.com</div>
+        </div>
+      </div>
 
       {isPreview && !isPublished(plan.contentStatus) && (
         <div className="no-print mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[12px] font-medium text-amber-800">
@@ -125,6 +135,14 @@ export default async function PlanDetailPage({
           {content.disclaimer}
         </p>
       )}
+
+      {/* Print-only branded footer */}
+      <div className="print-only mt-6 border-t border-slate-200 pt-3 text-[10px] text-slate-400">
+        <div className="flex items-center justify-between">
+          <span>{plan.category} &middot; {title}</span>
+          <span>Kennion Benefits Program &middot; kennionprogram.com</span>
+        </div>
+      </div>
     </div>
   );
 }
