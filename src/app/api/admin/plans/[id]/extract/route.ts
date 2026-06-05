@@ -5,9 +5,14 @@ import { extractPlanContent } from "@/lib/extractPlanContent";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+/**
+ * Generate a draft from the plan's PDF and RETURN it for the editor to load.
+ * This does NOT persist — the admin reviews the draft and clicks Save. That
+ * keeps a currently-published page live (and its content intact) until the
+ * admin deliberately saves, matching the editor's "until you save" prompt.
+ */
+export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const force = req.nextUrl.searchParams.get("force") === "1";
 
   try {
     await ensureDatabase();
@@ -22,26 +27,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!plan.pdfData) {
       return NextResponse.json({ error: "No PDF to extract from" }, { status: 400 });
     }
-    // Never silently clobber a published page.
-    if (plan.contentStatus === "published" && !force) {
-      return NextResponse.json(
-        { error: "Plan is published — pass ?force=1 to regenerate the draft" },
-        { status: 409 }
-      );
-    }
 
     const content = await extractPlanContent(Buffer.from(plan.pdfData), plan.name);
 
-    await prisma.plan.update({
-      where: { id },
-      data: {
-        contentJson: content,
-        contentStatus: "draft",
-        contentUpdatedAt: new Date(),
-      },
-    });
-
-    return NextResponse.json({ ok: true, content, contentStatus: "draft" });
+    // Return without persisting; the editor holds it until the admin saves.
+    return NextResponse.json({ ok: true, content, contentStatus: plan.contentStatus });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Extraction failed";
     return NextResponse.json({ error: message }, { status: 500 });

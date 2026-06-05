@@ -165,8 +165,7 @@ export default function PlanContentEditor() {
     setExtracting(true);
     setMsg(null);
     try {
-      const force = status === "published" ? "?force=1" : "";
-      const res = await fetch(`/api/admin/plans/${id}/extract${force}`, { method: "POST" });
+      const res = await fetch(`/api/admin/plans/${id}/extract`, { method: "POST" });
       const data = await res.json();
       if (data.error) {
         setMsg(data.error);

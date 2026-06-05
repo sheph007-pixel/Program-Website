@@ -49,11 +49,21 @@ function isHeading(line: string): boolean {
 /** Split "Label .... value" where value is a money/percent token, or 2+ space gap. */
 function splitLabelValue(line: string): PlanContentRow | null {
   const vm = line.match(VALUE_TOKEN);
-  if (vm && vm.index !== undefined && vm.index > 0) {
-    const label = line.slice(0, vm.index).replace(/[.\s]+$/, "").trim();
-    const value = line.slice(vm.index).trim();
-    if (label.length >= 2 && label.length <= 80 && value.length <= 60) {
-      return { label: titleCase(label), value };
+  if (vm && vm.index !== undefined) {
+    if (vm.index > 0) {
+      // "Label .... $value" — value (and any qualifier like "after deductible")
+      const label = line.slice(0, vm.index).replace(/[.\s]+$/, "").trim();
+      const value = line.slice(vm.index).trim();
+      if (label.length >= 2 && label.length <= 80 && value.length <= 60) {
+        return { label: titleCase(label), value };
+      }
+    } else {
+      // Value-first: "$25 Copay" / "$0 Preventive care" — label is the remainder
+      const value = vm[0];
+      const label = line.slice(vm[0].length).replace(/^[\s.:–-]+/, "").trim();
+      if (label.length >= 2 && label.length <= 80) {
+        return { label: titleCase(label), value };
+      }
     }
   }
   // Fallback: split on a run of 2+ spaces / dot-leaders / tab
@@ -99,8 +109,9 @@ export function parsePlanContent(rawText: string, planName: string): PlanContent
     const row = splitLabelValue(line);
     if (!row) continue;
 
-    // Collect prominent money/percent facts for the "at a glance" grid.
-    if (keyFacts.length < MAX_KEY_FACTS && /^\$|%$|^\$0$/.test(row.value)) {
+    // Collect prominent money/percent facts for the "at a glance" grid
+    // (covers "$1,500", "20%", and "20% after deductible").
+    if (keyFacts.length < MAX_KEY_FACTS && /[$%]/.test(row.value)) {
       keyFacts.push(row);
     }
     if (current) current.rows!.push(row);

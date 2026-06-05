@@ -15,7 +15,7 @@ type Plan = {
   category: string;
   summaryUrl: string;
   pdfName: string | null;
-  contentStatus?: string;
+  hasWebPage?: boolean;
 };
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
@@ -91,7 +91,7 @@ export default function PlansPage() {
   const meta = categoryMeta[activeCategory];
 
   const hasPdf = (plan: Plan) => !!plan.pdfName;
-  const hasWebPage = (plan: Plan) => plan.contentStatus === "published";
+  const hasWebPage = (plan: Plan) => !!plan.hasWebPage;
   const pdfUrl = (plan: Plan) => `/api/plans/${plan.id}/pdf`;
 
   const handlePlanClick = (plan: Plan) => {

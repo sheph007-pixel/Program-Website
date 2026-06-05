@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, ensureDatabase } from "@/lib/db";
-import { normalizePlanContent } from "@/lib/planContent";
+import { normalizePlanContent, hasRenderableContent } from "@/lib/planContent";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +48,15 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       typeof body?.contentStatus === "string" && ALLOWED_STATUS.has(body.contentStatus)
         ? body.contentStatus
         : "draft";
+
+    // Invariant: a published page must always have something to render, so the
+    // public list/detail can rely on status alone without loading contentJson.
+    if (requestedStatus === "published" && !hasRenderableContent(content)) {
+      return NextResponse.json(
+        { error: "Add at least one key fact or section before publishing." },
+        { status: 400 }
+      );
+    }
 
     const plan = await prisma.plan.update({
       where: { id },

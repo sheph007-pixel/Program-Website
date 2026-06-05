@@ -264,11 +264,11 @@ html {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* Print: strip app chrome, render plan content cleanly on paper */
+/* Print: strip app chrome, render plan content cleanly on paper.
+   Only hide the persistent sidebar and anything explicitly marked .no-print —
+   NOT semantic <header>/<footer>/<nav> in page content (e.g. /education
+   articles render their title in <header> and sources in <footer>). */
 @media print {
-  nav,
-  header,
-  footer,
   aside,
   .no-print {
     display: none !important;
