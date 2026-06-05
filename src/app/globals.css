@@ -269,11 +269,27 @@ html {
   display: none;
 }
 
+/* Repeating branded footer with QR — hidden on screen, fixed on each printed page. */
+.print-footer {
+  display: none;
+}
+
 /* Print: strip app chrome, render plan content cleanly on paper.
    Only hide the persistent sidebar and anything explicitly marked .no-print —
    NOT semantic <header>/<footer>/<nav> in page content (e.g. /education
    articles render their title in <header> and sources in <footer>). */
 @media print {
+  /* Print background colors/gradients (otherwise the white plan icon sits on an
+     unprinted gradient and disappears). */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  @page {
+    margin: 0.5in 0.5in 1in 0.5in;
+  }
+
   aside,
   .no-print {
     display: none !important;
@@ -281,6 +297,25 @@ html {
 
   .print-only {
     display: block !important;
+  }
+
+  /* Fixed branded footer + QR, repeated on every printed page */
+  .print-footer {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 8px;
+    background: #fff;
+  }
+  .print-footer img {
+    width: 46px;
+    height: 46px;
   }
 
   html,
@@ -297,7 +332,7 @@ html {
   .page-container {
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 0.7in 0 !important;
   }
 
   .card {

@@ -2,9 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  // pdf-parse is a CommonJS Node lib used for server-side PDF text extraction;
-  // keep it external so Next doesn't bundle its internals (and its test-file quirk).
-  serverExternalPackages: ["pdf-parse"],
+  // Keep these server-only Node libs external so Next doesn't bundle their
+  // internals (pdf-parse has a test-file require quirk; both then trace cleanly
+  // into the standalone output instead of risking a broken bundled require).
+  serverExternalPackages: ["pdf-parse", "qrcode"],
   async headers() {
     return [
       {

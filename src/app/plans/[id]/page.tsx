@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
+import QRCode from "qrcode";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { getCategoryMeta } from "@/lib/categoryMeta";
 import { normalizePlanContent, scrubPlanContent, isPublished, hasRenderableContent } from "@/lib/planContent";
 import PlanPageActions from "@/components/PlanPageActions";
 
 export const dynamic = "force-dynamic";
+
+const SITE_URL = "https://www.kennionprogram.com";
 
 export default async function PlanDetailPage({
   params,
@@ -41,6 +44,15 @@ export default async function PlanDetailPage({
   const meta = getCategoryMeta(plan.category);
   const Icon = meta.icon;
   const title = content.title || plan.name;
+
+  // QR (printed footer) deep-links to this plan's live page on kennionprogram.com
+  const planUrl = `${SITE_URL}/plans/${id}`;
+  let qrDataUrl = "";
+  try {
+    qrDataUrl = await QRCode.toDataURL(planUrl, { width: 160, margin: 0 });
+  } catch {
+    // QR is decorative for print; ignore failures
+  }
 
   return (
     <div className="page-container">
@@ -136,12 +148,22 @@ export default async function PlanDetailPage({
         </p>
       )}
 
-      {/* Print-only branded footer */}
-      <div className="print-only mt-6 border-t border-slate-200 pt-3 text-[10px] text-slate-400">
-        <div className="flex items-center justify-between">
-          <span>{plan.category} &middot; {title}</span>
-          <span>Kennion Benefits Program &middot; kennionprogram.com</span>
+      {/* Fixed branded footer with QR — repeats on every printed/PDF page */}
+      <div className="print-footer">
+        <div className="text-[10px] leading-tight text-slate-500">
+          <div className="text-[11px] font-extrabold tracking-wide text-[var(--kennion-navy)]">
+            KENNION <span className="font-medium text-slate-400">Benefits Program</span>
+          </div>
+          <div>{plan.category} &middot; {title}</div>
+          <div>kennionprogram.com</div>
         </div>
+        {qrDataUrl && (
+          <div className="text-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={qrDataUrl} alt="Scan to view this plan at kennionprogram.com" />
+            <div className="mt-0.5 text-[8px] text-slate-400">Scan to view online</div>
+          </div>
+        )}
       </div>
     </div>
   );
