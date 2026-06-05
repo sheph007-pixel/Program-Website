@@ -1,6 +1,6 @@
 "use client";
 
-import { Smartphone, Play, ArrowUpRight, Heart, Stethoscope, ShieldCheck, Activity } from "lucide-react";
+import { Smartphone, Play, ArrowUpRight, Heart, Stethoscope, Brain, Activity } from "lucide-react";
 import { useUserName } from "@/components/NameContext";
 import PhoneContact from "@/components/PhoneContact";
 
@@ -24,9 +24,9 @@ const benefits = [
     textColor: "text-indigo-600",
   },
   {
-    label: "Free Virtual Care",
-    desc: "Connect with a board-certified doctor 24/7 from anywhere at no cost",
-    icon: ShieldCheck,
+    label: "Free Mental Health",
+    desc: "Talk with a licensed therapist or counselor, confidentially, at no cost",
+    icon: Brain,
     color: "from-violet-600 to-purple-500",
     shadow: "shadow-purple-500/20",
     bg: "bg-violet-50",
@@ -67,8 +67,8 @@ export default function VirtualCarePage() {
         </h1>
         <p className="page-subtitle">
           One of the biggest perks of the Kennion program. Through HealthJoy
-          Telemed, you and your family get free, unlimited access to doctors
-          for primary care, urgent care, and virtual visits. No copays. No
+          Telemed, you and your family get free, unlimited access to care for
+          primary care, urgent care, and mental health. No copays. No
           surprise bills. Just open the app.
         </p>
       </div>
