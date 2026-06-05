@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, ensureDatabase } from "@/lib/db";
-import { normalizePlanContent, hasRenderableContent } from "@/lib/planContent";
+import { normalizePlanContent, scrubPlanContent, hasRenderableContent } from "@/lib/planContent";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +28,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       pdfName: plan.pdfName,
       contentStatus: plan.contentStatus,
       contentUpdatedAt: plan.contentUpdatedAt,
-      content: normalizePlanContent(plan.contentJson),
+      content: scrubPlanContent(normalizePlanContent(plan.contentJson)),
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Failed to load content";

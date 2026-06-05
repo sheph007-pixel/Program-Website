@@ -84,3 +84,55 @@ export function hasRenderableContent(content: PlanContent | null | undefined): b
   if (!content) return false;
   return content.keyFacts.length > 0 || content.sections.length > 0;
 }
+
+// Marker for the legacy auto-generated draft disclaimer we no longer show.
+const DRAFT_DISCLAIMER_MARKER = "auto-generated from the plan PDF";
+// The BYTE program is discontinued — strip any reference to it from plan content.
+const BYTE_RE = /\bbyte\b/i;
+
+function dropByteRows(rows: PlanContentRow[]): PlanContentRow[] {
+  return rows.filter((r) => !BYTE_RE.test(r.label) && !BYTE_RE.test(r.value));
+}
+
+/**
+ * Remove content that should never be shown to members:
+ *  - the legacy "Draft auto-generated…" disclaimer
+ *  - any reference to the discontinued BYTE program
+ * Applied on read (render + admin editor) and on extraction, so it takes effect
+ * immediately without rewriting stored rows.
+ */
+export function scrubPlanContent(content: PlanContent): PlanContent {
+  const keyFacts = dropByteRows(content.keyFacts);
+
+  const sections = content.sections
+    .filter((s) => !BYTE_RE.test(s.heading))
+    .map((s) => {
+      const rows = s.rows ? dropByteRows(s.rows) : undefined;
+      let body = s.body;
+      if (body && BYTE_RE.test(body)) {
+        body = body
+          .split(/\n+/)
+          .filter((line) => !BYTE_RE.test(line))
+          .join("\n")
+          .trim();
+      }
+      return {
+        heading: s.heading,
+        ...(body ? { body } : {}),
+        ...(rows && rows.length ? { rows } : {}),
+      } as PlanContentSection;
+    })
+    .filter((s) => (s.rows && s.rows.length) || s.body);
+
+  const disclaimer =
+    content.disclaimer && content.disclaimer.includes(DRAFT_DISCLAIMER_MARKER)
+      ? undefined
+      : content.disclaimer;
+
+  return {
+    ...(content.title ? { title: content.title } : {}),
+    keyFacts,
+    sections,
+    ...(disclaimer ? { disclaimer } : {}),
+  };
+}

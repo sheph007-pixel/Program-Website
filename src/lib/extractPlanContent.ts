@@ -3,9 +3,7 @@
 // deps), so it traces cleanly into the Next standalone / Alpine Docker build.
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import type { PlanContent, PlanContentRow, PlanContentSection } from "./planContent";
-
-const DRAFT_DISCLAIMER =
-  "Draft auto-generated from the plan PDF. Verify all figures against the official Summary of Benefits before publishing.";
+import { scrubPlanContent } from "./planContent";
 
 const MAX_KEY_FACTS = 12;
 const MAX_SECTIONS = 14;
@@ -122,12 +120,11 @@ export function parsePlanContent(rawText: string, planName: string): PlanContent
     .filter((s) => (s.rows?.length ?? 0) > 0)
     .slice(0, MAX_SECTIONS);
 
-  return {
+  return scrubPlanContent({
     title: planName,
     keyFacts: dedupRows(keyFacts).slice(0, MAX_KEY_FACTS),
     sections: cleanedSections,
-    disclaimer: DRAFT_DISCLAIMER,
-  };
+  });
 }
 
 /** Convenience: bytes → draft PlanContent. Never throws; returns empty draft on failure. */
@@ -143,7 +140,6 @@ export async function extractPlanContent(
       title: planName,
       keyFacts: [],
       sections: [],
-      disclaimer: DRAFT_DISCLAIMER,
     };
   }
 }

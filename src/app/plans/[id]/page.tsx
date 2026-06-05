@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { getCategoryMeta } from "@/lib/categoryMeta";
-import { normalizePlanContent, isPublished, hasRenderableContent } from "@/lib/planContent";
+import { normalizePlanContent, scrubPlanContent, isPublished, hasRenderableContent } from "@/lib/planContent";
 import PlanPageActions from "@/components/PlanPageActions";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +35,7 @@ export default async function PlanDetailPage({
   if (!plan || !plan.isActive) notFound();
   if (!isPublished(plan.contentStatus) && !isPreview) notFound();
 
-  const content = normalizePlanContent(plan.contentJson);
+  const content = scrubPlanContent(normalizePlanContent(plan.contentJson));
   if (!hasRenderableContent(content) && !isPreview) notFound();
 
   const meta = getCategoryMeta(plan.category);
