@@ -2,7 +2,6 @@
 
 import { Download, HelpCircle, Play, CheckCircle, ArrowUpRight, Sparkles } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
-import { useUserName } from "@/components/NameContext";
 
 const buttons = [
   {
@@ -36,7 +35,6 @@ const buttons = [
 ];
 
 export default function AppDownloadPage() {
-  const { name } = useUserName();
 
   return (
     <div className="page-container">
@@ -45,7 +43,7 @@ export default function AppDownloadPage() {
           <Sparkles size={26} className="text-white" strokeWidth={1.8} />
         </div>
         <h1 className="page-title">
-          {name ? `${name}, Meet Your Benefits App` : "HealthJoy App"}
+          HealthJoy App
         </h1>
         <p className="page-subtitle">
           Once you&apos;re enrolled, download the HealthJoy app. It becomes your

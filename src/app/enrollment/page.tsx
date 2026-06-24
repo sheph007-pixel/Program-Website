@@ -2,16 +2,13 @@
 
 import { Monitor, ArrowUpRight } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
-import { useUserName } from "@/components/NameContext";
 
 export default function EnrollmentPage() {
-  const { name } = useUserName();
-
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">
-          {name ? `Ready To Enroll, ${name}?` : "Enrollment"}
+          Enrollment
         </h1>
         <p className="page-subtitle">
           Log in to the Enrollment Portal to see the specific

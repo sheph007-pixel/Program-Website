@@ -2,7 +2,6 @@
 
 import { CreditCard, Monitor, LogIn, ArrowUpRight, Zap } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
-import { useUserName } from "@/components/NameContext";
 
 const buttons = [
   {
@@ -38,7 +37,6 @@ const highlights = [
 ];
 
 export default function VisaPage() {
-  const { name } = useUserName();
 
   return (
     <div className="page-container">
@@ -47,7 +45,7 @@ export default function VisaPage() {
           <Zap size={26} className="text-white" strokeWidth={1.8} />
         </div>
         <h1 className="page-title">
-          {name ? `${name}, Meet Your Paytient Card` : "Paytient Visa"}
+          Paytient Visa
         </h1>
         <p className="page-subtitle">
           Enrolled in any benefits? You can get the Paytient Visa card for free

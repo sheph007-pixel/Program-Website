@@ -2,7 +2,6 @@
 
 import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, Stethoscope, Percent, MessageSquare } from "lucide-react";
 import Link from "next/link";
-import { useUserName } from "@/components/NameContext";
 
 const perks = [
   {
@@ -95,8 +94,6 @@ const actionButtons = [
 ];
 
 export default function SelfPayPage() {
-  const { name } = useUserName();
-
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
@@ -104,7 +101,7 @@ export default function SelfPayPage() {
           <Wallet size={26} className="text-white" strokeWidth={1.8} />
         </div>
         <h1 className="page-title">
-          {name ? `${name}, Pay & Get Reimbursed` : "Self-Pay Benefit"}
+          Self-Pay Benefit
         </h1>
         <p className="page-subtitle">
           Pay for a covered visit yourself, at any provider you like, and the

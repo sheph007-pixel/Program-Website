@@ -5,7 +5,6 @@ import { FileText, ExternalLink, X, Download, Wallet, ArrowRight } from "lucide-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PhoneContact from "@/components/PhoneContact";
-import { useUserName } from "@/components/NameContext";
 import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 import { categoryMeta } from "@/lib/categoryMeta";
 
@@ -38,7 +37,6 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
 };
 
 export default function PlansPage() {
-  const { name } = useUserName();
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
   const [plans, setPlans] = useState<Record<string, Plan[]>>({});
@@ -108,7 +106,7 @@ export default function PlansPage() {
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">
-          {name ? `${name}, Explore Your Benefits` : "Plans"}
+          Plans
         </h1>
         <p className="page-subtitle">
           These are all the plans offered through the Kennion Benefits Program.
