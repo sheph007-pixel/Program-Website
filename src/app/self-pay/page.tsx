@@ -83,8 +83,8 @@ export default function SelfPayPage() {
           {name ? `${name}, Pay & Get Reimbursed` : "Self-Pay Benefit"}
         </h1>
         <p className="page-subtitle">
-          Pay for any office visit yourself and get reimbursed 100%. No copay,
-          no coinsurance, no deductible.
+          Pay for a covered visit yourself and the plan pays you back 100%. No
+          copay, no coinsurance, no deductible, just your money back.
         </p>
       </div>
 
@@ -126,7 +126,7 @@ export default function SelfPayPage() {
       </div>
       <div className="card p-5 mb-4 animate-fade-in-up stagger-2">
         <p className="text-[13px] text-slate-500 mb-3">
-          The Self-Pay Benefit applies to these services:
+          Self-Pay applies to these everyday visits:
         </p>
         <ul className="space-y-2.5">
           {coveredServices.map((service) => (
@@ -141,8 +141,8 @@ export default function SelfPayPage() {
           ))}
         </ul>
         <p className="mt-3 border-t border-slate-100 pt-3 text-[12px] text-slate-400 leading-relaxed">
-          Chiropractor visits are a separate benefit and are not reimbursed
-          under Self-Pay.
+          Chiropractic care has its own separate benefit, so chiropractor visits
+          are handled outside Self-Pay.
         </p>
       </div>
 
