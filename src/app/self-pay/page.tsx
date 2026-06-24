@@ -140,6 +140,10 @@ export default function SelfPayPage() {
             </li>
           ))}
         </ul>
+        <p className="mt-3 border-t border-slate-100 pt-3 text-[12px] text-slate-400 leading-relaxed">
+          Chiropractor visits are a separate benefit and are not reimbursed
+          under Self-Pay.
+        </p>
       </div>
 
       {/* HSA Saver Notice */}
