@@ -85,7 +85,7 @@ const actionButtons = [
   },
   {
     label: "Get Your Paytient Card",
-    desc: "Pay for any visit up front at zero interest and get reimbursed 100% by the plan",
+    desc: "Free with your benefits and zero interest. Use it for any out-of-pocket cost like dental, vision, and Rx.",
     icon: CreditCard,
     href: "/visa",
     external: false,
@@ -107,8 +107,9 @@ export default function SelfPayPage() {
           {name ? `${name}, Pay & Get Reimbursed` : "Self-Pay Benefit"}
         </h1>
         <p className="page-subtitle">
-          Pay for a covered visit yourself and the plan pays you back 100%. No
-          copay, no coinsurance, no deductible, just your money back.
+          Pay for a covered visit yourself, at any provider you like, and the
+          plan pays you back 100%. No copay, no coinsurance, no deductible, no
+          network limits. We have it set up for you.
         </p>
       </div>
 
@@ -240,10 +241,14 @@ export default function SelfPayPage() {
           <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
           Get Started
         </div>
-        <p className="text-[12px] text-slate-400 mb-3">
+        <p className="text-[12px] text-slate-400 mb-2">
           Submit your receipt through your plan&apos;s claims administrator,
           EBPA or HealthEZ. Not sure which one? Check your member ID card or ask
           us through Get Help.
+        </p>
+        <p className="text-[12px] text-slate-400">
+          Using the Paytient Visa for Self-Pay is optional. Any card works, the
+          plan reimburses based on what you paid.
         </p>
       </div>
       <div className="flex flex-col gap-3 animate-fade-in-up stagger-3">
