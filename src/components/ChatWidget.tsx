@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   MessageCircle,
   X,
@@ -8,62 +8,39 @@ import {
   Loader2,
   Headphones,
   CheckCircle,
-  ArrowUp,
-  ArrowLeft,
   Paperclip,
-  TicketPlus,
+  Phone,
 } from "lucide-react";
 import { useUserName } from "./NameContext";
 
-/** Render markdown links [text](url) as clickable <a> tags */
-function renderMessageContent(content: string, isUser: boolean) {
-  // Never display an em/en dash anywhere on the site, including chat replies.
-  content = content.replace(/[\u2014\u2013]/g, "-");
-  const parts = content.split(/(\[[^\]]+\]\([^)]+\))/g);
-  return parts.map((part, i) => {
-    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-    if (linkMatch) {
-      const [, text, url] = linkMatch;
-      const isTel = url.startsWith("tel:");
-      return (
-        <a
-          key={i}
-          href={url}
-          target={isTel ? undefined : "_blank"}
-          rel={isTel ? undefined : "noopener noreferrer"}
-          className={`underline font-medium transition-colors ${
-            isUser
-              ? "text-white/90 hover:text-white"
-              : "text-blue-600 hover:text-blue-700"
-          }`}
-        >
-          {text}
-        </a>
-      );
-    }
-    return <span key={i}>{part}</span>;
-  });
-}
+type ChatView = "form" | "success";
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
-
-type ChatView = "chat" | "form" | "success";
+const contacts = [
+  {
+    label: "HealthJoy Concierge",
+    sub: "Care and plan questions, 24/7",
+    tel: "8775003212",
+    display: "(877) 500-3212",
+  },
+  {
+    label: "Enrollment Help Line",
+    sub: "Sign up or enrollment questions",
+    tel: "8336141622",
+    display: "(833) 614-1622",
+  },
+  {
+    label: "Paytient Card Support",
+    sub: "Help with your Paytient Visa",
+    tel: "8663459591",
+    display: "(866) 345-9591",
+  },
+];
 
 export default function ChatWidget() {
-  const { name: userName, userCode } = useUserName();
+  const { name: userName } = useUserName();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [view, setView] = useState<ChatView>("chat");
-  const [summaryReady, setSummaryReady] = useState(false);
+  const [view, setView] = useState<ChatView>("form");
   const [ticketSending, setTicketSending] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // Form state
@@ -74,26 +51,10 @@ export default function ChatWidget() {
   const [formFile, setFormFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Pre-fill name when form opens
+  // Pre-fill name when the widget opens
   useEffect(() => {
-    if (view === "form") {
-      if (userName && !formName) setFormName(userName);
-    }
-  }, [view, userName, formName]);
-
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, summaryReady, scrollToBottom]);
-
-  useEffect(() => {
-    if (open && inputRef.current && view === "chat") {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  }, [open, view]);
+    if (open && userName && !formName) setFormName(userName);
+  }, [open, userName, formName]);
 
   useEffect(() => {
     const handler = () => setOpen(true);
@@ -101,7 +62,7 @@ export default function ChatWidget() {
     return () => window.removeEventListener("open-kennion-chat", handler);
   }, []);
 
-  // Lock body scroll on mobile when chat is open
+  // Lock body scroll on mobile when open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -137,128 +98,16 @@ export default function ChatWidget() {
     };
   }, [open]);
 
-  // Auto-greeting on first open
-  useEffect(() => {
-    if (open && messages.length === 0 && !loading) {
-      sendGreeting();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
-  const finalizeSession = (sid?: string | null) => {
-    const id = sid || sessionId;
-    if (!id || messages.length < 2) return;
-    fetch("/api/chat/finalize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId: id }),
-    }).catch(() => {});
-  };
-
-  const sendGreeting = async () => {
-    setLoading(true);
-    const greeting = userName
-      ? `Hi, my name is ${userName}. I need some help.`
-      : "Hi, I need some help.";
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "user", content: greeting }],
-          userName: userName || undefined,
-          userCode: userCode || undefined,
-          isGreeting: true,
-        }),
-      });
-      if (!res.ok) throw new Error();
-      await streamResponse(res);
-    } catch {
-      setMessages([
-        {
-          role: "assistant",
-          content: userName
-            ? `Hey ${userName}! Thanks for reaching out. I can help with most benefits questions right here. If you need personal follow-up from the Kennion team, you can submit a ticket anytime. What can I help you with?`
-            : "Hey there! Thanks for reaching out. I can help with most benefits questions right here. If you need personal follow-up from the Kennion team, you can submit a ticket anytime. What can I help you with?",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const streamResponse = async (res: Response) => {
-    const reader = res.body?.getReader();
-    if (!reader) return;
-
-    const decoder = new TextDecoder();
-    let fullText = "";
-
-    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value);
-      const lines = chunk.split("\n").filter((l) => l.startsWith("data: "));
-
-      for (const line of lines) {
-        const data = line.replace("data: ", "");
-        if (data === "[DONE]") continue;
-
-        try {
-          const parsed = JSON.parse(data);
-
-          if (parsed.sessionId && !parsed.text) {
-            setSessionId(parsed.sessionId);
-            continue;
-          }
-
-          if (parsed.text) {
-            fullText += parsed.text;
-            const cleanText = fullText.replace(/\n?SUMMARY_READY\n?/g, "").trim();
-
-            setMessages((prev) => {
-              const updated = [...prev];
-              updated[updated.length - 1] = { role: "assistant", content: cleanText };
-              return updated;
-            });
-          }
-        } catch {
-          // skip
-        }
-      }
-    }
-
-    if (fullText.includes("SUMMARY_READY")) {
-      setSummaryReady(true);
-    }
-
-    return fullText;
-  };
-
   const handleSubmitForm = async () => {
     if (!formName.trim() || !formEmail.trim()) return;
 
     setTicketSending(true);
 
-    const allText = messages
-      .map((m) => `${m.role === "user" ? "Member" : "Kennion"}: ${m.content}`)
-      .join("\n\n");
-    const userMessages = messages
-      .filter((m) => m.role === "user")
-      .map((m) => m.content)
-      .join("\n");
-
     const formData = new FormData();
     formData.append("name", formName.trim());
     formData.append("email", formEmail.trim());
     formData.append("phone", formPhone.trim() || "Not provided");
-    formData.append("employer", "See transcript");
-    formData.append("issue", formDetails.trim() || userMessages);
-    formData.append("chatTranscript", allText);
-    if (sessionId) formData.append("sessionId", sessionId);
+    formData.append("issue", formDetails.trim());
     if (formFile) formData.append("attachment", formFile);
 
     try {
@@ -271,77 +120,18 @@ export default function ChatWidget() {
     } finally {
       setTicketSending(false);
       setView("success");
-      finalizeSession();
     }
   };
 
-  const sendMessage = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
+  const handleClose = () => setOpen(false);
 
-    const userMsg: Message = { role: "user", content: text };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages,
-          sessionId: sessionId || undefined,
-          userName: userName || undefined,
-          userCode: userCode || undefined,
-        }),
-      });
-      if (!res.ok) throw new Error();
-      await streamResponse(res);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "Sorry, I'm having a little trouble right now. You can call the Enrollment Help Line at (833) 614-1622 and they'll help you right away!",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    if (messages.length >= 2) {
-      finalizeSession();
-    }
-  };
-
-  const resetChat = () => {
-    finalizeSession();
-    setMessages([]);
-    setSummaryReady(false);
-    setView("chat");
-    setSessionId(null);
+  const resetForm = () => {
+    setView("form");
     setFormName(userName || "");
     setFormEmail("");
     setFormPhone("");
     setFormDetails("");
     setFormFile(null);
-  };
-
-  const openForm = () => {
-    setSummaryReady(false);
-    setView("form");
   };
 
   return (
@@ -358,7 +148,7 @@ export default function ChatWidget() {
         </button>
       )}
 
-      {/* Chat window */}
+      {/* Window */}
       {open && (
         <div
           ref={chatContainerRef}
@@ -366,184 +156,69 @@ export default function ChatWidget() {
         >
           {/* ===== HEADER ===== */}
           <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white/80 backdrop-blur-xl px-4 py-3 sm:bg-gradient-to-r sm:from-[#0a1929] sm:to-[#132f4c] sm:border-0 sm:rounded-t-2xl sm:py-4 sm:px-5">
-            {view === "form" ? (
-              <>
-                <button
-                  onClick={() => setView("chat")}
-                  className="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-200/50 sm:text-white/80 sm:hover:bg-white/20"
-                >
-                  <ArrowLeft size={20} strokeWidth={2} />
-                </button>
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-[15px] font-semibold text-slate-900 sm:text-white sm:text-[14px]">
-                    Submit a Ticket
-                  </h3>
-                  <p className="text-[11px] text-slate-400 sm:text-white/50">
-                    We&apos;ll follow up personally
-                  </p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="relative">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
-                    <Headphones size={18} className="text-white" strokeWidth={1.8} />
-                  </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white sm:border-[#0a1929] bg-emerald-400" />
-                </div>
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-[15px] font-semibold text-slate-900 sm:text-white sm:text-[14px]">
-                    Kennion Support
-                  </h3>
-                  <p className="text-[11px] text-emerald-500 sm:text-emerald-400/90">
-                    Online now
-                  </p>
-                </div>
-                {/* Submit a Ticket header button */}
-                <button
-                  onClick={openForm}
-                  className="flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1.5 text-emerald-600 transition-colors hover:bg-emerald-500/25 sm:bg-white/10 sm:text-white/90 sm:hover:bg-white/20"
-                >
-                  <TicketPlus size={14} strokeWidth={2} />
-                  <span className="text-[11px] font-semibold hidden sm:inline">Ticket</span>
-                </button>
-              </>
-            )}
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
+              <Headphones size={18} className="text-white" strokeWidth={1.8} />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-[15px] font-semibold text-slate-900 sm:text-white sm:text-[14px]">
+                Kennion Support
+              </h3>
+              <p className="text-[11px] text-slate-400 sm:text-white/50">
+                We&apos;re here to help
+              </p>
+            </div>
             <button
               onClick={handleClose}
               className="rounded-full bg-slate-200/80 p-1.5 text-slate-500 transition-colors hover:bg-slate-300 sm:rounded-xl sm:bg-transparent sm:p-2 sm:text-white/80 sm:hover:bg-white/20"
-              aria-label="Close chat"
+              aria-label="Close"
             >
               <X size={18} strokeWidth={2.5} className="sm:hidden" />
               <X size={22} strokeWidth={2.5} className="hidden sm:block" />
             </button>
           </div>
 
-          {/* ===== CHAT VIEW ===== */}
-          {view === "chat" && (
-            <>
-              <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 bg-white sm:bg-slate-50/50">
-                {messages.map((msg, i) => (
-                  <div
-                    key={i}
-                    className={`flex mb-1.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                  >
-                    <div
-                      className={`max-w-[82%] sm:max-w-[78%] rounded-[20px] px-4 py-2.5 text-[15px] sm:text-[13px] leading-relaxed whitespace-pre-line ${
-                        msg.role === "user"
-                          ? "bg-blue-500 text-white rounded-br-md"
-                          : "bg-[#e9e9eb] text-black rounded-bl-md sm:bg-white sm:text-slate-700 sm:shadow-sm sm:border sm:border-slate-100"
-                      }`}
-                    >
-                      {renderMessageContent(msg.content, msg.role === "user")}
-                    </div>
-                  </div>
-                ))}
-
-                {/* Typing indicator */}
-                {loading && messages.length > 0 && (
-                  <div className="flex mb-1.5 justify-start">
-                    <div className="rounded-[20px] rounded-bl-md bg-[#e9e9eb] sm:bg-white px-4 py-3 sm:shadow-sm sm:border sm:border-slate-100">
-                      <div className="flex gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-slate-400/60 animate-bounce" style={{ animationDelay: "0ms" }} />
-                        <span className="h-2 w-2 rounded-full bg-slate-400/60 animate-bounce" style={{ animationDelay: "150ms" }} />
-                        <span className="h-2 w-2 rounded-full bg-slate-400/60 animate-bounce" style={{ animationDelay: "300ms" }} />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Initial loading */}
-                {loading && messages.length === 0 && (
-                  <div className="flex items-center justify-center py-12">
-                    <Loader2 size={24} className="animate-spin text-slate-300" />
-                  </div>
-                )}
-
-                {/* SUMMARY_READY action card */}
-                {summaryReady && (
-                  <div className="mt-3 mb-2 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-center">
-                    <p className="text-[14px] sm:text-[13px] font-semibold text-[#0a1929] mb-1">
-                      Ready to submit a support request?
-                    </p>
-                    <p className="text-[12px] text-slate-500 mb-3">
-                      A team member will follow up with you personally.
-                    </p>
-                    <button
-                      onClick={openForm}
-                      className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 text-[14px] sm:text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 transition-all active:scale-[0.98]"
-                    >
-                      <TicketPlus size={16} strokeWidth={2} />
-                      Submit a Ticket
-                    </button>
-                    <button
-                      onClick={() => setSummaryReady(false)}
-                      className="mt-2 text-[12px] text-slate-400 hover:text-slate-500"
-                    >
-                      Keep Chatting
-                    </button>
-                  </div>
-                )}
-
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Input area */}
-              <div className="shrink-0 border-t border-slate-200 bg-white px-4 pt-3 pb-8 sm:pb-5 sm:rounded-b-2xl">
-                <div className="flex items-end gap-2">
-                  <textarea
-                    ref={inputRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Message..."
-                    rows={1}
-                    className="flex-1 resize-none rounded-full border border-slate-300 bg-white px-4 py-2.5 text-[16px] sm:text-[13px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 sm:rounded-xl sm:bg-slate-50 sm:focus:bg-white sm:focus:ring-1 sm:focus:ring-blue-400/20"
-                    style={{ maxHeight: 100, fontSize: "16px" }}
-                  />
-                  <button
-                    onClick={sendMessage}
-                    disabled={!input.trim() || loading}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white transition-all active:scale-95 disabled:opacity-30 sm:h-10 sm:w-10 sm:rounded-xl sm:bg-gradient-to-br sm:from-blue-600 sm:to-cyan-500"
-                    aria-label="Send message"
-                  >
-                    {loading ? (
-                      <Loader2 size={16} className="animate-spin" />
-                    ) : (
-                      <>
-                        <ArrowUp size={18} strokeWidth={2.5} className="sm:hidden" />
-                        <Send size={16} strokeWidth={1.8} className="hidden sm:block" />
-                      </>
-                    )}
-                  </button>
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <button
-                    onClick={openForm}
-                    className="text-[12px] sm:text-[11px] font-medium text-blue-500 transition-colors hover:text-blue-600"
-                  >
-                    Need Personal Help? Submit a Ticket
-                  </button>
-                  {messages.length > 2 && (
-                    <button
-                      onClick={resetChat}
-                      className="text-[12px] sm:text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-500"
-                    >
-                      Start Over
-                    </button>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-
           {/* ===== FORM VIEW ===== */}
           {view === "form" && (
             <div className="flex-1 overflow-y-auto bg-white sm:bg-slate-50/50">
               <div className="px-4 py-5 sm:px-5">
+                {/* Contacts */}
+                <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-400 mb-2">
+                  Need help now? Call the right line
+                </p>
+                <div className="space-y-2 mb-5">
+                  {contacts.map((c) => (
+                    <a
+                      key={c.tel}
+                      href={`tel:${c.tel}`}
+                      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 transition-colors hover:border-blue-400"
+                    >
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50">
+                        <Phone size={15} className="text-blue-600" strokeWidth={2} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">
+                          {c.label}
+                        </p>
+                        <p className="text-[11px] text-slate-400">{c.sub}</p>
+                      </div>
+                      <span className="text-[13px] font-semibold text-blue-600">
+                        {c.display}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="relative mb-5 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-slate-200" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-slate-400">
+                    Or submit a ticket
+                  </span>
+                  <div className="h-px flex-1 bg-slate-200" />
+                </div>
+
                 <p className="text-[13px] sm:text-[12px] text-slate-500 mb-5">
-                  Fill in your details below and a member of the Kennion team will follow up with you directly.
-                  {messages.length > 1 && " Your chat transcript will be included automatically."}
+                  Fill in your details and a member of the Kennion team will
+                  follow up with you directly.
                 </p>
 
                 <div className="space-y-4">
@@ -680,10 +355,10 @@ export default function ChatWidget() {
               </div>
               <div className="shrink-0 border-t border-slate-200 bg-white p-4 pb-8 sm:pb-5 sm:rounded-b-2xl text-center">
                 <button
-                  onClick={resetChat}
+                  onClick={resetForm}
                   className="rounded-2xl sm:rounded-xl border border-slate-200 px-6 py-3 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-slate-500 transition-all active:scale-[0.98]"
                 >
-                  Start a New Conversation
+                  Submit Another Request
                 </button>
               </div>
             </>

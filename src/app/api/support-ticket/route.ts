@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "Failed to send email" }, { status: 500 });
     }
 
-    // Link to chat session in DB
+    // Log the ticket in the DB so it shows in /admin/conversations
     if (sessionId) {
       prisma.chatSession
         .update({
@@ -167,6 +167,19 @@ export async function POST(req: NextRequest) {
             userEmail: email !== "See transcript" ? email : undefined,
             userPhone: phone !== "See transcript" ? phone : undefined,
             employer: employer !== "See transcript" ? employer : undefined,
+          },
+        })
+        .catch(() => {});
+    } else {
+      prisma.chatSession
+        .create({
+          data: {
+            userName: name,
+            userEmail: email,
+            userPhone: phone !== "Not provided" ? phone : undefined,
+            summary: issue || undefined,
+            ticketSent: true,
+            status: "new",
           },
         })
         .catch(() => {});

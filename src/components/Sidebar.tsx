@@ -14,11 +14,9 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Pencil,
   MoreHorizontal,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useUserName } from "./NameContext";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -48,13 +46,10 @@ const moreMenuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { name, userCode, setName, hasName } = useUserName();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [editingName, setEditingName] = useState(false);
-  const [nameInput, setNameInput] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -62,35 +57,15 @@ export default function Sidebar() {
 
   const sidebarWidth = collapsed ? "var(--sidebar-collapsed)" : "var(--sidebar-width)";
 
-  const saveName = () => {
-    if (nameInput.trim()) {
-      setName(nameInput);
-    }
-    setEditingName(false);
-  };
-
   return (
     <>
-      {/* Mobile top bar - clean, just logo and avatar */}
-      <div className="no-print fixed top-0 left-0 right-0 z-40 flex h-14 items-center justify-between bg-[var(--kennion-navy)] px-4 md:hidden">
+      {/* Mobile top bar - just the logo */}
+      <div className="no-print fixed top-0 left-0 right-0 z-40 flex h-14 items-center bg-[var(--kennion-navy)] px-4 md:hidden">
         <img
           src="/kennion-logo-white.svg"
           alt="Kennion"
           className="h-7"
         />
-        {hasName && (
-          <button
-            onClick={() => {
-              setNameInput(name);
-              setMobileOpen(true);
-            }}
-            className="flex items-center gap-2"
-          >
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-[11px] font-bold text-white">
-              {name.charAt(0)}
-            </div>
-          </button>
-        )}
       </div>
 
       {/* Mobile "More" menu popup */}
@@ -282,72 +257,6 @@ export default function Sidebar() {
             )}
           </button>
         </nav>
-
-        {/* User profile section - at bottom, with distinct background */}
-        {!collapsed && hasName && !editingName && (
-          <div className="mx-3 mb-3 mt-1">
-            <button
-              onClick={() => {
-                setNameInput(name);
-                setEditingName(true);
-              }}
-              className="group flex items-center gap-3 text-left w-full rounded-2xl bg-white/[0.07] border border-white/[0.1] px-3.5 py-3 transition-all hover:bg-white/[0.12] hover:border-white/[0.15]"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-[14px] font-bold text-white shadow-md shadow-emerald-500/25">
-                {name.charAt(0)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-white truncate">
-                  {name}
-                </p>
-                <p className="text-[10px] text-white/40 font-mono">{userCode}</p>
-              </div>
-              <Pencil
-                size={13}
-                className="shrink-0 text-white/30 group-hover:text-white/60 transition-colors"
-              />
-            </button>
-          </div>
-        )}
-
-        {/* Name edit mode - at bottom */}
-        {!collapsed && editingName && (
-          <div className="border-t border-white/[0.08] px-5 py-3.5">
-            <p className="text-[11px] text-white/40 mb-2 font-medium">Your first name</p>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") saveName();
-                  if (e.key === "Escape") setEditingName(false);
-                }}
-                autoFocus
-                className="flex-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-2 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-blue-400/50"
-                placeholder="First name"
-              />
-              <button
-                onClick={saveName}
-                className="rounded-lg bg-blue-500/20 px-3 py-2 text-[12px] font-semibold text-blue-400 hover:bg-blue-500/30 transition-colors"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Collapsed user avatar - at bottom */}
-        {collapsed && hasName && (
-          <div className="flex justify-center py-3">
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-[13px] font-bold text-white cursor-pointer shadow-md shadow-emerald-500/25"
-              title={name}
-            >
-              {name.charAt(0)}
-            </div>
-          </div>
-        )}
 
         {/* Collapse toggle (desktop only) */}
         <div className="hidden border-t border-white/[0.06] p-3 md:block">
