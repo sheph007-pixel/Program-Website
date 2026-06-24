@@ -1,6 +1,6 @@
 "use client";
 
-import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, Stethoscope, MessageSquare } from "lucide-react";
+import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
 const steps = [
@@ -80,20 +80,9 @@ export default function SelfPayPage() {
           Self-Pay Benefit
         </h1>
         <p className="page-subtitle">
-          Pay for a covered visit yourself, at any provider you like, and the
-          plan pays you back 100%. No copay, no coinsurance, no deductible, no
-          network limits. We have it set up for you.
-        </p>
-      </div>
-
-      {/* Differentiator highlight */}
-      <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 mb-6 animate-fade-in-up flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-500 shadow-md shadow-indigo-500/20">
-          <Stethoscope size={18} className="text-white" strokeWidth={1.8} />
-        </div>
-        <p className="text-[13px] font-medium text-blue-900 leading-snug">
-          See any doctor who takes Visa. No network, no referrals, unlike
-          traditional insurance.
+          A Self-Pay benefit is built into your health plan. See any provider,
+          with no network or referrals, then get 100% back. Here is how it
+          works.
         </p>
       </div>
 
@@ -145,13 +134,8 @@ export default function SelfPayPage() {
             itemized invoice to submit to my insurance.&rdquo;
           </p>
           <p className="mt-2 text-[12px] text-blue-800 leading-relaxed">
-            Then ask if they offer a discount for paying in full at the time of
-            service. Many providers do, because it saves them billing and
-            paperwork.
-          </p>
-          <p className="mt-2 text-[12px] text-blue-800 leading-relaxed">
-            You get your money back, the provider is paid on the spot, and the
-            plan keeps costs down.
+            Then ask if they give a discount for paying in full at the time of
+            service. Many providers do.
           </p>
         </div>
       </div>
