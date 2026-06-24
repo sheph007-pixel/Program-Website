@@ -147,12 +147,13 @@ export default function SelfPayPage() {
             What to Say at the Visit
           </h3>
           <p className="text-[12px] text-blue-900 leading-relaxed italic">
-            &ldquo;I&apos;ll pay up front with a Visa card, and I&apos;ll need an
-            itemized invoice to submit to my insurance.&rdquo;
+            &ldquo;I&apos;m self-paying today, please don&apos;t bill my
+            insurance. I&apos;ll pay in full now, and I just need an itemized
+            receipt.&rdquo;
           </p>
           <p className="mt-2 text-[12px] text-blue-800 leading-relaxed">
-            Then ask if they give a discount for paying in full at the time of
-            service. Many providers do.
+            Then ask if they give a discount for paying in full. Many providers
+            do.
           </p>
         </div>
       </div>
