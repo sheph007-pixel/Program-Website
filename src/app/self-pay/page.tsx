@@ -1,6 +1,6 @@
 "use client";
 
-import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, MessageSquare } from "lucide-react";
+import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, MessageSquare, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 const steps = [
@@ -76,13 +76,30 @@ export default function SelfPayPage() {
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-orange-500/25">
           <Wallet size={26} className="text-white" strokeWidth={1.8} />
         </div>
+        <div className="mb-2 inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-amber-600">
+          <Sparkles size={13} strokeWidth={2} />
+          Save on Care With an Innovative Approach
+        </div>
         <h1 className="page-title">
           Self-Pay Benefit
         </h1>
         <p className="page-subtitle">
-          A Self-Pay benefit is built into your health plan. See any provider,
-          with no network or referrals, then get 100% back. Here is how it
-          works.
+          Your health plan has a Self-Pay benefit built in. Instead of paying a
+          copay at every visit, pay for a covered visit up front and the plan
+          pays you back 100%, so it costs you nothing. See any provider, no
+          network needed.
+        </p>
+      </div>
+
+      {/* Everyone wins */}
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 mb-6 animate-fade-in-up flex items-start gap-3">
+        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
+          <BadgeCheck size={16} className="text-emerald-700" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] text-emerald-900 leading-relaxed">
+          <span className="font-bold">Everyone wins:</span> your doctor is paid
+          on the spot, the plan saves because cash prices are often lower than
+          insurance rates, and you skip the copay.
         </p>
       </div>
 
