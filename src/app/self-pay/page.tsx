@@ -1,31 +1,7 @@
 "use client";
 
-import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, Stethoscope, Percent, MessageSquare } from "lucide-react";
+import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, Stethoscope, MessageSquare } from "lucide-react";
 import Link from "next/link";
-
-const perks = [
-  {
-    label: "Any Doctor",
-    desc: "No provider network. See nearly any doctor who takes Visa.",
-    icon: Stethoscope,
-    color: "from-blue-600 to-indigo-500",
-    shadow: "shadow-indigo-500/20",
-  },
-  {
-    label: "100% Back",
-    desc: "No copay, no coinsurance, no deductible.",
-    icon: BadgeCheck,
-    color: "from-emerald-500 to-teal-500",
-    shadow: "shadow-emerald-500/20",
-  },
-  {
-    label: "Pay Less",
-    desc: "Ask for a cash discount when you pay up front.",
-    icon: Percent,
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-orange-500/20",
-  },
-];
 
 const steps = [
   {
@@ -110,27 +86,15 @@ export default function SelfPayPage() {
         </p>
       </div>
 
-      {/* Perks */}
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 mb-6 animate-fade-in-up">
-        {perks.map((p) => {
-          const Icon = p.icon;
-          return (
-            <div
-              key={p.label}
-              className="card flex flex-col items-center text-center p-5"
-            >
-              <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${p.color} shadow-md ${p.shadow} mb-3`}>
-                <Icon size={22} className="text-white" strokeWidth={1.8} />
-              </div>
-              <h3 className="text-[14px] font-bold text-[var(--kennion-navy)] mb-1">
-                {p.label}
-              </h3>
-              <p className="text-[13px] text-slate-400 leading-relaxed sm:text-[12px]">
-                {p.desc}
-              </p>
-            </div>
-          );
-        })}
+      {/* Differentiator highlight */}
+      <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 mb-6 animate-fade-in-up flex items-center gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-500 shadow-md shadow-indigo-500/20">
+          <Stethoscope size={18} className="text-white" strokeWidth={1.8} />
+        </div>
+        <p className="text-[13px] font-medium text-blue-900 leading-snug">
+          See any doctor who takes Visa. No network, no referrals, unlike
+          traditional insurance.
+        </p>
       </div>
 
       {/* How It Works */}
@@ -141,15 +105,20 @@ export default function SelfPayPage() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 mb-6 animate-fade-in-up stagger-1">
-        {steps.map((s) => {
+        {steps.map((s, i) => {
           const Icon = s.icon;
           return (
             <div
               key={s.label}
               className="card flex flex-col items-center text-center p-5"
             >
-              <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} shadow-md ${s.shadow} mb-3`}>
-                <Icon size={22} className="text-white" strokeWidth={1.8} />
+              <div className="relative mb-3">
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} shadow-md ${s.shadow}`}>
+                  <Icon size={22} className="text-white" strokeWidth={1.8} />
+                </div>
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full border border-slate-200 bg-white text-[11px] font-bold text-[var(--kennion-navy)] shadow-sm">
+                  {i + 1}
+                </span>
               </div>
               <h3 className="text-[14px] font-bold text-[var(--kennion-navy)] mb-1">
                 {s.label}
