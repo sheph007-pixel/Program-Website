@@ -1,13 +1,37 @@
 "use client";
 
-import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck } from "lucide-react";
+import { Wallet, CreditCard, Receipt, BadgeCheck, FileSignature, ArrowUpRight, AlertCircle, ClipboardCheck, Stethoscope, Percent, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useUserName } from "@/components/NameContext";
+
+const perks = [
+  {
+    label: "Any Doctor",
+    desc: "No provider network. See nearly any doctor who takes Visa.",
+    icon: Stethoscope,
+    color: "from-blue-600 to-indigo-500",
+    shadow: "shadow-indigo-500/20",
+  },
+  {
+    label: "100% Back",
+    desc: "No copay, no coinsurance, no deductible.",
+    icon: BadgeCheck,
+    color: "from-emerald-500 to-teal-500",
+    shadow: "shadow-emerald-500/20",
+  },
+  {
+    label: "Pay Less",
+    desc: "Ask for a cash discount when you pay up front.",
+    icon: Percent,
+    color: "from-amber-500 to-orange-500",
+    shadow: "shadow-orange-500/20",
+  },
+];
 
 const steps = [
   {
     label: "Pay at the Visit",
-    desc: "Use your Paytient card or any card to pay the provider in full at the time of service.",
+    desc: "Pay the provider in full with your Paytient Visa or any card, and ask for an itemized receipt.",
     icon: CreditCard,
     color: "from-amber-500 to-orange-500",
     shadow: "shadow-orange-500/20",
@@ -25,7 +49,7 @@ const steps = [
   },
   {
     label: "Get 100% Back",
-    desc: "Submit your receipt and the plan reimburses the full amount you paid.",
+    desc: "Submit your receipt and the plan pays back every dollar you spent.",
     icon: BadgeCheck,
     color: "from-emerald-500 to-teal-500",
     shadow: "shadow-emerald-500/20",
@@ -88,6 +112,29 @@ export default function SelfPayPage() {
         </p>
       </div>
 
+      {/* Perks */}
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 mb-6 animate-fade-in-up">
+        {perks.map((p) => {
+          const Icon = p.icon;
+          return (
+            <div
+              key={p.label}
+              className="card flex flex-col items-center text-center p-5"
+            >
+              <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${p.color} shadow-md ${p.shadow} mb-3`}>
+                <Icon size={22} className="text-white" strokeWidth={1.8} />
+              </div>
+              <h3 className="text-[14px] font-bold text-[var(--kennion-navy)] mb-1">
+                {p.label}
+              </h3>
+              <p className="text-[13px] text-slate-400 leading-relaxed sm:text-[12px]">
+                {p.desc}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
       {/* How It Works */}
       <div className="mb-3">
         <div className="badge mb-4 bg-amber-50 text-amber-600">
@@ -115,6 +162,31 @@ export default function SelfPayPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* What to Say at the Visit */}
+      <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 mb-6 animate-fade-in-up stagger-2 flex items-start gap-3">
+        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-100">
+          <MessageSquare size={16} className="text-blue-700" strokeWidth={2} />
+        </div>
+        <div>
+          <h3 className="text-[13px] font-bold text-blue-900 mb-1">
+            What to Say at the Visit
+          </h3>
+          <p className="text-[12px] text-blue-900 leading-relaxed italic">
+            &ldquo;I&apos;ll pay up front with a Visa card, and I&apos;ll need an
+            itemized invoice to submit to my insurance.&rdquo;
+          </p>
+          <p className="mt-2 text-[12px] text-blue-800 leading-relaxed">
+            Then ask if they offer a discount for paying in full at the time of
+            service. Many providers do, because it saves them billing and
+            paperwork.
+          </p>
+          <p className="mt-2 text-[12px] text-blue-800 leading-relaxed">
+            You get your money back, the provider is paid on the spot, and the
+            plan keeps costs down.
+          </p>
+        </div>
       </div>
 
       {/* What's Covered */}
