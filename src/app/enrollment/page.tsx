@@ -8,7 +8,7 @@ export default function EnrollmentPage() {
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">
-          Enrollment
+          Open Enrollment
         </h1>
         <p className="page-subtitle">
           Log in to the Enrollment Portal to see the specific

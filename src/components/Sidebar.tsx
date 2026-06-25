@@ -21,7 +21,7 @@ import { useState, useEffect } from "react";
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/plans", label: "Plans", icon: FileText },
-  { href: "/enrollment", label: "Enrollment", icon: ClipboardList },
+  { href: "/enrollment", label: "Open Enrollment", icon: ClipboardList },
   { href: "/app-download", label: "App", icon: Smartphone },
   { href: "/visa", label: "Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
