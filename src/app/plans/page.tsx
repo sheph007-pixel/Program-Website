@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { FileText, ExternalLink, X, Download, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { FileText, ExternalLink, X, Download } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
 import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 import { categoryMeta } from "@/lib/categoryMeta";
@@ -14,7 +12,6 @@ type Plan = {
   category: string;
   summaryUrl: string;
   pdfName: string | null;
-  hasWebPage?: boolean;
 };
 
 const categoryOrder = ["Health Plans", "Dental Plans", "Vision Plans", "Supplemental"];
@@ -37,7 +34,6 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
 };
 
 export default function PlansPage() {
-  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string>("Health Plans");
   const [plans, setPlans] = useState<Record<string, Plan[]>>({});
   const [loading, setLoading] = useState(true);
@@ -89,13 +85,10 @@ export default function PlansPage() {
   const meta = categoryMeta[activeCategory];
 
   const hasPdf = (plan: Plan) => !!plan.pdfName;
-  const hasWebPage = (plan: Plan) => !!plan.hasWebPage;
   const pdfUrl = (plan: Plan) => `/api/plans/${plan.id}/pdf`;
 
   const handlePlanClick = (plan: Plan) => {
-    if (hasWebPage(plan)) {
-      router.push(`/plans/${plan.id}`);
-    } else if (hasPdf(plan)) {
+    if (hasPdf(plan)) {
       setSelectedPlan(plan);
     } else {
       window.open(plan.summaryUrl, "_blank", "noopener,noreferrer");
@@ -166,12 +159,10 @@ export default function PlansPage() {
                   {plan.name}
                 </h3>
                 <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">
-                  {hasWebPage(plan) ? "View details" : hasPdf(plan) ? "View summary" : "View details"}
+                  {hasPdf(plan) ? "View summary" : "View details"}
                 </p>
               </div>
-              {hasWebPage(plan) ? (
-                <ArrowRight size={14} className="shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-blue-500" />
-              ) : hasPdf(plan) ? (
+              {hasPdf(plan) ? (
                 <FileText size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
               ) : (
                 <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
