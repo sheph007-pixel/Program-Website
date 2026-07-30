@@ -9,7 +9,6 @@ import {
   Smartphone,
   CreditCard,
   Stethoscope,
-  Users,
   MessageCircle,
   X,
   ChevronLeft,
@@ -25,7 +24,6 @@ const navItems = [
   { href: "/app-download", label: "App", icon: Smartphone },
   { href: "/visa", label: "Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
-  { href: "/providers", label: "Providers", icon: Users },
 ];
 
 // Bottom tab bar items for mobile
@@ -41,7 +39,6 @@ const mobileTabItems = [
 const moreMenuItems = [
   { href: "/visa", label: "Paytient Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
-  { href: "/providers", label: "Providers", icon: Users },
 ];
 
 export default function Sidebar() {
