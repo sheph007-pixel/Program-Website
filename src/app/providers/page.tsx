@@ -11,7 +11,6 @@ import {
   ArrowRight,
   BadgeCheck,
   Sparkles,
-  Headphones,
 } from "lucide-react";
 import Link from "next/link";
 import PhoneContact from "@/components/PhoneContact";
@@ -97,10 +96,6 @@ const settings: CareSetting[] = [
 ];
 
 export default function ProvidersPage() {
-  const openHelp = () => {
-    window.dispatchEvent(new Event("open-kennion-chat"));
-  };
-
   return (
     <div className="page-container">
       <div className="page-header animate-fade-in-up">
@@ -221,28 +216,6 @@ export default function ProvidersPage() {
           Need a Hand?
         </div>
       </div>
-      <div className="card p-5 mb-4 animate-fade-in-up">
-        <h3 className="text-[15px] font-bold text-[var(--kennion-navy)] mb-1.5">
-          Asked for a Deposit, or Told the Plan Is Not Accepted?
-        </h3>
-        <p className="text-[13px] text-slate-600 leading-relaxed mb-4">
-          You do not need to fix this yourself, and there is no contract for you
-          to negotiate. Give us the provider's name and billing contact and our
-          concierge team reaches out to their office directly to explain how the
-          plan pays. Since 2013, we have resolved these every time. In the
-          meantime, our concierge team keeps you from ever being blocked from
-          care.
-        </p>
-        <button
-          type="button"
-          onClick={openHelp}
-          className="btn-primary"
-        >
-          <Headphones size={20} strokeWidth={1.8} />
-          Get Help
-        </button>
-      </div>
-
       <PhoneContact
         number="(877) 500-3212"
         label="HealthJoy Concierge"
