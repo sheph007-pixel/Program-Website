@@ -41,11 +41,11 @@ const faqs = [
   },
   {
     q: "What if a provider does not accept the plan?",
-    a: "Around 90% of providers will accept and file your claim with EBPA or HealthEZ. If they do not, pay with your Paytient Visa Card and submit the receipt in the HealthJoy app for reimbursement through your plan's Self-Pay Benefit.",
+    a: "Around 90% of providers will accept and file your claim with EBPA or HealthEZ. If they do not, pay with your Paytient Visa Card and submit the receipt in the HealthJoy app for reimbursement through your plan.",
   },
   {
     q: "Can I get free office visits?",
-    a: "Yes. Virtual visits in the HealthJoy app are free. With your plan's Self-Pay Benefit, when you pay for an office visit in full with your Paytient Visa Card, the plan reimburses 100%. The HealthJoy concierge team will walk you through it.",
+    a: "Yes. Virtual visits in the HealthJoy app are free. When you pay for an office visit in full with your Paytient Visa Card, the plan reimburses 100%. The HealthJoy concierge team will walk you through it.",
   },
   {
     q: "Can I go to any provider or pharmacy?",

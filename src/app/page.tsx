@@ -7,7 +7,6 @@ import {
   Smartphone,
   CreditCard,
   UserSearch,
-  Wallet,
   HelpCircle,
   ArrowRight,
 } from "lucide-react";
@@ -60,15 +59,6 @@ const steps = [
   },
   {
     num: 6,
-    label: "Self-Pay Benefit",
-    sub: "Pay anywhere, get reimbursed",
-    icon: Wallet,
-    href: "/self-pay",
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-orange-500/20",
-  },
-  {
-    num: 7,
     label: "Get Help",
     sub: "We're here for you",
     icon: HelpCircle,

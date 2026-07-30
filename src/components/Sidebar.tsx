@@ -9,7 +9,6 @@ import {
   Smartphone,
   CreditCard,
   Stethoscope,
-  Wallet,
   Users,
   MessageCircle,
   X,
@@ -26,7 +25,6 @@ const navItems = [
   { href: "/app-download", label: "App", icon: Smartphone },
   { href: "/visa", label: "Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
-  { href: "/self-pay", label: "Self-Pay", icon: Wallet },
   { href: "/providers", label: "Providers", icon: Users },
 ];
 
@@ -43,7 +41,6 @@ const mobileTabItems = [
 const moreMenuItems = [
   { href: "/visa", label: "Paytient Visa", icon: CreditCard },
   { href: "/virtual-care", label: "Free Virtual Care", icon: Stethoscope },
-  { href: "/self-pay", label: "Self-Pay", icon: Wallet },
   { href: "/providers", label: "Providers", icon: Users },
 ];
 

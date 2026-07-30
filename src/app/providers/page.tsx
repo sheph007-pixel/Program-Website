@@ -51,9 +51,8 @@ const settings: CareSetting[] = [
     steps: [
       "Call any doctor, specialist, or urgent care you want and book the visit. No referral needed.",
       "Show your plan ID card at check-in and pay only your normal cost.",
-      "If the office is unsure or wants payment up front, use your Self-Pay benefit: pay with your Paytient card, send the receipt, and the plan pays you back 100%. Or let our concierge team call their billing office first.",
+      "If the office is unsure or wants payment up front, pay with your Paytient card and let our concierge team call their billing office to sort it out.",
     ],
-    links: [{ label: "How Self-Pay Works", href: "/self-pay" }],
   },
   {
     label: "Facilities",
@@ -231,7 +230,7 @@ export default function ProvidersPage() {
           to negotiate. Give us the provider's name and billing contact and our
           concierge team reaches out to their office directly to explain how the
           plan pays. Since 2013, we have resolved these every time. In the
-          meantime, your Self-Pay benefit keeps you from ever being blocked from
+          meantime, our concierge team keeps you from ever being blocked from
           care.
         </p>
         <button
