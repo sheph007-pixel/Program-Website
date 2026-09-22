@@ -1,27 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+// The site is closed until the new program launches. Only the coming soon
+// landing page at www.kennionprogram.com is served; every other host and path
+// returns a bare 404 so nothing else is reachable or indexable.
+const CANONICAL_HOST = "www.kennionprogram.com";
+const APEX_HOST = "kennionprogram.com";
 
-  // Skip auth check for login page and auth API
-  if (pathname === "/admin/login" || pathname === "/api/admin/auth") {
+// Railway's deploy healthcheck calls "/" with this host header.
+const HEALTHCHECK_HOST = "healthcheck.railway.app";
+
+const PUBLIC_PATHS = new Set([
+  "/",
+  "/robots.txt",
+  "/favicon.ico",
+  "/kennion-logo-white.svg",
+]);
+
+const NOINDEX = "noindex, nofollow, noarchive, nosnippet, noimageindex";
+
+function notFound() {
+  return new NextResponse("Not Found", {
+    status: 404,
+    headers: { "Content-Type": "text/plain", "X-Robots-Tag": NOINDEX },
+  });
+}
+
+export function middleware(req: NextRequest) {
+  const host = (req.headers.get("host") || "").split(":")[0].toLowerCase();
+  const { pathname } = req.nextUrl;
+  const isDev =
+    process.env.NODE_ENV !== "production" &&
+    (host === "localhost" || host === "127.0.0.1");
+
+  if (host === APEX_HOST && pathname === "/") {
+    return NextResponse.redirect(`https://${CANONICAL_HOST}/`, 308);
+  }
+
+  if (host === HEALTHCHECK_HOST && pathname === "/") {
     return NextResponse.next();
   }
 
-  const token = req.cookies.get("kennion_admin")?.value;
-  const expected = process.env.ADMIN_SESSION_SECRET || "kennion-admin-secret-2024";
-
-  if (token !== expected) {
-    if (pathname.startsWith("/api/admin")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const loginUrl = new URL("/admin/login", req.url);
-    return NextResponse.redirect(loginUrl);
+  if (host !== CANONICAL_HOST && !isDev) {
+    return notFound();
   }
 
-  return NextResponse.next();
+  if (PUBLIC_PATHS.has(pathname) || pathname.startsWith("/_next/static/")) {
+    return NextResponse.next();
+  }
+
+  return notFound();
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/api/admin/:path*"],
+  matcher: "/:path*",
 };
