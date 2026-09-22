@@ -13,7 +13,7 @@ const PUBLIC_PATHS = new Set([
   "/",
   "/robots.txt",
   "/favicon.ico",
-  "/kennion-logo-white.svg",
+  "/kennion-logo.png",
 ]);
 
 const NOINDEX = "noindex, nofollow, noarchive, nosnippet, noimageindex";
