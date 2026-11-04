@@ -4,9 +4,6 @@ import Link from "next/link";
 import {
   ClipboardList,
   Monitor,
-  Smartphone,
-  CreditCard,
-  UserSearch,
   HelpCircle,
   ArrowRight,
 } from "lucide-react";
@@ -17,7 +14,7 @@ const steps = [
     label: "Explore Plans",
     sub: "See all available benefits",
     icon: ClipboardList,
-    href: "/plans",
+    href: "/medical",
     color: "from-blue-600 to-blue-500",
     shadow: "shadow-blue-500/20",
   },
@@ -32,33 +29,6 @@ const steps = [
   },
   {
     num: 3,
-    label: "Get the App",
-    sub: "Your personalized benefits hub",
-    icon: Smartphone,
-    href: "/app-download",
-    color: "from-indigo-600 to-violet-500",
-    shadow: "shadow-violet-500/20",
-  },
-  {
-    num: 4,
-    label: "Get Visa Card",
-    sub: "Pay for care with 0% interest",
-    icon: CreditCard,
-    href: "/visa",
-    color: "from-violet-600 to-purple-500",
-    shadow: "shadow-purple-500/20",
-  },
-  {
-    num: 5,
-    label: "Free Virtual Care",
-    sub: "See a doctor at no cost",
-    icon: UserSearch,
-    href: "/virtual-care",
-    color: "from-cyan-600 to-teal-500",
-    shadow: "shadow-teal-500/20",
-  },
-  {
-    num: 6,
     label: "Get Help",
     sub: "We're here for you",
     icon: HelpCircle,
@@ -91,7 +61,7 @@ export default function HomePage() {
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2">
           {steps.map((step) => {
             const Icon = step.icon;
             const inner = (

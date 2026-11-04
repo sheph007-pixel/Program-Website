@@ -3,9 +3,9 @@ import QRCode from "qrcode";
 import { prisma, ensureDatabase } from "@/lib/db";
 import { getCategoryMeta } from "@/lib/categoryMeta";
 import { normalizePlanContent, scrubPlanContent, isPublished, hasRenderableContent } from "@/lib/planContent";
-import Link from "next/link";
 import { getTemplate, resolveValues, renderFromTemplate, FREE_VIRTUAL_CARE } from "@/lib/planTemplates";
 import PlanPageActions from "@/components/PlanPageActions";
+import { categoryPage } from "@/lib/planCategories";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +68,7 @@ export default async function PlanDetailPage({
 
   return (
     <div className="page-container">
-      <PlanPageActions />
+      <PlanPageActions backHref={`/${categoryPage(plan.category).slug}`} backLabel={`All ${categoryPage(plan.category).label} Plans`} />
 
       {/* Print-only branded header */}
       <div className="print-only mb-5 border-b border-slate-200 pb-3">
@@ -111,12 +111,6 @@ export default async function PlanDetailPage({
               </h2>
               <p className="text-[12px] text-slate-500">{FREE_VIRTUAL_CARE.note}</p>
             </div>
-            <Link
-              href={FREE_VIRTUAL_CARE.href}
-              className="no-print shrink-0 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-3.5 py-2 text-[12px] font-semibold text-white shadow-sm transition-all hover:shadow-md"
-            >
-              {FREE_VIRTUAL_CARE.cta} →
-            </Link>
           </div>
           <div className="grid grid-cols-3 gap-2.5">
             {FREE_VIRTUAL_CARE.services.map((s) => (
