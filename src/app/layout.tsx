@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { headers } from "next/headers";
 import LayoutShell from "@/components/LayoutShell";
 
 export const viewport: Viewport = {
@@ -26,15 +27,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Set by middleware while the site is behind the preview code; the page is
+  // then the code prompt, shown without the sidebar and help widget.
+  const locked = (await headers()).get("x-site-locked") === "1";
   return (
     <html lang="en">
       <body>
-        <LayoutShell>{children}</LayoutShell>
+        {locked ? children : <LayoutShell>{children}</LayoutShell>}
       </body>
     </html>
   );
