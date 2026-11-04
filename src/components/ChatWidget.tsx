@@ -26,7 +26,7 @@ const contacts = [
     icon: CalendarClock,
   },
   {
-    label: "Enrollment Portal",
+    label: "Employee Navigator",
     sub: "See your plans and rates, and enroll",
     href: ENROLLMENT_PORTAL_URL,
     display: "Log In",
