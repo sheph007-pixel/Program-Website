@@ -1,16 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import LayoutShell from "@/components/LayoutShell";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#faf8f5",
 };
 
 export const metadata: Metadata = {
-  title: "Kennion Program - Coming Soon",
-  description: "A new Kennion program is coming January 1st, 2027.",
+  title: "KENNION Benefits Program",
+  description:
+    "Welcome to the Kennion Benefits Program. Explore plans, enroll, and get care - all in one place.",
   robots: {
     index: false,
     follow: false,
@@ -28,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <LayoutShell>{children}</LayoutShell>
+      </body>
     </html>
   );
 }
