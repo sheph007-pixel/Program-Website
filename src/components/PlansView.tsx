@@ -3,6 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { FileText, ExternalLink, X, Download } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
+import PartnerCard from "@/components/PartnerCard";
+import CounselorCTA from "@/components/CounselorCTA";
+import { programBySlug } from "@/lib/programPartners";
 import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
 import { categoryMeta } from "@/lib/categoryMeta";
 
@@ -18,12 +21,10 @@ type SupportInfo = { type: "idcard"; label: string; sublabel: string; gradient: 
 
 const categorySupport: Record<string, SupportInfo[] | null> = {
   "Health Plans": [
-    { type: "idcard", label: "Health Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20" },
-    { type: "phone", number: "(877) 500-3212", label: "HealthJoy Concierge", sublabel: "Don't have your ID card? Call HealthJoy 24/7 and they can help", gradient: "from-purple-600 to-fuchsia-500", shadow: "shadow-purple-500/20" },
+    { type: "idcard", label: "Medical Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-blue-600 to-blue-500", shadow: "shadow-blue-500/20" },
   ],
   "Dental Plans": [
     { type: "idcard", label: "Dental Plan Support", sublabel: "Call the number on the back of your ID card", gradient: "from-indigo-600 to-violet-500", shadow: "shadow-violet-500/20" },
-    { type: "phone", number: "(877) 500-3212", label: "HealthJoy Concierge", sublabel: "Don't have your ID card? Call HealthJoy 24/7 and they can help", gradient: "from-purple-600 to-fuchsia-500", shadow: "shadow-purple-500/20" },
   ],
   "Vision Plans": [
     { type: "phone", number: "(800) 877-7195", label: "VSP Vision Care", sublabel: "Call VSP for vision plan questions and support", gradient: "from-violet-600 to-purple-500", shadow: "shadow-purple-500/20" },
@@ -31,8 +32,9 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
   "Supplemental": null,
 };
 
-export default function PlansView({ category, label }: { category: string; label: string }) {
-  const activeCategory = category;
+export default function PlansView({ slug }: { slug: string }) {
+  const program = programBySlug(slug);
+  const activeCategory = program.category;
   const [plans, setPlans] = useState<Record<string, Plan[]>>({});
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
@@ -94,24 +96,31 @@ export default function PlansView({ category, label }: { category: string; label
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container page-container-wide">
       <div className="page-header animate-fade-in-up">
-        <h1 className="page-title">
-          {label} Plans
-        </h1>
+        <h1 className="page-title">{program.title}</h1>
         <p className="page-subtitle">
-          These are all the {label.toLowerCase()} plans offered through the Kennion Benefits Program.
-          To see the specific plans and rates for your group, log in to enroll,
-          call the Benefits Enrollment Line, or check the HealthJoy app.
+          {program.tagline} These are all the {program.title.toLowerCase()} partners and plans
+          offered through BenSync. To see the specific plans and rates for your group, log in
+          to enroll, or schedule time to talk with a benefits counselor.
         </p>
       </div>
 
+      {/* Program partners */}
+      <section className="mb-8 rounded-[10px] border border-slate-200 bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)] animate-fade-in-up stagger-1 sm:p-5">
+        <div className="mb-3 text-[13px] font-semibold text-blue-700">{program.partnerNote}</div>
+        <div className={`grid grid-cols-1 gap-3 ${program.partners.length > 1 ? "md:grid-cols-3" : ""}`}>
+          {program.partners.map((partner) => (
+            <PartnerCard key={partner.name} partner={partner} />
+          ))}
+        </div>
+      </section>
+
       {/* Plan Tiles Grid */}
-      {loading ? (
-        <div className="text-center py-12 text-slate-400 text-sm">Loading plans...</div>
-      ) : activePlans.length === 0 ? (
-        <div className="text-center py-12 text-slate-400 text-sm">No plans available</div>
-      ) : (
+      {!loading && activePlans.length > 0 && (
+        <h2 className="mb-3 text-[17px] font-semibold text-slate-800">Plan Summaries</h2>
+      )}
+      {loading || activePlans.length === 0 ? null : (
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 animate-fade-in-up stagger-2">
           {activePlans.map((plan, i) => (
             <button
@@ -147,7 +156,7 @@ export default function PlansView({ category, label }: { category: string; label
           <div className="divider" />
           <div className="badge mb-4 bg-slate-100 text-slate-500">
             <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-            Get Help
+            Plan Support
           </div>
           <div className="flex flex-col gap-3 animate-fade-in-up">
             {categorySupport[activeCategory]!.map((info) =>
@@ -179,6 +188,10 @@ export default function PlansView({ category, label }: { category: string; label
           </div>
         </>
       )}
+
+      <div className="mt-8 animate-fade-in-up">
+        <CounselorCTA />
+      </div>
 
       {/* ===== PDF VIEWER MODAL ===== */}
       {selectedPlan && (

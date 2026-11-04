@@ -264,6 +264,10 @@ html {
   padding: 40px 24px 60px;
 }
 
+.page-container-wide {
+  max-width: 1040px;
+}
+
 @media (min-width: 768px) {
   .page-container {
     padding: 56px 32px 80px;

@@ -9,30 +9,28 @@ import {
   Headphones,
   CheckCircle,
   Paperclip,
-  Phone,
+  CalendarClock,
+  Monitor,
 } from "lucide-react";
+import { SCHEDULE_URL, ENROLLMENT_PORTAL_URL } from "@/lib/programPartners";
 import { useUserName } from "./NameContext";
 
 type ChatView = "form" | "success";
 
 const contacts = [
   {
-    label: "HealthJoy Concierge",
-    sub: "Care and plan questions, 24/7",
-    tel: "8775003212",
-    display: "(877) 500-3212",
+    label: "Talk With a Benefits Counselor",
+    sub: "Schedule a free 1-on-1 call",
+    href: SCHEDULE_URL,
+    display: "Schedule",
+    icon: CalendarClock,
   },
   {
-    label: "Enrollment Help Line",
-    sub: "Sign up or enrollment questions",
-    tel: "8336141622",
-    display: "(833) 614-1622",
-  },
-  {
-    label: "Paytient Card Support",
-    sub: "Help with your Paytient Visa",
-    tel: "8663459591",
-    display: "(866) 345-9591",
+    label: "Enrollment Portal",
+    sub: "See your plans and rates, and enroll",
+    href: ENROLLMENT_PORTAL_URL,
+    display: "Log In",
+    icon: Monitor,
   },
 ];
 
@@ -183,17 +181,19 @@ export default function ChatWidget() {
               <div className="px-4 py-5 sm:px-5">
                 {/* Contacts */}
                 <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-400 mb-2">
-                  Need help now? Call the right line
+                  Need help now?
                 </p>
                 <div className="space-y-2 mb-5">
                   {contacts.map((c) => (
                     <a
-                      key={c.tel}
-                      href={`tel:${c.tel}`}
+                      key={c.label}
+                      href={c.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 transition-colors hover:border-blue-400"
                     >
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-                        <Phone size={15} className="text-blue-600" strokeWidth={2} />
+                        <c.icon size={15} className="text-blue-600" strokeWidth={2} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] font-semibold text-[var(--kennion-navy)] leading-tight">

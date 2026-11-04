@@ -9,9 +9,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "KENNION Benefits Program",
+  title: "BenSync Benefits Program",
   description:
-    "Welcome to the Kennion Benefits Program. Explore plans, enroll, and get care - all in one place.",
+    "BenSync, the benefits program powered by Kennion Benefit Advisors. Explore your benefits, enroll, and talk with a licensed benefits counselor.",
+  icons: {
+    icon: [{ url: "/bensync/favicon-32.png", sizes: "32x32", type: "image/png" }],
+    apple: [{ url: "/bensync/favicon-180.png", sizes: "180x180" }],
+  },
   robots: {
     index: false,
     follow: false,

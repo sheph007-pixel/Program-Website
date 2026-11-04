@@ -133,17 +133,6 @@ export function getTemplate(category: string): CategoryTemplate | null {
   return PLAN_TEMPLATES[category] ?? null;
 }
 
-/**
- * Free virtual care included on EVERY medical plan (program-wide benefit via the
- * HealthJoy app, powered by Teladoc). Same on all plans, so it's hardcoded rather
- * than an editable per-plan field.
- */
-export const FREE_VIRTUAL_CARE = {
-  heading: "Free Virtual Care, included on every plan",
-  note: "$0 visits through the HealthJoy app, powered by Teladoc",
-  services: ["Virtual Primary Care", "General Urgent Care", "Mental Health"],
-};
-
 export function templateFields(template: CategoryTemplate): TemplateField[] {
   return template.sections.flatMap((s) => s.fields);
 }

@@ -1,102 +1,127 @@
-"use client";
-
 import Link from "next/link";
-import {
-  ClipboardList,
-  Monitor,
-  HelpCircle,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight, Monitor, ArrowUpRight } from "lucide-react";
+import CounselorCTA from "@/components/CounselorCTA";
+import { PROGRAMS, ENROLLMENT_PORTAL_URL } from "@/lib/programPartners";
 
-const steps = [
-  {
-    num: 1,
-    label: "Explore Plans",
-    sub: "See all available benefits",
-    icon: ClipboardList,
-    href: "/medical",
-    color: "from-blue-600 to-blue-500",
-    shadow: "shadow-blue-500/20",
-  },
-  {
-    num: 2,
-    label: "Enroll",
-    sub: "See your plans and rates",
-    icon: Monitor,
-    href: "/enrollment",
-    color: "from-blue-600 to-indigo-500",
-    shadow: "shadow-indigo-500/20",
-  },
-  {
-    num: 3,
-    label: "Get Help",
-    sub: "We're here for you",
-    icon: HelpCircle,
-    href: "#",
-    chat: true,
-    color: "from-teal-600 to-emerald-500",
-    shadow: "shadow-emerald-500/20",
-  },
+const steps: [string, string][] = [
+  [
+    "Your Employer Picks Your Partners",
+    "Each group chooses one partner for each benefit, so your exact plans and rates depend on your employer.",
+  ],
+  [
+    "Talk With a Benefits Counselor",
+    "Schedule a free 1-on-1 call with a licensed counselor to go through every option and what it costs you.",
+  ],
+  [
+    "Enroll",
+    "Make your elections in the Enrollment Portal during your group's open enrollment, or when you are newly hired.",
+  ],
 ];
 
 export default function HomePage() {
-  const handleClick = (step: (typeof steps)[number]) => {
-    if (step.chat) {
-      window.dispatchEvent(new CustomEvent("open-kennion-chat"));
-    }
-  };
-
   return (
-    <div className="flex min-h-screen flex-col justify-center px-5 py-6 sm:px-8">
-      <div className="mx-auto w-full max-w-[620px]">
-        {/* Header */}
-        <div className="mb-5 text-center animate-fade-in-up">
-          <h1 className="text-[26px] font-extrabold tracking-tight text-[var(--kennion-navy)] sm:text-[32px]" style={{ letterSpacing: "-0.02em" }}>
-            Your Benefits Program
-          </h1>
-          <p className="mt-1.5 text-[14px] text-slate-500 sm:text-[15px]">
-            Welcome to the Kennion Benefits Program. Whether you&apos;re new or
-            already enrolled, everything you need is right here.
+    <div>
+      {/* Hero */}
+      <header className="bg-blue-900 px-5 pt-10 pb-12 text-white sm:px-8">
+        <div className="mx-auto max-w-[1040px]">
+          <div className="text-[12px] font-bold uppercase tracking-[0.6px] text-sky-400">
+            One Program for Every Employer
+          </div>
+          <img
+            src="/bensync/wordmark-reversed.png"
+            alt="BenSync"
+            className="mt-3 h-11 w-auto sm:h-14"
+          />
+          <div className="mt-2 text-[14px] font-medium text-white/70">Powered by Kennion Benefit Advisors</div>
+          <p className="mt-4 max-w-[720px] text-[15.5px] leading-relaxed text-white/85">
+            BenSync is one benefits program shared by employers of every size, much like an
+            association plan, and new groups can join all year. Kennion Benefit Advisors works
+            with your employer to choose from the program&apos;s partners below. Your group&apos;s
+            specific plans and rates are set up in the Enrollment Portal: log in to enroll, or
+            schedule time to talk with a licensed benefits counselor.
           </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={ENROLLMENT_PORTAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-5 py-3 text-[14.5px] font-semibold text-white transition-colors hover:bg-blue-500"
+            >
+              <Monitor size={18} strokeWidth={1.8} />
+              Enrollment Portal
+              <ArrowUpRight size={15} className="opacity-70" />
+            </a>
+            <Link
+              href="/enrollment"
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-white/25 px-5 py-3 text-[14.5px] font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              How Enrollment Works
+            </Link>
+          </div>
         </div>
+      </header>
 
-        {/* Steps */}
-        <div className="grid grid-cols-1 gap-2">
-          {steps.map((step) => {
-            const Icon = step.icon;
-            const inner = (
-              <div className={`card card-interactive group flex items-center gap-3 p-3 animate-fade-in-up stagger-${step.num}`}>
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.color} shadow-md ${step.shadow} transition-transform duration-300 group-hover:scale-105`}>
-                  <Icon size={18} className="text-white" strokeWidth={1.8} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)] leading-tight">
-                    {step.label}
-                  </h3>
-                  {step.sub && (
-                    <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">{step.sub}</p>
-                  )}
-                </div>
-                <ArrowRight size={16} className="shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-500" />
+      <main className="mx-auto max-w-[1040px] px-5 pt-8 pb-14 sm:px-8">
+        {/* Benefits */}
+        <h2 className="mb-3 text-[20px] font-semibold text-slate-800">What the Program Offers</h2>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {PROGRAMS.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/${p.slug}`}
+              className="group flex flex-col rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition-colors hover:border-blue-600"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-[18px] font-semibold text-slate-800">{p.title}</h3>
+                <ArrowRight size={17} className="text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-blue-600" />
               </div>
-            );
-
-            if (step.chat) {
-              return (
-                <button key={step.num} onClick={() => handleClick(step)} className="text-left">
-                  {inner}
-                </button>
-              );
-            }
-
-            return (
-              <Link key={step.num} href={step.href}>
-                {inner}
-              </Link>
-            );
-          })}
+              <p className="mt-1 text-[14px] leading-relaxed text-slate-600">{p.tagline}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                {p.partners.map((partner) => (
+                  <span key={partner.name} className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[12.5px] font-medium text-slate-700">
+                    <span
+                      aria-hidden
+                      className="flex h-4.5 w-4.5 items-center justify-center rounded text-[10px] font-bold text-white"
+                      style={{ background: partner.color }}
+                    >
+                      {partner.mark}
+                    </span>
+                    {partner.name}
+                  </span>
+                ))}
+              </div>
+              {p.partners.length > 1 && (
+                <div className="mt-2 text-[12.5px] font-semibold text-blue-700">{p.partnerNote}</div>
+              )}
+            </Link>
+          ))}
         </div>
-      </div>
+
+        {/* Counselor */}
+        <div className="mt-8">
+          <CounselorCTA />
+        </div>
+
+        {/* How it works */}
+        <h2 className="mt-10 mb-3 text-[20px] font-semibold text-slate-800">How It Works</h2>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          {steps.map(([title, body], i) => (
+            <div key={title} className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+              <div className="mb-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-blue-900 text-[14px] font-bold text-white">
+                {i + 1}
+              </div>
+              <div className="text-[15.5px] font-semibold text-slate-800">{title}</div>
+              <p className="mt-1 text-[14px] leading-relaxed text-slate-600">{body}</p>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-10 text-center text-[12px] leading-relaxed text-slate-400">
+          Plans, benefits and rates are set by each carrier and vary by employer. Your
+          enrollment materials confirm what your group offers. Nothing here is an offer of
+          coverage or a guarantee of benefits.
+        </p>
+      </main>
     </div>
   );
 }

@@ -52,10 +52,11 @@ export default function Sidebar() {
       {/* Mobile top bar - just the logo */}
       <div className="no-print fixed top-0 left-0 right-0 z-40 flex h-14 items-center bg-[var(--kennion-navy)] px-4 md:hidden">
         <img
-          src="/kennion-logo-white.svg"
-          alt="Kennion"
-          className="h-7"
+          src="/bensync/wordmark-reversed.png"
+          alt="BenSync"
+          className="h-6 w-auto"
         />
+        <span className="ml-auto text-[11px] text-white/50">Powered by Kennion</span>
       </div>
 
       {/* Mobile bottom tab bar */}
@@ -115,18 +116,16 @@ export default function Sidebar() {
           collapsed ? "justify-center px-3 py-5" : "px-5 py-6"
         }`}>
           {collapsed ? (
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/20">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3l9 4.5v5.5c0 5.25-3.75 9.5-9 11-5.25-1.5-9-5.75-9-11V7.5L12 3z"/>
-                <path d="M9 12l2 2 4-4"/>
-              </svg>
-            </div>
+            <img src="/bensync/monogram.png" alt="BenSync" className="h-9 w-9" />
           ) : (
-            <img
-              src="/kennion-logo-white.svg"
-              alt="Kennion Benefits Program"
-              className="h-11 w-auto"
-            />
+            <div>
+              <img
+                src="/bensync/wordmark-reversed.png"
+                alt="BenSync"
+                className="h-8 w-auto"
+              />
+              <div className="mt-1.5 text-[11px] text-white/50">Powered by Kennion Benefit Advisors</div>
+            </div>
           )}
         </div>
 
@@ -218,7 +217,7 @@ export default function Sidebar() {
         {/* Footer */}
         {!collapsed && (
           <div className="border-t border-white/[0.06] px-5 py-3 text-[11px] text-white/30">
-            &copy; {new Date().getFullYear()} Kennion Benefits Program
+            &copy; {new Date().getFullYear()} BenSync by Kennion Benefit Advisors
           </div>
         )}
       </aside>

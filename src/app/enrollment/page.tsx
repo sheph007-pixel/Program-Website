@@ -1,55 +1,46 @@
-"use client";
-
 import { Monitor, ArrowUpRight } from "lucide-react";
-import PhoneContact from "@/components/PhoneContact";
+import CounselorCTA from "@/components/CounselorCTA";
+import { ENROLLMENT_PORTAL_URL } from "@/lib/programPartners";
+
+const whenToEnroll: [string, string][] = [
+  ["Open Enrollment", "Once a year, during the window your employer sets, you can join, change or drop your plans."],
+  ["New Hires", "When you start a new job, you can enroll within your employer's new-hire window."],
+  ["Life Events", "Marriage, a new baby or losing other coverage lets you make changes outside open enrollment."],
+];
 
 export default function EnrollmentPage() {
   return (
-    <div className="page-container">
+    <div className="page-container page-container-wide">
       <div className="page-header animate-fade-in-up">
-        <h1 className="page-title">
-          Open Enrollment
-        </h1>
+        <h1 className="page-title">Open Enrollment</h1>
         <p className="page-subtitle">
-          Log in to the Enrollment Portal to see the specific
-          plans and rates available for your group. Everything is customized for
-          you based on your employer. Not sure where to start? Call the
-          Enrollment Help Line and a Benefits Coach will walk you through it.
+          Log in to the Enrollment Portal to see the plans and rates available for your
+          group. Everything is customized for you based on your employer. Not sure where to
+          start? Schedule a call and a licensed benefits counselor will walk you through it.
         </p>
       </div>
 
       {/* Enrollment Portal */}
-      <div className="animate-fade-in-up stagger-1">
-        <a
-          href="https://goenroll.employeenavigator.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-        >
+      <div className="mx-auto max-w-[720px] animate-fade-in-up stagger-1">
+        <a href={ENROLLMENT_PORTAL_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
           <Monitor size={20} strokeWidth={1.8} />
           Enrollment Portal
           <ArrowUpRight size={16} className="ml-1 opacity-60" />
         </a>
       </div>
 
-      <div className="divider" />
-
-      {/* Help Line */}
-      <div className="animate-fade-in-up stagger-2 text-center">
-        <p className="mb-5 text-[15px] text-slate-500">
-          Need help enrolling? A Benefits Coach can walk you through your
-          options, explain your rates, and get you enrolled over the phone.
-        </p>
+      <div className="mt-8 animate-fade-in-up stagger-2">
+        <CounselorCTA />
       </div>
 
-      <div className="animate-fade-in-up stagger-3">
-        <PhoneContact
-          number="(833) 614-1622"
-          label="Enrollment Help Line"
-          sublabel="Live enrollment support from your Benefits Coach"
-          gradient="from-emerald-600 to-teal-500"
-          shadow="shadow-emerald-500/20"
-        />
+      <h2 className="mt-10 mb-3 text-[18px] font-semibold text-slate-800">When You Can Enroll</h2>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3 animate-fade-in-up stagger-3">
+        {whenToEnroll.map(([title, body]) => (
+          <div key={title} className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+            <div className="text-[15.5px] font-semibold text-slate-800">{title}</div>
+            <p className="mt-1 text-[14px] leading-relaxed text-slate-600">{body}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
