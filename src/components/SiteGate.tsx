@@ -41,7 +41,6 @@ export default function SiteGate() {
           <Lock size={20} strokeWidth={2} />
         </div>
         <h1 className="mt-3 text-[19px] font-semibold text-slate-800">Enter Access Code</h1>
-        <p className="mt-1 text-[14px] text-slate-500">This site is not open to the public yet.</p>
         <input
           type="password"
           inputMode="numeric"
