@@ -34,8 +34,8 @@ export default function HomePage() {
           />
           <div className="mt-2 text-[14px] font-medium text-white/70">Powered by Kennion Benefit Advisors</div>
           <p className="mt-4 max-w-[720px] text-[15.5px] leading-relaxed text-white/85">
-            BenSync is one benefits program shared by employers of every size, much like an
-            association plan, and new groups can join all year. Kennion Benefit Advisors works
+            BenSync is one benefits program shared by employers of every size, and new groups
+            can join all year. Kennion Benefit Advisors works
             with your employer to choose from the program&apos;s partners below. Your group&apos;s
             specific plans and rates are set up in the Enrollment Portal: log in to enroll, or
             schedule time to talk with a licensed benefits counselor.
