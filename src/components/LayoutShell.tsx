@@ -20,7 +20,7 @@ export default function LayoutShell({ children }: { children: ReactNode }) {
     <NameProvider>
       <Sidebar />
       <main
-        className="min-h-screen max-w-[100vw] overflow-x-hidden bg-[#f8fafc] pt-14 pb-16 transition-all duration-300 ease-in-out md:max-w-none md:pt-0 md:pb-0"
+        className="min-h-screen max-w-[100vw] overflow-x-hidden bg-[#fafbfc] pt-14 pb-16 transition-all duration-300 ease-in-out md:max-w-none md:pt-0 md:pb-0"
         style={{ marginLeft: "var(--current-sidebar-width, 0px)" }}
       >
         {children}

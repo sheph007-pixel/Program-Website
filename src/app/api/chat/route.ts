@@ -40,17 +40,17 @@ async function notifyNewChat(
       subject: `New Chat: ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #0a1929, #132f4c); padding: 20px 24px; border-radius: 12px 12px 0 0;">
+          <div style="background: linear-gradient(135deg, #0b2138, #0f2a47); padding: 20px 24px; border-radius: 12px 12px 0 0;">
             <h2 style="color: white; margin: 0; font-size: 16px;">New Chat Started</h2>
           </div>
-          <div style="background: white; padding: 24px; border: 1px solid #e2e8f0; border-top: none;">
-            <p style="margin: 0 0 8px; color: #334155; font-size: 14px;"><strong>${name}</strong> sent their first message.</p>
-            <p style="margin: 0 0 16px; color: #64748b; font-size: 13px;">Code: ${code}</p>
-            <div style="margin: 0 0 20px; padding: 12px 14px; background: #f8fafc; border-left: 3px solid #2563eb; border-radius: 6px; color: #1e293b; font-size: 14px; line-height: 1.5;">${safeMessage}</div>
-            <a href="https://www.kennionprogram.com/admin/conversations" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;">View Conversations</a>
+          <div style="background: white; padding: 24px; border: 1px solid #e0e4e6; border-top: none;">
+            <p style="margin: 0 0 8px; color: #444a4e; font-size: 14px;"><strong>${name}</strong> sent their first message.</p>
+            <p style="margin: 0 0 16px; color: #6b7276; font-size: 13px;">Code: ${code}</p>
+            <div style="margin: 0 0 20px; padding: 12px 14px; background: #fafbfc; border-left: 3px solid #1f8a5b; border-radius: 6px; color: #333333; font-size: 14px; line-height: 1.5;">${safeMessage}</div>
+            <a href="https://www.kennionprogram.com/admin/conversations" style="display: inline-block; background: linear-gradient(135deg, #1f8a5b, #5cc792); color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;">View Conversations</a>
           </div>
-          <div style="background: #f1f5f9; padding: 12px 24px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; border-top: none;">
-            <p style="margin: 0; color: #94a3b8; font-size: 11px;">Kennion Benefits Program</p>
+          <div style="background: #f2f4f5; padding: 12px 24px; border-radius: 0 0 12px 12px; border: 1px solid #e0e4e6; border-top: none;">
+            <p style="margin: 0; color: #8b9296; font-size: 11px;">Kennion Benefits Program</p>
           </div>
         </div>
       `,
