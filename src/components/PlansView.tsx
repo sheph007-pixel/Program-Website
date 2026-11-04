@@ -100,9 +100,8 @@ export default function PlansView({ slug }: { slug: string }) {
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">{program.title}</h1>
         <p className="page-subtitle">
-          {program.tagline} These are all the {program.title.toLowerCase()} partners and plans
-          offered through BenSync. To see the specific plans and rates for your group, log in
-          to enroll, or schedule time to talk with a benefits counselor.
+          {program.tagline} Your group&apos;s specific plans and rates are in Employee
+          Navigator.
         </p>
       </div>
 

@@ -14,17 +14,16 @@ export default function EnrollmentPage() {
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">Open Enrollment</h1>
         <p className="page-subtitle">
-          Log in to the Enrollment Portal to see the plans and rates available for your
-          group. Everything is customized for you based on your employer. Not sure where to
-          start? Schedule a call and a licensed benefits counselor will walk you through it.
+          Log in to Employee Navigator to see your group&apos;s plans and rates and enroll.
+          Not sure where to start? Schedule a call with a licensed benefits counselor.
         </p>
       </div>
 
-      {/* Enrollment Portal */}
+      {/* Employee Navigator */}
       <div className="mx-auto max-w-[720px] animate-fade-in-up stagger-1">
         <a href={ENROLLMENT_PORTAL_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
           <Monitor size={20} strokeWidth={1.8} />
-          Enrollment Portal
+          Employee Navigator
           <ArrowUpRight size={16} className="ml-1 opacity-60" />
         </a>
       </div>
