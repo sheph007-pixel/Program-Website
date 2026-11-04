@@ -1,6 +1,7 @@
 export async function register() {
-  // Only run on server (not edge)
-  if (typeof process !== "undefined" && process.env.DATABASE_URL) {
+  // Only run in the Node.js server runtime. Middleware runs on the edge
+  // runtime, where Prisma cannot connect, so skip it there.
+  if (process.env.NEXT_RUNTIME === "nodejs" && process.env.DATABASE_URL) {
     try {
       const { ensureDatabase } = await import("@/lib/db");
       await ensureDatabase();
