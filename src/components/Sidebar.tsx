@@ -158,7 +158,7 @@ export default function Sidebar() {
         }`}
         style={{
           width: mobileOpen ? "280px" : sidebarWidth,
-          background: "linear-gradient(180deg, #0a1929 0%, #0d2137 50%, #0a1929 100%)",
+          background: "linear-gradient(180deg, #0b2138 0%, #0b2138 50%, #0b2138 100%)",
         }}
       >
         {/* Close button (mobile) */}

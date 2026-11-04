@@ -21,7 +21,7 @@ export default function AdminNav() {
   };
 
   return (
-    <header className="border-b border-slate-200 bg-gradient-to-r from-[#0a1929] to-[#132f4c]">
+    <header className="border-b border-slate-200 bg-gradient-to-r from-[#0b2138] to-[#0f2a47]">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">

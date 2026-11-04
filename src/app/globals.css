@@ -1,17 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Brand palette matched to app.kennion.com (BenSync): green for actions,
+   navy for headings and the dark rail, cool grey neutrals. Tailwind's blue,
+   indigo, sky, cyan and slate scales are remapped so every existing utility
+   class picks up the new look. */
+@theme {
+  --font-sans: "Google Sans Flex", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --color-blue-50: #f0f8f4;
+  --color-blue-100: #e8f3ed;
+  --color-blue-200: #bfe0cd;
+  --color-blue-300: #95cdae;
+  --color-blue-400: #5fb38a;
+  --color-blue-500: #2f9a68;
+  --color-blue-600: #1f8a5b;
+  --color-blue-700: #16714a;
+  --color-blue-800: #135c3d;
+  --color-blue-900: #0f2a47;
+  --color-blue-950: #0b2138;
+
+  --color-indigo-50: #f0f8f4;
+  --color-indigo-100: #e8f3ed;
+  --color-indigo-200: #bfe0cd;
+  --color-indigo-300: #95cdae;
+  --color-indigo-400: #4fa97e;
+  --color-indigo-500: #23905f;
+  --color-indigo-600: #16714a;
+  --color-indigo-700: #135c3d;
+  --color-indigo-800: #0f4a31;
+  --color-indigo-900: #0f2a47;
+  --color-indigo-950: #0b2138;
+
+  --color-sky-50: #effaf4;
+  --color-sky-100: #dcf4e7;
+  --color-sky-200: #c2ecd5;
+  --color-sky-300: #a6e3c2;
+  --color-sky-400: #7fd6a8;
+  --color-sky-500: #5cc792;
+  --color-sky-600: #3fae7a;
+  --color-sky-700: #2f8f63;
+  --color-sky-800: #23704d;
+  --color-sky-900: #1a573c;
+  --color-sky-950: #103a28;
+
+  --color-cyan-50: #effaf4;
+  --color-cyan-100: #dcf4e7;
+  --color-cyan-200: #c2ecd5;
+  --color-cyan-300: #a6e3c2;
+  --color-cyan-400: #7fd6a8;
+  --color-cyan-500: #5cc792;
+  --color-cyan-600: #3fae7a;
+  --color-cyan-700: #2f8f63;
+  --color-cyan-800: #23704d;
+  --color-cyan-900: #1a573c;
+  --color-cyan-950: #103a28;
+
+  --color-slate-50: #fafbfc;
+  --color-slate-100: #f2f4f5;
+  --color-slate-200: #e0e4e6;
+  --color-slate-300: #c9d1d8;
+  --color-slate-400: #8b9296;
+  --color-slate-500: #6b7276;
+  --color-slate-600: #5c6368;
+  --color-slate-700: #444a4e;
+  --color-slate-800: #333333;
+  --color-slate-900: #202429;
+  --color-slate-950: #16191c;
+}
 
 :root {
-  --kennion-navy: #0a1929;
-  --kennion-navy-light: #132f4c;
-  --kennion-blue: #0066cc;
-  --kennion-blue-hover: #0052a3;
-  --kennion-blue-light: #e6f0ff;
-  --kennion-accent: #00b4d8;
-  --kennion-gradient: linear-gradient(135deg, #0066cc 0%, #0099e6 50%, #00b4d8 100%);
-  --kennion-gradient-dark: linear-gradient(135deg, #0a1929 0%, #132f4c 100%);
-  --kennion-light: #f0f5ff;
+  --kennion-navy: #0b2138;
+  --kennion-navy-light: #0f2a47;
+  --kennion-blue: #1f8a5b;
+  --kennion-blue-hover: #16714a;
+  --kennion-blue-light: #e8f3ed;
+  --kennion-accent: #7fd6a8;
+  --kennion-gradient: linear-gradient(135deg, #1f8a5b 0%, #16714a 100%);
+  --kennion-gradient-dark: linear-gradient(135deg, #0b2138 0%, #0f2a47 100%);
+  --kennion-light: #e8f3ed;
   --sidebar-width: 240px;
   --sidebar-collapsed: 72px;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
@@ -25,11 +93,11 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  font-family: "Google Sans Flex", -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   margin: 0;
-  background: #f8fafc;
-  color: var(--kennion-navy);
+  background: #f5f7f9;
+  color: #333333;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -52,11 +120,11 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #c9d1d8;
   border-radius: 100px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #8b9296;
 }
 
 /* Animations */
@@ -93,8 +161,8 @@ html {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.2); }
-  50% { box-shadow: 0 0 0 8px rgba(0, 102, 204, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(31, 138, 91, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(31, 138, 91, 0); }
 }
 
 .animate-fade-in-up {
@@ -126,15 +194,15 @@ html {
   gap: 10px;
   width: 100%;
   padding: 16px 24px;
-  background: var(--kennion-gradient);
+  background: var(--kennion-blue);
   color: white;
   font-weight: 600;
   font-size: 15px;
-  border-radius: 12px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.25);
+  box-shadow: 0 4px 12px rgba(31, 138, 91, 0.25);
   text-decoration: none;
   position: relative;
   overflow: hidden;
@@ -150,8 +218,9 @@ html {
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 102, 204, 0.35);
+  background: var(--kennion-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(31, 138, 91, 0.35);
 }
 
 .btn-primary:hover::before {
@@ -165,15 +234,15 @@ html {
 /* Card styles */
 .card {
   background: white;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  border: 1px solid #e5e9ee;
   box-shadow: var(--shadow-sm);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
   box-shadow: var(--shadow-lg);
-  border-color: #cbd5e1;
+  border-color: #c9d1d8;
   transform: translateY(-2px);
 }
 
@@ -225,7 +294,7 @@ html {
 .page-subtitle {
   font-size: 16px;
   line-height: 1.6;
-  color: #64748b;
+  color: #6b7276;
   max-width: 540px;
   margin: 0 auto;
 }
@@ -254,7 +323,7 @@ html {
 /* Divider */
 .divider {
   height: 1px;
-  background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+  background: linear-gradient(to right, transparent, #e0e4e6, transparent);
   margin: 32px 0;
 }
 
@@ -309,7 +378,7 @@ html {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #e0e4e6;
     padding-top: 8px;
     background: #fff;
   }
@@ -337,7 +406,7 @@ html {
 
   .card {
     box-shadow: none !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid #e0e4e6 !important;
     break-inside: avoid;
     transform: none !important;
   }

@@ -155,7 +155,7 @@ export default function ChatWidget() {
           className="fixed inset-0 z-[70] flex flex-col bg-white sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[600px] sm:w-[400px] sm:rounded-2xl sm:border sm:border-slate-200 sm:shadow-2xl md:bottom-6 md:right-6"
         >
           {/* ===== HEADER ===== */}
-          <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white/80 backdrop-blur-xl px-4 py-3 sm:bg-gradient-to-r sm:from-[#0a1929] sm:to-[#132f4c] sm:border-0 sm:rounded-t-2xl sm:py-4 sm:px-5">
+          <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white/80 backdrop-blur-xl px-4 py-3 sm:bg-gradient-to-r sm:from-[#0b2138] sm:to-[#0f2a47] sm:border-0 sm:rounded-t-2xl sm:py-4 sm:px-5">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400">
               <Headphones size={18} className="text-white" strokeWidth={1.8} />
             </div>
@@ -346,7 +346,7 @@ export default function ChatWidget() {
                 <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50">
                   <CheckCircle size={40} className="text-emerald-500" strokeWidth={1.5} />
                 </div>
-                <h4 className="text-[20px] sm:text-[17px] font-bold text-[#0a1929] mb-2">
+                <h4 className="text-[20px] sm:text-[17px] font-bold text-[#0b2138] mb-2">
                   Request Submitted!
                 </h4>
                 <p className="text-[15px] sm:text-[13px] text-slate-500 text-center max-w-[300px] leading-relaxed">
