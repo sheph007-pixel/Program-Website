@@ -37,7 +37,7 @@ export const PROGRAMS: Program[] = [
     slug: "medical",
     category: "Health Plans",
     title: "Medical",
-    partnerNote: "Your Employer Chooses One of These Partners",
+    partnerNote: "Your Employer Picks One of These Partners",
     partners: [
       {
         name: "UnitedHealthcare",
@@ -90,7 +90,7 @@ export const PROGRAMS: Program[] = [
     slug: "dental",
     category: "Dental Plans",
     title: "Dental",
-    partnerNote: "Program Partner",
+    partnerNote: "Our Partner",
     partners: [
       {
         name: "Guardian",
@@ -112,7 +112,7 @@ export const PROGRAMS: Program[] = [
     slug: "vision",
     category: "Vision Plans",
     title: "Vision",
-    partnerNote: "Program Partner",
+    partnerNote: "Our Partner",
     partners: [
       {
         name: "VSP",
@@ -134,7 +134,7 @@ export const PROGRAMS: Program[] = [
     slug: "supplemental",
     category: "Supplemental",
     title: "Supplemental",
-    partnerNote: "Program Partner",
+    partnerNote: "Our Partner",
     partners: [
       {
         name: "Guardian",

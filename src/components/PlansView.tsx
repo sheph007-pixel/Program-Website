@@ -1,21 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { FileText, ExternalLink, X, Download } from "lucide-react";
+import { FileText, ArrowUpRight, LogIn } from "lucide-react";
 import PhoneContact from "@/components/PhoneContact";
 import PartnerCard from "@/components/PartnerCard";
-import CounselorCTA from "@/components/CounselorCTA";
-import { programBySlug } from "@/lib/programPartners";
-import { useRefreshOnVisible } from "@/lib/useRefreshOnVisible";
-import { categoryMeta } from "@/lib/categoryMeta";
-
-type Plan = {
-  id: string;
-  name: string;
-  category: string;
-  summaryUrl: string;
-  pdfName: string | null;
-};
+import { programBySlug, ENROLLMENT_PORTAL_URL, SCHEDULE_URL } from "@/lib/programPartners";
 
 type SupportInfo = { type: "idcard"; label: string; sublabel: string; gradient: string; shadow: string } | { type: "phone"; number: string; label: string; sublabel: string; gradient: string; shadow: string };
 
@@ -35,65 +23,7 @@ const categorySupport: Record<string, SupportInfo[] | null> = {
 export default function PlansView({ slug }: { slug: string }) {
   const program = programBySlug(slug);
   const activeCategory = program.category;
-  const [plans, setPlans] = useState<Record<string, Plan[]>>({});
-  const [loading, setLoading] = useState(true);
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-
-  const fetchPlans = useCallback(async () => {
-    try {
-      const res = await fetch("/api/plans", { cache: "no-store" });
-      const data = await res.json();
-      if (data && Object.keys(data).length > 0) {
-        setPlans(data);
-      }
-    } catch {
-      // silent - page just shows empty categories
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchPlans();
-  }, [fetchPlans]);
-
-  // Re-pull the latest plans whenever the page is brought back to the
-  // foreground (e.g. reopening on mobile) so updates show without a refresh.
-  useRefreshOnVisible(fetchPlans);
-
-  // Close modal on Escape
-  useEffect(() => {
-    if (!selectedPlan) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedPlan(null);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [selectedPlan]);
-
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (selectedPlan) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [selectedPlan]);
-
-  const activePlans = plans[activeCategory] || [];
-  const meta = categoryMeta[activeCategory];
-
-  const hasPdf = (plan: Plan) => !!plan.pdfName;
-  const pdfUrl = (plan: Plan) => `/api/plans/${plan.id}/pdf`;
-
-  const handlePlanClick = (plan: Plan) => {
-    if (hasPdf(plan)) {
-      setSelectedPlan(plan);
-    } else {
-      window.open(plan.summaryUrl, "_blank", "noopener,noreferrer");
-    }
-  };
+  const partners = [...program.partners].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="page-container page-container-wide">
@@ -103,47 +33,40 @@ export default function PlansView({ slug }: { slug: string }) {
 
       {/* Program partners */}
       <section className="mb-8 rounded-[10px] border border-slate-200 bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)] animate-fade-in-up stagger-1 sm:p-5">
-        <div className="mb-3 text-[13px] font-semibold text-blue-700">{program.partnerNote}</div>
-        <div className={`grid grid-cols-1 gap-3 ${program.partners.length > 1 ? "md:grid-cols-3" : ""}`}>
-          {program.partners.map((partner) => (
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-[16px] font-semibold text-slate-800">{program.partnerNote}</h2>
+            <p className="mt-1 text-[14px] leading-relaxed text-slate-600">
+              To see your plans and rates, log in or talk with a benefits counselor.
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <a
+              href={ENROLLMENT_PORTAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-600 px-4 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-blue-700"
+            >
+              <LogIn size={16} strokeWidth={2} />
+              Log In
+            </a>
+            <a
+              href={SCHEDULE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-4 py-2.5 text-[14px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              Schedule a Call
+              <ArrowUpRight size={16} strokeWidth={2.2} />
+            </a>
+          </div>
+        </div>
+        <div className={`grid grid-cols-1 gap-3 ${partners.length > 1 ? "md:grid-cols-3" : ""}`}>
+          {partners.map((partner) => (
             <PartnerCard key={partner.name} partner={partner} />
           ))}
         </div>
       </section>
-
-      {/* Plan Tiles Grid */}
-      {!loading && activePlans.length > 0 && (
-        <h2 className="mb-3 text-[17px] font-semibold text-slate-800">Plan Summaries</h2>
-      )}
-      {loading || activePlans.length === 0 ? null : (
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 animate-fade-in-up stagger-2">
-          {activePlans.map((plan, i) => (
-            <button
-              key={plan.id}
-              onClick={() => handlePlanClick(plan)}
-              className="card card-interactive group flex items-center gap-3 p-3.5 text-left transition-all w-full"
-              style={{ animationDelay: `${i * 0.03}s` }}
-            >
-              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
-                <FileText size={16} className={meta.color} strokeWidth={1.8} />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-[14px] font-semibold text-[var(--kennion-navy)] leading-tight sm:text-[13px]">
-                  {plan.name}
-                </h3>
-                <p className="text-[12px] text-slate-400 mt-0.5 sm:text-[11px]">
-                  {hasPdf(plan) ? "View summary" : "View details"}
-                </p>
-              </div>
-              {hasPdf(plan) ? (
-                <FileText size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
-              ) : (
-                <ExternalLink size={14} className="shrink-0 text-slate-300 transition-all group-hover:text-blue-500" />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Support Contacts for Category */}
       {categorySupport[activeCategory] && (
@@ -184,55 +107,6 @@ export default function PlansView({ slug }: { slug: string }) {
         </>
       )}
 
-      <div className="mt-8 animate-fade-in-up">
-        <CounselorCTA />
-      </div>
-
-      {/* ===== PDF VIEWER MODAL ===== */}
-      {selectedPlan && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={(e) => { if (e.target === e.currentTarget) setSelectedPlan(null); }}
-        >
-          <div className="flex flex-col w-full h-full sm:w-[90vw] sm:max-w-4xl sm:h-[85vh] sm:rounded-2xl bg-white shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 px-4 py-3 sm:px-6 sm:py-4 bg-white">
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${categoryMeta[selectedPlan.category]?.bg || "bg-slate-50"}`}>
-                <FileText size={18} className={categoryMeta[selectedPlan.category]?.color || "text-slate-500"} strokeWidth={1.8} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-[15px] sm:text-[16px] font-bold text-[var(--kennion-navy)] truncate">
-                  {selectedPlan.name}
-                </h3>
-                <p className="text-[11px] text-slate-400">{selectedPlan.category}</p>
-              </div>
-              <a
-                href={pdfUrl(selectedPlan)}
-                download
-                className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-200"
-              >
-                <Download size={14} />
-                <span className="hidden sm:inline">Download</span>
-              </a>
-              <button
-                onClick={() => setSelectedPlan(null)}
-                className="flex items-center justify-center rounded-lg bg-slate-100 p-2 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
-              >
-                <X size={18} strokeWidth={2} />
-              </button>
-            </div>
-
-            {/* PDF Iframe */}
-            <div className="flex-1 bg-slate-100">
-              <iframe
-                src={pdfUrl(selectedPlan)}
-                className="w-full h-full border-0"
-                title={`${selectedPlan.name} Summary`}
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
