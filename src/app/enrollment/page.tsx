@@ -13,10 +13,6 @@ export default function EnrollmentPage() {
     <div className="page-container page-container-wide">
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">Open Enrollment</h1>
-        <p className="page-subtitle">
-          Log in to Employee Navigator to see your group&apos;s plans and rates and enroll.
-          Not sure where to start? Schedule a call with a licensed benefits counselor.
-        </p>
       </div>
 
       {/* Employee Navigator */}

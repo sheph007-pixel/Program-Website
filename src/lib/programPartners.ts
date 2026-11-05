@@ -25,7 +25,6 @@ export type Program = {
   /** The plan category these plans are stored under in the admin. */
   category: string;
   title: string;
-  tagline: string;
   /** Shown under the title: one partner per group, or the program's partner. */
   partnerNote: string;
   partners: Partner[];
@@ -38,7 +37,6 @@ export const PROGRAMS: Program[] = [
     slug: "medical",
     category: "Health Plans",
     title: "Medical",
-    tagline: "Doctor visits and prescriptions. Options at every price point, paid pre-tax.",
     partnerNote: "Your Employer Chooses One of These Partners",
     partners: [
       {
@@ -92,7 +90,6 @@ export const PROGRAMS: Program[] = [
     slug: "dental",
     category: "Dental Plans",
     title: "Dental",
-    tagline: "Cleanings, fillings and more, with plan options that include orthodontia.",
     partnerNote: "Program Partner",
     partners: [
       {
@@ -115,7 +112,6 @@ export const PROGRAMS: Program[] = [
     slug: "vision",
     category: "Vision Plans",
     title: "Vision",
-    tagline: "Eye exams, glasses and contacts, with a plan for every budget.",
     partnerNote: "Program Partner",
     partners: [
       {
@@ -138,7 +134,6 @@ export const PROGRAMS: Program[] = [
     slug: "supplemental",
     category: "Supplemental",
     title: "Supplemental",
-    tagline: "Protect your family and your paycheck, with cash benefits paid straight to you.",
     partnerNote: "Program Partner",
     partners: [
       {

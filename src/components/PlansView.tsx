@@ -99,10 +99,6 @@ export default function PlansView({ slug }: { slug: string }) {
     <div className="page-container page-container-wide">
       <div className="page-header animate-fade-in-up">
         <h1 className="page-title">{program.title}</h1>
-        <p className="page-subtitle">
-          {program.tagline} Your group&apos;s specific plans and rates are in Employee
-          Navigator.
-        </p>
       </div>
 
       {/* Program partners */}
