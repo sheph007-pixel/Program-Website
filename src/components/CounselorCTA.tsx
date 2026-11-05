@@ -2,7 +2,7 @@ import { CalendarClock, ArrowUpRight } from "lucide-react";
 import { SCHEDULE_URL } from "@/lib/programPartners";
 
 /** Book a call with a licensed benefits counselor (Calendly). */
-export default function CounselorCTA({ compact = false }: { compact?: boolean }) {
+export default function CounselorCTA() {
   return (
     <section className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -10,17 +10,10 @@ export default function CounselorCTA({ compact = false }: { compact?: boolean })
           <CalendarClock size={22} strokeWidth={1.8} />
         </div>
         <div className="flex-1">
-          <h2 className="text-[18px] font-semibold text-slate-800">Talk With a Licensed Benefits Counselor</h2>
+          <h2 className="text-[18px] font-semibold text-slate-800">Talk With a Benefits Counselor</h2>
           <p className="mt-1 text-[14px] leading-relaxed text-slate-600">
-            Book a free 1-on-1 call. A counselor will call you at the time you pick to go
-            through your options, explain your rates and help you make your elections.
+            Book a free call and we&apos;ll help you enroll.
           </p>
-          {!compact && (
-            <p className="mt-2 text-[13px] italic leading-relaxed text-slate-500">
-              Please have your spouse and dependent information ready for your call,
-              including dates of birth and Social Security numbers.
-            </p>
-          )}
         </div>
         <a
           href={SCHEDULE_URL}
