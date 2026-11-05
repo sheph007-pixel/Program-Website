@@ -84,6 +84,10 @@ const SQL_STATEMENTS = [
   `ALTER TABLE "Plan" ADD COLUMN IF NOT EXISTS "contentStatus" TEXT NOT NULL DEFAULT 'none'`,
   `ALTER TABLE "Plan" ADD COLUMN IF NOT EXISTS "contentUpdatedAt" TIMESTAMP(3)`,
 
+  // The EBPA and HealthEZ captive medical plans end 12/31/26 and are retired.
+  // Remove them for good (idempotent: a no-op once they are gone).
+  `DELETE FROM "Plan" WHERE "category" = 'Health Plans' AND "name" IN ('Deluxe Platinum', 'Elite Health', 'Freedom Platinum', 'Premier Health', 'Choice Gold', 'Freedom Gold', 'Select Health', 'Basic Gold', 'Preferred Silver', 'Enhanced Silver', 'Freedom Silver', 'Core Health', 'Classic Silver', 'Saver HSA', 'Freedom Bronze')`,
+
   `CREATE TABLE IF NOT EXISTS "ChatSession" (
     "id" TEXT NOT NULL,
     "userCode" TEXT,
